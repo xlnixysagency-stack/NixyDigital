@@ -1,14 +1,14 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NixyDigital - Premium Web Design &amp; Development</title>
+    <title>NixyDigital - Premium Web Design & Development</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="/_sdk/element_sdk.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body {
           box-sizing: border-box;
@@ -18,13 +18,15 @@
         }
         .accent-line {
           height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.4), transparent);
+          background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.5), transparent);
         }
         .card-border {
-          border: 1px solid rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(99, 102, 241, 0.08);
         }
         .nav-link {
           position: relative;
+          font-weight: 500;
+          letter-spacing: -0.3px;
         }
         .nav-link::after {
           content: '';
@@ -32,7 +34,7 @@
           bottom: -2px;
           left: 0;
           width: 0;
-          height: 1px;
+          height: 1.5px;
           background: #6366f1;
           transition: width 0.3s ease;
         }
@@ -40,24 +42,40 @@
           width: 100%;
         }
         .btn-primary {
-          transition: all 0.3s ease;
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          font-weight: 600;
+          letter-spacing: -0.3px;
+          box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.2);
         }
         .btn-primary:hover {
           transform: translateY(-2px);
-          box-shadow: 0 10px 40px -10px rgba(99, 102, 241, 0.4);
+          box-shadow: 0 12px 48px rgba(99, 102, 241, 0.3);
         }
         .service-card {
-          transition: all 0.4s ease;
+          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+          background: linear-gradient(135deg, rgba(15, 15, 18, 0.8), rgba(15, 15, 18, 0.5)) !important;
         }
         .service-card:hover {
-          transform: translateY(-4px);
+          transform: translateY(-6px);
           border-color: rgba(99, 102, 241, 0.2);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        .service-card h3 {
+          letter-spacing: -0.5px;
+          font-weight: 700;
         }
         .stat-number {
           background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
+          font-weight: 800;
+          letter-spacing: -1px;
+        }
+        .section-label {
+          font-weight: 700;
+          letter-spacing: 0.5px;
+          font-size: 0.7rem;
         }
         @keyframes fadeInUp {
           from {
@@ -77,192 +95,323 @@
         .animate-delay-3 { animation-delay: 0.3s; }
         .animate-delay-4 { animation-delay: 0.4s; }
     </style>
-    <style>@view-transition { navigation: auto; }</style>
-    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
 </head>
 <body class="h-full bg-[#09090b] text-gray-300 overflow-auto">
-<div class="app-wrapper w-full h-full"><!-- Navigation -->
+<div class="app-wrapper w-full h-full">
+
+    <!-- Navigation -->
     <nav class="fixed top-0 left-0 right-0 z-50 bg-black backdrop-blur-md border-b border-white/5">
         <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center"><img src="assets/logo.png" alt="NixyDigital logo" style="height: 95px; width: auto;" class="object-contain" loading="lazy" onerror="console.error('Logo failed to load:', this.src); this.style.display='none';">
+            <div class="flex items-center">
+                <img
+                        src="assets/logo.png"
+                        alt="NixyDigital logo"
+                        style="height: 85px; width: auto;"
+                        class="object-contain"
+                        loading="lazy"
+                        onerror="console.error('Logo failed to load:', this.src); this.style.display='none';"
+                />
             </div>
-            <div class="hidden md:flex items-center gap-8"><a href="#services" class="nav-link text-sm text-gray-400 hover:text-white transition-colors">Services</a> <a href="#process" class="nav-link text-sm text-gray-400 hover:text-white transition-colors">Process</a> <a href="#proof" class="nav-link text-sm text-gray-400 hover:text-white transition-colors">Results</a> <a href="#contact" class="nav-link text-sm text-gray-400 hover:text-white transition-colors">Contact</a>
-            </div><button class="md:hidden text-gray-400">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
-            </svg></button>
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#services" class="nav-link text-sm text-gray-400 hover:text-white transition-colors">Services</a>
+                <a href="#process" class="nav-link text-sm text-gray-400 hover:text-white transition-colors">Process</a>
+                <a href="#proof" class="nav-link text-sm text-gray-400 hover:text-white transition-colors">Results</a>
+                <a href="#contact" class="nav-link text-sm text-gray-400 hover:text-white transition-colors">Contact</a>
+            </div>
+            <button class="md:hidden text-gray-400">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
         </div>
-    </nav><!-- Hero Section -->
+    </nav>
+
+    <!-- Hero Section -->
     <section class="min-h-[90%] flex items-center justify-center pt-20 px-6">
         <div class="max-w-4xl mx-auto text-center">
-            <div class="opacity-0 animate-fade-in animate-delay-1"><span class="inline-block px-4 py-1.5 text-xs font-medium text-indigo-400 bg-indigo-500/10 rounded-full border border-indigo-500/20 mb-8"> Premium Web Solutions </span>
+            <div class="opacity-0 animate-fade-in animate-delay-1 mb-8">
+          <span class="inline-block px-4 py-2 text-xs font-bold text-indigo-400 bg-indigo-500/10 rounded-full border border-indigo-500/20">
+            Premium Web Solutions
+          </span>
             </div>
-            <h1 id="hero-headline" class="opacity-0 animate-fade-in animate-delay-2 text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] tracking-tight mb-6">We build websites that<br><span class="text-indigo-400">drive results</span></h1>
-            <p id="hero-subheadline" class="opacity-0 animate-fade-in animate-delay-3 text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">Strategic design and development for ambitious brands ready to stand out in a crowded digital landscape.</p>
-            <div class="opacity-0 animate-fade-in animate-delay-4 flex flex-col sm:flex-row items-center justify-center gap-4"><button id="cta-button" class="btn-primary px-8 py-4 bg-indigo-500 hover:bg-indigo-400 text-white font-medium rounded-lg text-sm"> Start Your Project </button> <a href="#services" class="px-8 py-4 text-gray-400 hover:text-white font-medium text-sm transition-colors flex items-center gap-2"> Explore Services
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                </svg></a>
-            </div>
-        </div>
-    </section><!-- Divider -->
-    <div class="accent-line max-w-6xl mx-auto"></div><!-- Services Section -->
-    <section id="services" class="py-24 px-6">
-        <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-16"><span class="text-xs font-medium text-indigo-400 tracking-widest uppercase mb-4 block">What We Do</span>
-                <h2 id="services-title" class="text-3xl md:text-4xl font-bold text-white">What We Build</h2>
-            </div>
-            <div class="grid md:grid-cols-3 gap-6"><!-- Service 1 -->
-                <div class="service-card card-border bg-[#0f0f12] rounded-2xl p-8">
-                    <div class="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6">
-                        <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                    </div>
-                    <h3 id="service-1-title" class="text-xl font-semibold text-white mb-3">Web Design</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Bespoke interfaces crafted with precision. Every pixel serves a purpose, every interaction tells your story.</p>
-                    <div class="mt-6 pt-6 border-t border-white/5">
-                        <ul class="space-y-2 text-sm text-gray-500">
-                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span> UI/UX Design</li>
-                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span> Responsive Layouts</li>
-                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span> Design Systems</li>
-                        </ul>
-                    </div>
-                </div><!-- Service 2 -->
-                <div class="service-card card-border bg-[#0f0f12] rounded-2xl p-8">
-                    <div class="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6">
-                        <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                        </svg>
-                    </div>
-                    <h3 id="service-2-title" class="text-xl font-semibold text-white mb-3">Development</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Clean, performant code that scales. Built with modern technologies for speed, security, and longevity.</p>
-                    <div class="mt-6 pt-6 border-t border-white/5">
-                        <ul class="space-y-2 text-sm text-gray-500">
-                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span> Custom Development</li>
-                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span> CMS Integration</li>
-                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span> Performance Optimization</li>
-                        </ul>
-                    </div>
-                </div><!-- Service 3 -->
-                <div class="service-card card-border bg-[#0f0f12] rounded-2xl p-8">
-                    <div class="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6">
-                        <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                        </svg>
-                    </div>
-                    <h3 id="service-3-title" class="text-xl font-semibold text-white mb-3">Strategy</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Data-driven decisions that align design with business goals. We build with purpose, not assumptions.</p>
-                    <div class="mt-6 pt-6 border-t border-white/5">
-                        <ul class="space-y-2 text-sm text-gray-500">
-                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span> Brand Strategy</li>
-                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span> Conversion Optimization</li>
-                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span> Analytics Setup</li>
-                        </ul>
-                    </div>
-                </div>
+            <h1 id="hero-headline" class="opacity-0 animate-fade-in animate-delay-2 text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-[1.05] tracking-tight mb-8">
+                We build websites that<br>
+                <span class="text-indigo-400">drive results</span>
+            </h1>
+            <p id="hero-subheadline" class="opacity-0 animate-fade-in animate-delay-3 text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed font-light">
+                Strategic design and development for ambitious brands ready to stand out in a crowded digital landscape.
+            </p>
+            <div class="opacity-0 animate-fade-in animate-delay-4 flex flex-col sm:flex-row items-center justify-center gap-6">
+                <button id="cta-button" class="btn-primary px-10 py-4 bg-indigo-500 hover:bg-indigo-400 text-white font-medium rounded-lg text-sm">
+                    Start Your Project
+                </button>
+                <a href="#services" class="px-10 py-4 text-gray-300 hover:text-white font-medium text-sm transition-colors flex items-center gap-3 group">
+                    Explore Services
+                    <svg class="w-4 h-4 transition-transform group-hover:translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </a>
             </div>
         </div>
-    </section><!-- Divider -->
-    <div class="accent-line max-w-6xl mx-auto"></div><!-- Proof Section -->
-    <section id="proof" class="py-24 px-6 bg-[#0a0a0d]">
+    </section>
+
+    <!-- Divider -->
+    <div class="accent-line max-w-6xl mx-auto"></div>
+
+    <!-- Services Section -->
+    <section id="services" class="py-32 px-6">
         <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-16"><span class="text-xs font-medium text-indigo-400 tracking-widest uppercase mb-4 block">Proven Results</span>
-                <h2 class="text-3xl md:text-4xl font-bold text-white">Built for Impact</h2>
+            <div class="text-center mb-20">
+                <span class="section-label text-indigo-400 uppercase mb-4 block">What We Do</span>
+                <h2 id="services-title" class="text-4xl md:text-5xl font-bold text-white leading-tight">What We Build</h2>
             </div>
-            <div class="grid md:grid-cols-4 gap-8">
-                <div class="text-center">
-                    <div class="stat-number text-5xl md:text-6xl font-bold mb-2">
-                        98%
-                    </div>
-                    <p class="text-gray-500 text-sm">Client Satisfaction</p>
-                </div>
-                <div class="text-center">
-                    <div class="stat-number text-5xl md:text-6xl font-bold mb-2">
-                        2.4s
-                    </div>
-                    <p class="text-gray-500 text-sm">Avg. Load Time</p>
-                </div>
-                <div class="text-center">
-                    <div class="stat-number text-5xl md:text-6xl font-bold mb-2">
-                        3x
-                    </div>
-                    <p class="text-gray-500 text-sm">Conversion Lift</p>
-                </div>
-                <div class="text-center">
-                    <div class="stat-number text-5xl md:text-6xl font-bold mb-2">
-                        50+
-                    </div>
-                    <p class="text-gray-500 text-sm">Projects Delivered</p>
-                </div>
-            </div>
-            <div class="mt-16 grid md:grid-cols-3 gap-6">
-                <div class="flex items-center gap-4 p-4 bg-[#0f0f12] rounded-xl border border-white/5">
-                    <div class="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="service-card card-border bg-[#0f0f12] rounded-2xl p-10">
+                    <div class="w-14 h-14 bg-indigo-500/15 rounded-xl flex items-center justify-center mb-8">
+                        <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                         </svg>
                     </div>
-                    <p class="text-sm text-gray-400">On-time delivery, every project</p>
+                    <h3 id="service-1-title" class="text-2xl font-bold text-white mb-4">Web Design</h3>
+                    <p class="text-gray-400 text-base leading-relaxed mb-8">
+                        Bespoke interfaces crafted with precision. Every pixel serves a purpose.
+                    </p>
+                    <div class="pt-8 border-t border-white/5">
+                        <ul class="space-y-3 text-sm text-gray-500">
+                            <li class="flex items-center gap-3">
+                                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full flex-shrink-0"></span>
+                                UI/UX Design
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full flex-shrink-0"></span>
+                                Responsive Layouts
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full flex-shrink-0"></span>
+                                Design Systems
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="flex items-center gap-4 p-4 bg-[#0f0f12] rounded-xl border border-white/5">
-                    <div class="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+
+                <!-- Service 2 -->
+                <div class="service-card card-border bg-[#0f0f12] rounded-2xl p-10">
+                    <div class="w-14 h-14 bg-indigo-500/15 rounded-xl flex items-center justify-center mb-8">
+                        <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
                         </svg>
                     </div>
-                    <p class="text-sm text-gray-400">Transparent, fixed-scope pricing</p>
+                    <h3 id="service-2-title" class="text-2xl font-bold text-white mb-4">Development</h3>
+                    <p class="text-gray-400 text-base leading-relaxed mb-8">
+                        Clean, performant code that scales. Built for speed and longevity.
+                    </p>
+                    <div class="pt-8 border-t border-white/5">
+                        <ul class="space-y-3 text-sm text-gray-500">
+                            <li class="flex items-center gap-3">
+                                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full flex-shrink-0"></span>
+                                Custom Development
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full flex-shrink-0"></span>
+                                CMS Integration
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full flex-shrink-0"></span>
+                                Performance Optimization
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="flex items-center gap-4 p-4 bg-[#0f0f12] rounded-xl border border-white/5">
-                    <div class="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+
+                <!-- Service 3 -->
+                <div class="service-card card-border bg-[#0f0f12] rounded-2xl p-10">
+                    <div class="w-14 h-14 bg-indigo-500/15 rounded-xl flex items-center justify-center mb-8">
+                        <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                         </svg>
                     </div>
-                    <p class="text-sm text-gray-400">30-day post-launch support</p>
+                    <h3 id="service-3-title" class="text-2xl font-bold text-white mb-4">Strategy</h3>
+                    <p class="text-gray-400 text-base leading-relaxed mb-8">
+                        Data-driven decisions that align design with business goals.
+                    </p>
+                    <div class="pt-8 border-t border-white/5">
+                        <ul class="space-y-3 text-sm text-gray-500">
+                            <li class="flex items-center gap-3">
+                                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full flex-shrink-0"></span>
+                                Brand Strategy
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full flex-shrink-0"></span>
+                                Conversion Optimization
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full flex-shrink-0"></span>
+                                Analytics Setup
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </section><!-- Divider -->
-    <div class="accent-line max-w-6xl mx-auto"></div><!-- Process Section -->
-    <section id="process" class="py-24 px-6">
+    </section>
+
+    <!-- Divider -->
+    <div class="accent-line max-w-6xl mx-auto"></div>
+
+    <!-- Proof Section -->
+    <section id="proof" class="py-32 px-6 bg-gradient-to-b from-[#05050a] to-[#0a0a0d]">
         <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-16"><span class="text-xs font-medium text-indigo-400 tracking-widest uppercase mb-4 block">How We Work</span>
-                <h2 class="text-3xl md:text-4xl font-bold text-white">Simple. Efficient. Effective.</h2>
+            <div class="text-center mb-24">
+                <span class="section-label text-indigo-400 uppercase mb-4 block">Proven Results</span>
+                <h2 class="text-4xl md:text-5xl font-bold text-white leading-tight">Built for Impact</h2>
             </div>
-            <div class="grid md:grid-cols-2 gap-8"><!-- Step 1 -->
-                <div class="relative p-8 bg-[#0f0f12] rounded-2xl border border-white/5">
-                    <div class="absolute -top-4 -left-4 w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+
+            <div class="grid md:grid-cols-4 gap-6 mb-16">
+                <div class="text-center">
+                    <div class="stat-number text-6xl md:text-7xl font-bold mb-3">98%</div>
+                    <p class="text-gray-400 text-sm font-medium">Client Satisfaction</p>
+                </div>
+                <div class="text-center">
+                    <div class="stat-number text-6xl md:text-7xl font-bold mb-3">2.4s</div>
+                    <p class="text-gray-400 text-sm font-medium">Avg. Load Time</p>
+                </div>
+                <div class="text-center">
+                    <div class="stat-number text-6xl md:text-7xl font-bold mb-3">3x</div>
+                    <p class="text-gray-400 text-sm font-medium">Conversion Lift</p>
+                </div>
+                <div class="text-center">
+                    <div class="stat-number text-6xl md:text-7xl font-bold mb-3">50+</div>
+                    <p class="text-gray-400 text-sm font-medium">Projects Delivered</p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="flex items-center gap-4 p-6 bg-[#0f0f12]/50 border border-indigo-500/10 rounded-xl">
+                    <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                    <p class="text-sm text-gray-300 font-medium">On-time delivery, every project</p>
+                </div>
+                <div class="flex items-center gap-4 p-6 bg-[#0f0f12]/50 border border-indigo-500/10 rounded-xl">
+                    <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                    <p class="text-sm text-gray-300 font-medium">Transparent, fixed-scope pricing</p>
+                </div>
+                <div class="flex items-center gap-4 p-6 bg-[#0f0f12]/50 border border-indigo-500/10 rounded-xl">
+                    <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                    </div>
+                    <p class="text-sm text-gray-300 font-medium">30-day post-launch support</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="accent-line max-w-6xl mx-auto"></div>
+
+    <!-- Process Section -->
+    <section id="process" class="py-32 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-20">
+                <span class="section-label text-indigo-400 uppercase mb-4 block">How We Work</span>
+                <h2 class="text-4xl md:text-5xl font-bold text-white leading-tight">Simple. Efficient. Effective.</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Step 1 -->
+                <div class="relative p-10 bg-gradient-to-br from-[#0f0f12] to-[#0a0a0d] card-border rounded-2xl">
+                    <div class="absolute -top-5 -left-5 w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center text-white font-bold text-base shadow-lg shadow-indigo-500/20">
                         1
                     </div>
-                    <h3 class="text-xl font-semibold text-white mb-4 mt-2">Discovery &amp; Strategy</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-6">We start with deep understanding. Through focused conversations, we uncover your goals, challenges, and vision. Then we craft a strategic roadmap that aligns design decisions with business outcomes.</p>
-                    <div class="flex flex-wrap gap-2"><span class="px-3 py-1 text-xs bg-white/5 text-gray-400 rounded-full">Research</span> <span class="px-3 py-1 text-xs bg-white/5 text-gray-400 rounded-full">Planning</span> <span class="px-3 py-1 text-xs bg-white/5 text-gray-400 rounded-full">Wireframing</span>
+                    <h3 class="text-2xl font-bold text-white mb-4 mt-4">Discovery & Strategy</h3>
+                    <p class="text-gray-400 text-base leading-relaxed mb-8">
+                        We start with deep understanding. Through focused conversations, we uncover your goals, challenges, and vision. Then we craft a strategic roadmap that aligns design decisions with business outcomes.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1.5 text-xs font-medium bg-indigo-500/10 border border-indigo-500/20 text-gray-300 rounded-full">Research</span>
+                        <span class="px-3 py-1.5 text-xs font-medium bg-indigo-500/10 border border-indigo-500/20 text-gray-300 rounded-full">Planning</span>
+                        <span class="px-3 py-1.5 text-xs font-medium bg-indigo-500/10 border border-indigo-500/20 text-gray-300 rounded-full">Wireframing</span>
                     </div>
-                </div><!-- Step 2 -->
-                <div class="relative p-8 bg-[#0f0f12] rounded-2xl border border-white/5">
-                    <div class="absolute -top-4 -left-4 w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                </div>
+
+                <!-- Step 2 -->
+                <div class="relative p-10 bg-gradient-to-br from-[#0f0f12] to-[#0a0a0d] card-border rounded-2xl">
+                    <div class="absolute -top-5 -left-5 w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center text-white font-bold text-base shadow-lg shadow-indigo-500/20">
                         2
                     </div>
-                    <h3 class="text-xl font-semibold text-white mb-4 mt-2">Design &amp; Development</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Ideas become reality. We design with intention, develop with precision, and iterate with your feedback. Every milestone is shared, every decision is transparent. Launch day is just the beginning.</p>
-                    <div class="flex flex-wrap gap-2"><span class="px-3 py-1 text-xs bg-white/5 text-gray-400 rounded-full">Design</span> <span class="px-3 py-1 text-xs bg-white/5 text-gray-400 rounded-full">Build</span> <span class="px-3 py-1 text-xs bg-white/5 text-gray-400 rounded-full">Launch</span>
+                    <h3 class="text-2xl font-bold text-white mb-4 mt-4">Design & Development</h3>
+                    <p class="text-gray-400 text-base leading-relaxed mb-8">
+                        Ideas become reality. We design with intention, develop with precision, and iterate with your feedback. Every milestone is shared, every decision is transparent. Launch day is just the beginning.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1.5 text-xs font-medium bg-indigo-500/10 border border-indigo-500/20 text-gray-300 rounded-full">Design</span>
+                        <span class="px-3 py-1.5 text-xs font-medium bg-indigo-500/10 border border-indigo-500/20 text-gray-300 rounded-full">Build</span>
+                        <span class="px-3 py-1.5 text-xs font-medium bg-indigo-500/10 border border-indigo-500/20 text-gray-300 rounded-full">Launch</span>
                     </div>
                 </div>
             </div>
         </div>
-    </section><!-- Divider -->
-    <div class="accent-line max-w-6xl mx-auto"></div><!-- Final CTA Section -->
-    <section id="contact" class="py-32 px-6">
+    </section>
+
+    <!-- Divider -->
+    <div class="accent-line max-w-6xl mx-auto"></div>
+
+    <!-- Final CTA Section -->
+    <section id="contact" class="py-40 px-6">
         <div class="max-w-3xl mx-auto text-center">
-            <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Ready to build something<br><span class="text-indigo-400">exceptional?</span></h2>
-            <p class="text-gray-400 text-lg mb-10 max-w-xl mx-auto">Let's discuss your project. No pressure, no obligations—just a conversation about what's possible.</p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4"><button class="btn-primary px-10 py-4 bg-indigo-500 hover:bg-indigo-400 text-white font-medium rounded-lg text-sm"> Schedule a Call </button> <span class="text-gray-600 text-sm">or</span> <a href="mailto:hello@nixydigital.com" class="text-gray-400 hover:text-white text-sm transition-colors underline underline-offset-4"> hello@nixydigital.com </a>
+            <h2 class="text-4xl md:text-6xl font-bold text-white mb-8 leading-tight">
+                Ready to build something<br>
+                <span class="text-indigo-400">exceptional?</span>
+            </h2>
+            <p class="text-gray-300 text-lg mb-14 max-w-2xl mx-auto leading-relaxed">
+                Let's discuss your project. No pressure, no obligations—just a conversation about what's possible.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <button class="btn-primary px-12 py-5 bg-indigo-500 hover:bg-indigo-400 text-white font-semibold rounded-lg text-sm">
+                    Schedule a Call
+                </button>
+                <span class="text-gray-600 text-sm hidden sm:block">or</span>
+                <a href="mailto:hello@nixydigital.com" class="px-12 py-5 text-indigo-400 hover:text-indigo-300 font-semibold text-sm transition-colors underline underline-offset-4">
+                    hello@nixydigital.com
+                </a>
             </div>
         </div>
-    </section><!-- Footer -->
+    </section>
+
+    <!-- Footer -->
     <footer class="py-8 px-6 border-t border-white/5">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center"><img src="assets/logo.png" alt="NixyDigital logo" class="h-8 md:h-10 w-auto object-contain" loading="lazy" onerror="console.error('Logo failed to load:', this.src); this.style.display='none';">
+            <div class="flex items-center">
+                <img
+                        src="assets/logo.png"
+                        alt="NixyDigital logo"
+                        class="h-8 md:h-10 w-auto object-contain"
+                        loading="lazy"
+                        onerror="console.error('Logo failed to load:', this.src); this.style.display='none';"
+                />
             </div>
-            <p id="footer-text" class="text-gray-600 text-sm">© 2024 NixyDigital. All rights reserved.</p>
-            <div class="flex items-center gap-6"><a href="#" class="text-gray-600 hover:text-gray-400 text-sm transition-colors">Privacy</a> <a href="#" class="text-gray-600 hover:text-gray-400 text-sm transition-colors">Terms</a>
+            <p id="footer-text" class="text-gray-600 text-sm">
+                © 2024 NixyDigital. All rights reserved.
+            </p>
+            <div class="flex items-center gap-6">
+                <a href="#" class="text-gray-600 hover:text-gray-400 text-sm transition-colors">Privacy</a>
+                <a href="#" class="text-gray-600 hover:text-gray-400 text-sm transition-colors">Terms</a>
             </div>
         </div>
     </footer>
+
 </div>
+
 <script>
     const defaultConfig = {
       hero_headline: 'We build websites that<br><span class="text-indigo-400">drive results</span>',
@@ -402,5 +551,5 @@
       });
     });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cafaccf6682db7e',t:'MTc3MDYwMTM5Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
