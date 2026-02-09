@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NixyDigital - Premium Web Design &amp; Development</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <style>
+        body {
+          box-sizing: border-box;
+        }
+        * {
+          font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .accent-line {
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.4), transparent);
+        }
+        .card-border {
+          border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .nav-link {
+          position: relative;
+        }
+        .nav-link::after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          width: 0;
+          height: 1px;
+          background: #6366f1;
+          transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+          width: 100%;
+        }
+        .btn-primary {
+          transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 40px -10px rgba(99, 102, 241, 0.4);
+        }
+        .service-card {
+          transition: all 0.4s ease;
+        }
+        .service-card:hover {
+          transform: translateY(-4px);
+          border-color: rgba(99, 102, 241, 0.2);
+        }
+        .stat-number {
+          background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in {
+          animation: fadeInUp 0.8s ease forwards;
+        }
+        .animate-delay-1 { animation-delay: 0.1s; }
+        .animate-delay-2 { animation-delay: 0.2s; }
+        .animate-delay-3 { animation-delay: 0.3s; }
+        .animate-delay-4 { animation-delay: 0.4s; }
+    </style>
+    <style>@view-transition { navigation: auto; }</style>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+</head>
+<body class="h-full bg-[#09090b] text-gray-300 overflow-auto">
+<div class="app-wrapper w-full h-full"><!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-black backdrop-blur-md border-b border-white/5">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center"><img src="assets/logo.png" alt="NixyDigital logo" style="height: 95px; width: auto;" class="object-contain" loading="lazy" onerror="console.error('Logo failed to load:', this.src); this.style.display='none';">
+            </div>
+            <div class="hidden md:flex items-center gap-8"><a href="#services" class="nav-link text-sm text-gray-400 hover:text-white transition-colors">Services</a> <a href="#process" class="nav-link text-sm text-gray-400 hover:text-white transition-colors">Process</a> <a href="#proof" class="nav-link text-sm text-gray-400 hover:text-white transition-colors">Results</a> <a href="#contact" class="nav-link text-sm text-gray-400 hover:text-white transition-colors">Contact</a>
+            </div><button class="md:hidden text-gray-400">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
+            </svg></button>
+        </div>
+    </nav><!-- Hero Section -->
+    <section class="min-h-[90%] flex items-center justify-center pt-20 px-6">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="opacity-0 animate-fade-in animate-delay-1"><span class="inline-block px-4 py-1.5 text-xs font-medium text-indigo-400 bg-indigo-500/10 rounded-full border border-indigo-500/20 mb-8"> Premium Web Solutions </span>
+            </div>
+            <h1 id="hero-headline" class="opacity-0 animate-fade-in animate-delay-2 text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] tracking-tight mb-6">We build websites that<br><span class="text-indigo-400">drive results</span></h1>
+            <p id="hero-subheadline" class="opacity-0 animate-fade-in animate-delay-3 text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">Strategic design and development for ambitious brands ready to stand out in a crowded digital landscape.</p>
+            <div class="opacity-0 animate-fade-in animate-delay-4 flex flex-col sm:flex-row items-center justify-center gap-4"><button id="cta-button" class="btn-primary px-8 py-4 bg-indigo-500 hover:bg-indigo-400 text-white font-medium rounded-lg text-sm"> Start Your Project </button> <a href="#services" class="px-8 py-4 text-gray-400 hover:text-white font-medium text-sm transition-colors flex items-center gap-2"> Explore Services
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg></a>
+            </div>
+        </div>
+    </section><!-- Divider -->
+    <div class="accent-line max-w-6xl mx-auto"></div><!-- Services Section -->
+    <section id="services" class="py-24 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16"><span class="text-xs font-medium text-indigo-400 tracking-widest uppercase mb-4 block">What We Do</span>
+                <h2 id="services-title" class="text-3xl md:text-4xl font-bold text-white">What We Build</h2>
+            </div>
+            <div class="grid md:grid-cols-3 gap-6"><!-- Service 1 -->
+                <div class="service-card card-border bg-[#0f0f12] rounded-2xl p-8">
+                    <div class="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h3 id="service-1-title" class="text-xl font-semibold text-white mb-3">Web Design</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Bespoke interfaces crafted with precision. Every pixel serves a purpose, every interaction tells your story.</p>
+                    <div class="mt-6 pt-6 border-t border-white/5">
+                        <ul class="space-y-2 text-sm text-gray-500">
+                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span> UI/UX Design</li>
+                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span> Responsive Layouts</li>
+                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span> Design Systems</li>
+                        </ul>
+                    </div>
+                </div><!-- Service 2 -->
+                <div class="service-card card-border bg-[#0f0f12] rounded-2xl p-8">
+                    <div class="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                        </svg>
+                    </div>
+                    <h3 id="service-2-title" class="text-xl font-semibold text-white mb-3">Development</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Clean, performant code that scales. Built with modern technologies for speed, security, and longevity.</p>
+                    <div class="mt-6 pt-6 border-t border-white/5">
+                        <ul class="space-y-2 text-sm text-gray-500">
+                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span> Custom Development</li>
+                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span> CMS Integration</li>
+                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span> Performance Optimization</li>
+                        </ul>
+                    </div>
+                </div><!-- Service 3 -->
+                <div class="service-card card-border bg-[#0f0f12] rounded-2xl p-8">
+                    <div class="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6">
+                        <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                    </div>
+                    <h3 id="service-3-title" class="text-xl font-semibold text-white mb-3">Strategy</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">Data-driven decisions that align design with business goals. We build with purpose, not assumptions.</p>
+                    <div class="mt-6 pt-6 border-t border-white/5">
+                        <ul class="space-y-2 text-sm text-gray-500">
+                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span> Brand Strategy</li>
+                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span> Conversion Optimization</li>
+                            <li class="flex items-center gap-2"><span class="w-1 h-1 bg-indigo-500 rounded-full"></span> Analytics Setup</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!-- Divider -->
+    <div class="accent-line max-w-6xl mx-auto"></div><!-- Proof Section -->
+    <section id="proof" class="py-24 px-6 bg-[#0a0a0d]">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16"><span class="text-xs font-medium text-indigo-400 tracking-widest uppercase mb-4 block">Proven Results</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-white">Built for Impact</h2>
+            </div>
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="stat-number text-5xl md:text-6xl font-bold mb-2">
+                        98%
+                    </div>
+                    <p class="text-gray-500 text-sm">Client Satisfaction</p>
+                </div>
+                <div class="text-center">
+                    <div class="stat-number text-5xl md:text-6xl font-bold mb-2">
+                        2.4s
+                    </div>
+                    <p class="text-gray-500 text-sm">Avg. Load Time</p>
+                </div>
+                <div class="text-center">
+                    <div class="stat-number text-5xl md:text-6xl font-bold mb-2">
+                        3x
+                    </div>
+                    <p class="text-gray-500 text-sm">Conversion Lift</p>
+                </div>
+                <div class="text-center">
+                    <div class="stat-number text-5xl md:text-6xl font-bold mb-2">
+                        50+
+                    </div>
+                    <p class="text-gray-500 text-sm">Projects Delivered</p>
+                </div>
+            </div>
+            <div class="mt-16 grid md:grid-cols-3 gap-6">
+                <div class="flex items-center gap-4 p-4 bg-[#0f0f12] rounded-xl border border-white/5">
+                    <div class="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <p class="text-sm text-gray-400">On-time delivery, every project</p>
+                </div>
+                <div class="flex items-center gap-4 p-4 bg-[#0f0f12] rounded-xl border border-white/5">
+                    <div class="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <p class="text-sm text-gray-400">Transparent, fixed-scope pricing</p>
+                </div>
+                <div class="flex items-center gap-4 p-4 bg-[#0f0f12] rounded-xl border border-white/5">
+                    <div class="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <p class="text-sm text-gray-400">30-day post-launch support</p>
+                </div>
+            </div>
+        </div>
+    </section><!-- Divider -->
+    <div class="accent-line max-w-6xl mx-auto"></div><!-- Process Section -->
+    <section id="process" class="py-24 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16"><span class="text-xs font-medium text-indigo-400 tracking-widest uppercase mb-4 block">How We Work</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-white">Simple. Efficient. Effective.</h2>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8"><!-- Step 1 -->
+                <div class="relative p-8 bg-[#0f0f12] rounded-2xl border border-white/5">
+                    <div class="absolute -top-4 -left-4 w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                        1
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-4 mt-2">Discovery &amp; Strategy</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">We start with deep understanding. Through focused conversations, we uncover your goals, challenges, and vision. Then we craft a strategic roadmap that aligns design decisions with business outcomes.</p>
+                    <div class="flex flex-wrap gap-2"><span class="px-3 py-1 text-xs bg-white/5 text-gray-400 rounded-full">Research</span> <span class="px-3 py-1 text-xs bg-white/5 text-gray-400 rounded-full">Planning</span> <span class="px-3 py-1 text-xs bg-white/5 text-gray-400 rounded-full">Wireframing</span>
+                    </div>
+                </div><!-- Step 2 -->
+                <div class="relative p-8 bg-[#0f0f12] rounded-2xl border border-white/5">
+                    <div class="absolute -top-4 -left-4 w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                        2
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-4 mt-2">Design &amp; Development</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">Ideas become reality. We design with intention, develop with precision, and iterate with your feedback. Every milestone is shared, every decision is transparent. Launch day is just the beginning.</p>
+                    <div class="flex flex-wrap gap-2"><span class="px-3 py-1 text-xs bg-white/5 text-gray-400 rounded-full">Design</span> <span class="px-3 py-1 text-xs bg-white/5 text-gray-400 rounded-full">Build</span> <span class="px-3 py-1 text-xs bg-white/5 text-gray-400 rounded-full">Launch</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section><!-- Divider -->
+    <div class="accent-line max-w-6xl mx-auto"></div><!-- Final CTA Section -->
+    <section id="contact" class="py-32 px-6">
+        <div class="max-w-3xl mx-auto text-center">
+            <h2 class="text-3xl md:text-5xl font-bold text-white mb-6">Ready to build something<br><span class="text-indigo-400">exceptional?</span></h2>
+            <p class="text-gray-400 text-lg mb-10 max-w-xl mx-auto">Let's discuss your project. No pressure, no obligations—just a conversation about what's possible.</p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4"><button class="btn-primary px-10 py-4 bg-indigo-500 hover:bg-indigo-400 text-white font-medium rounded-lg text-sm"> Schedule a Call </button> <span class="text-gray-600 text-sm">or</span> <a href="mailto:hello@nixydigital.com" class="text-gray-400 hover:text-white text-sm transition-colors underline underline-offset-4"> hello@nixydigital.com </a>
+            </div>
+        </div>
+    </section><!-- Footer -->
+    <footer class="py-8 px-6 border-t border-white/5">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center"><img src="assets/logo.png" alt="NixyDigital logo" class="h-8 md:h-10 w-auto object-contain" loading="lazy" onerror="console.error('Logo failed to load:', this.src); this.style.display='none';">
+            </div>
+            <p id="footer-text" class="text-gray-600 text-sm">© 2024 NixyDigital. All rights reserved.</p>
+            <div class="flex items-center gap-6"><a href="#" class="text-gray-600 hover:text-gray-400 text-sm transition-colors">Privacy</a> <a href="#" class="text-gray-600 hover:text-gray-400 text-sm transition-colors">Terms</a>
+            </div>
+        </div>
+    </footer>
+</div>
+<script>
+    const defaultConfig = {
+      hero_headline: 'We build websites that<br><span class="text-indigo-400">drive results</span>',
+      hero_subheadline: 'Strategic design and development for ambitious brands ready to stand out in a crowded digital landscape.',
+      cta_button_text: 'Start Your Project',
+      services_title: 'What We Build',
+      service_1_title: 'Web Design',
+      service_2_title: 'Development',
+      service_3_title: 'Strategy',
+      footer_text: '© 2024 NixyDigital. All rights reserved.',
+      background_color: '#09090b',
+      surface_color: '#0f0f12',
+      text_color: '#9ca3af',
+      primary_action_color: '#6366f1',
+      secondary_action_color: '#818cf8'
+    };
+
+    let config = { ...defaultConfig };
+
+    async function onConfigChange(cfg) {
+      config = { ...defaultConfig, ...cfg };
+
+      // Update text content
+      document.getElementById('hero-headline').innerHTML = config.hero_headline || defaultConfig.hero_headline;
+      document.getElementById('hero-subheadline').textContent = config.hero_subheadline || defaultConfig.hero_subheadline;
+      document.getElementById('cta-button').textContent = config.cta_button_text || defaultConfig.cta_button_text;
+      document.getElementById('services-title').textContent = config.services_title || defaultConfig.services_title;
+      document.getElementById('service-1-title').textContent = config.service_1_title || defaultConfig.service_1_title;
+      document.getElementById('service-2-title').textContent = config.service_2_title || defaultConfig.service_2_title;
+      document.getElementById('service-3-title').textContent = config.service_3_title || defaultConfig.service_3_title;
+      document.getElementById('footer-text').textContent = config.footer_text || defaultConfig.footer_text;
+
+      // Apply colors
+      const bgColor = config.background_color || defaultConfig.background_color;
+      const surfaceColor = config.surface_color || defaultConfig.surface_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+
+      document.body.style.backgroundColor = bgColor;
+
+      document.querySelectorAll('.service-card, .bg-\\[\\#0f0f12\\]').forEach(el => {
+        el.style.backgroundColor = surfaceColor;
+      });
+
+      document.querySelectorAll('.text-gray-400, .text-gray-500, .text-gray-600').forEach(el => {
+        if (!el.classList.contains('text-indigo-400') && !el.classList.contains('text-white')) {
+          el.style.color = textColor;
+        }
+      });
+
+      document.querySelectorAll('.btn-primary, .bg-indigo-500').forEach(el => {
+        el.style.backgroundColor = primaryColor;
+      });
+
+      document.querySelectorAll('.text-indigo-400').forEach(el => {
+        el.style.color = secondaryColor;
+      });
+    }
+
+    function mapToCapabilities(cfg) {
+      return {
+        recolorables: [
+          {
+            get: () => cfg.background_color || defaultConfig.background_color,
+            set: (value) => {
+              config.background_color = value;
+              window.elementSdk.setConfig({ background_color: value });
+            }
+          },
+          {
+            get: () => cfg.surface_color || defaultConfig.surface_color,
+            set: (value) => {
+              config.surface_color = value;
+              window.elementSdk.setConfig({ surface_color: value });
+            }
+          },
+          {
+            get: () => cfg.text_color || defaultConfig.text_color,
+            set: (value) => {
+              config.text_color = value;
+              window.elementSdk.setConfig({ text_color: value });
+            }
+          },
+          {
+            get: () => cfg.primary_action_color || defaultConfig.primary_action_color,
+            set: (value) => {
+              config.primary_action_color = value;
+              window.elementSdk.setConfig({ primary_action_color: value });
+            }
+          },
+          {
+            get: () => cfg.secondary_action_color || defaultConfig.secondary_action_color,
+            set: (value) => {
+              config.secondary_action_color = value;
+              window.elementSdk.setConfig({ secondary_action_color: value });
+            }
+          }
+        ],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+
+    function mapToEditPanelValues(cfg) {
+      return new Map([
+        ['hero_headline', cfg.hero_headline || defaultConfig.hero_headline],
+        ['hero_subheadline', cfg.hero_subheadline || defaultConfig.hero_subheadline],
+        ['cta_button_text', cfg.cta_button_text || defaultConfig.cta_button_text],
+        ['services_title', cfg.services_title || defaultConfig.services_title],
+        ['service_1_title', cfg.service_1_title || defaultConfig.service_1_title],
+        ['service_2_title', cfg.service_2_title || defaultConfig.service_2_title],
+        ['service_3_title', cfg.service_3_title || defaultConfig.service_3_title],
+        ['footer_text', cfg.footer_text || defaultConfig.footer_text]
+      ]);
+    }
+
+    // Initialize SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+
+    // Smooth scroll for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cafaccf6682db7e',t:'MTc3MDYwMTM5Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
