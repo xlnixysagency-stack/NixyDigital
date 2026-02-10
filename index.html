@@ -1,555 +1,306 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NixyDigital - Premium Web Design & Development</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="/_sdk/element_sdk.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Nixy Digital</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
     <style>
-        body {
-          box-sizing: border-box;
+        :root {
+          --bg: #0b0b0f;
+          --panel: #111118;
+          --text: #f5f7fa;
+          --muted: #9aa3b2;
+          --accent: #5b7cff;
+          --border: rgba(255,255,255,0.08);
         }
+
         * {
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: "Inter", system-ui, sans-serif;
         }
-        .accent-line {
-          height: 1px;
-          background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.5), transparent);
+
+        body {
+          background:
+            radial-gradient(1200px 600px at 70% -10%, rgba(91,124,255,0.15), transparent 60%),
+            var(--bg);
+          color: var(--text);
+          line-height: 1.6;
         }
-        .card-border {
-          border: 1px solid rgba(99, 102, 241, 0.08);
+
+        header {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 28px 24px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
         }
-        .nav-link {
-          position: relative;
+
+        .brand {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .brand img {
+          height: 42px;
+        }
+
+        .brand span {
+          font-weight: 700;
+          font-size: 18px;
+        }
+
+        nav a {
+          color: var(--muted);
+          text-decoration: none;
+          margin-left: 28px;
+          font-size: 14px;
           font-weight: 500;
-          letter-spacing: -0.3px;
         }
-        .nav-link::after {
-          content: '';
-          position: absolute;
-          bottom: -2px;
-          left: 0;
-          width: 0;
-          height: 1.5px;
-          background: #6366f1;
-          transition: width 0.3s ease;
+
+        nav a:hover {
+          color: var(--text);
         }
-        .nav-link:hover::after {
-          width: 100%;
+
+        .hero {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 120px 24px 140px;
+          display: grid;
+          grid-template-columns: 1.2fr 1fr;
+          gap: 80px;
+          align-items: center;
         }
-        .btn-primary {
-          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-          font-weight: 600;
-          letter-spacing: -0.3px;
-          box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.2);
-        }
-        .btn-primary:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 12px 48px rgba(99, 102, 241, 0.3);
-        }
-        .service-card {
-          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-          background: linear-gradient(135deg, rgba(15, 15, 18, 0.8), rgba(15, 15, 18, 0.5)) !important;
-        }
-        .service-card:hover {
-          transform: translateY(-6px);
-          border-color: rgba(99, 102, 241, 0.2);
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-        }
-        .service-card h3 {
-          letter-spacing: -0.5px;
-          font-weight: 700;
-        }
-        .stat-number {
-          background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          font-weight: 800;
+
+        .hero h1 {
+          font-size: 54px;
+          font-weight: 900;
           letter-spacing: -1px;
+          line-height: 1.05;
+          margin-bottom: 24px;
         }
-        .section-label {
+
+        .hero h1 span {
+          color: var(--accent);
+        }
+
+        .hero p {
+          color: var(--muted);
+          font-size: 18px;
+          max-width: 560px;
+          margin-bottom: 40px;
+        }
+
+        .cta {
+          display: flex;
+          gap: 18px;
+        }
+
+        .btn-primary {
+          background: linear-gradient(135deg, #5b7cff, #7f96ff);
+          color: #fff;
+          padding: 16px 32px;
+          border-radius: 12px;
+          font-weight: 800;
+          font-size: 15px;
+          text-decoration: none;
+          display: inline-block;
+          box-shadow: 0 10px 30px rgba(91,124,255,0.35);
+        }
+
+        .btn-secondary {
+          background: transparent;
+          color: var(--text);
+          border: 1px solid var(--border);
+          padding: 16px 30px;
+          border-radius: 12px;
+          font-weight: 600;
+          font-size: 15px;
+          text-decoration: none;
+          display: inline-block;
+        }
+
+        .hero-card {
+          background: var(--panel);
+          border: 1px solid var(--border);
+          border-radius: 20px;
+          padding: 40px;
+        }
+
+        .stat {
+          display: flex;
+          justify-content: space-between;
+          padding: 20px 0;
+          border-bottom: 1px solid var(--border);
+        }
+
+        .stat:last-child {
+          border-bottom: none;
+        }
+
+        .stat strong {
+          font-size: 22px;
+          font-weight: 800;
+        }
+
+        .stat span {
+          color: var(--muted);
+          font-size: 14px;
+        }
+
+        section {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 100px 24px;
+        }
+
+        .section-title {
+          font-size: 36px;
+          font-weight: 800;
+          letter-spacing: -0.5px;
+          margin-bottom: 18px;
+        }
+
+        .section-desc {
+          color: var(--muted);
+          max-width: 680px;
+          margin-bottom: 64px;
+        }
+
+        .grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 32px;
+        }
+
+        .card {
+          background: var(--panel);
+          border: 1px solid var(--border);
+          border-radius: 18px;
+          padding: 36px;
+        }
+
+        .card h3 {
+          font-size: 20px;
           font-weight: 700;
-          letter-spacing: 0.5px;
-          font-size: 0.7rem;
+          margin-bottom: 12px;
         }
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
+
+        .card p {
+          color: var(--muted);
+          font-size: 15px;
+        }
+
+        footer {
+          border-top: 1px solid var(--border);
+          padding: 40px 24px;
+          text-align: center;
+          color: var(--muted);
+          font-size: 14px;
+        }
+
+        @media (max-width: 900px) {
+          nav {
+            display: none;
           }
-          to {
-            opacity: 1;
-            transform: translateY(0);
+
+          .hero {
+            grid-template-columns: 1fr;
+            gap: 60px;
+            padding: 90px 24px;
+          }
+
+          .hero h1 {
+            font-size: 42px;
+          }
+
+          .grid {
+            grid-template-columns: 1fr;
           }
         }
-        .animate-fade-in {
-          animation: fadeInUp 0.8s ease forwards;
-        }
-        .animate-delay-1 { animation-delay: 0.1s; }
-        .animate-delay-2 { animation-delay: 0.2s; }
-        .animate-delay-3 { animation-delay: 0.3s; }
-        .animate-delay-4 { animation-delay: 0.4s; }
     </style>
 </head>
-<body class="h-full bg-[#09090b] text-gray-300 overflow-auto">
-<div class="app-wrapper w-full h-full">
+<body>
 
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-black backdrop-blur-md border-b border-white/5">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center">
-                <img
-                        src="assets/logo.png"
-                        alt="NixyDigital logo"
-                        style="height: 85px; width: auto;"
-                        class="object-contain"
-                        loading="lazy"
-                        onerror="console.error('Logo failed to load:', this.src); this.style.display='none';"
-                />
-            </div>
-            <div class="hidden md:flex items-center gap-8">
-                <a href="#services" class="nav-link text-sm text-gray-400 hover:text-white transition-colors">Services</a>
-                <a href="#process" class="nav-link text-sm text-gray-400 hover:text-white transition-colors">Process</a>
-                <a href="#proof" class="nav-link text-sm text-gray-400 hover:text-white transition-colors">Results</a>
-                <a href="#contact" class="nav-link text-sm text-gray-400 hover:text-white transition-colors">Contact</a>
-            </div>
-            <button class="md:hidden text-gray-400">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
-                </svg>
-            </button>
-        </div>
+<header>
+    <div class="brand">
+        <img src="assets/logo.png" alt="Nixy Digital Logo">
+        <span>Nixy Digital</span>
+    </div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="project.html">Start Project</a>
+        <a href="journey.html">Journey</a>
+        <a href="contact.html">Contact</a>
     </nav>
+</header>
 
-    <!-- Hero Section -->
-    <section class="min-h-[90%] flex items-center justify-center pt-20 px-6">
-        <div class="max-w-4xl mx-auto text-center">
-            <div class="opacity-0 animate-fade-in animate-delay-1 mb-8">
-          <span class="inline-block px-4 py-2 text-xs font-bold text-indigo-400 bg-indigo-500/10 rounded-full border border-indigo-500/20">
-            Premium Web Solutions
-          </span>
-            </div>
-            <h1 id="hero-headline" class="opacity-0 animate-fade-in animate-delay-2 text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-[1.05] tracking-tight mb-8">
-                We build websites that<br>
-                <span class="text-indigo-400">drive results</span>
-            </h1>
-            <p id="hero-subheadline" class="opacity-0 animate-fade-in animate-delay-3 text-lg md:text-xl text-gray-300 max-w-2xl mx-auto mb-12 leading-relaxed font-light">
-                Strategic design and development for ambitious brands ready to stand out in a crowded digital landscape.
+<section class="hero">
+    <div>
+        <h1>Websites that <span>don’t just look good</span><br>they convert.</h1>
+        <p>
+            Nixy Digital builds conversion-focused websites and documents the entire journey
+            from zero to scalable systems.
+        </p>
+        <div class="cta">
+            <a href="project.html" class="btn-primary">Start a Project</a>
+            <a href="journey.html" class="btn-secondary">View the Journey</a>
+        </div>
+    </div>
+
+    <div class="hero-card">
+        <div class="stat">
+            <strong>Strategy First</strong>
+            <span>Every decision intentional</span>
+        </div>
+        <div class="stat">
+            <strong>No Templates</strong>
+            <span>Built from scratch</span>
+        </div>
+        <div class="stat">
+            <strong>Public Build</strong>
+            <span>Transparent growth</span>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2 class="section-title">What Nixy Digital Does</h2>
+    <p class="section-desc">
+        This isn’t just design. It’s systems, structure, and clarity built for real businesses.
+    </p>
+
+    <div class="grid">
+        <div class="card">
+            <h3>Conversion Websites</h3>
+            <p>
+                Pages engineered to guide attention, build trust, and drive action.
             </p>
-            <div class="opacity-0 animate-fade-in animate-delay-4 flex flex-col sm:flex-row items-center justify-center gap-6">
-                <button id="cta-button" class="btn-primary px-10 py-4 bg-indigo-500 hover:bg-indigo-400 text-white font-medium rounded-lg text-sm">
-                    Start Your Project
-                </button>
-                <a href="#services" class="px-10 py-4 text-gray-300 hover:text-white font-medium text-sm transition-colors flex items-center gap-3 group">
-                    Explore Services
-                    <svg class="w-4 h-4 transition-transform group-hover:translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                    </svg>
-                </a>
-            </div>
         </div>
-    </section>
-
-    <!-- Divider -->
-    <div class="accent-line max-w-6xl mx-auto"></div>
-
-    <!-- Services Section -->
-    <section id="services" class="py-32 px-6">
-        <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-20">
-                <span class="section-label text-indigo-400 uppercase mb-4 block">What We Do</span>
-                <h2 id="services-title" class="text-4xl md:text-5xl font-bold text-white leading-tight">What We Build</h2>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                <!-- Service 1 -->
-                <div class="service-card card-border bg-[#0f0f12] rounded-2xl p-10">
-                    <div class="w-14 h-14 bg-indigo-500/15 rounded-xl flex items-center justify-center mb-8">
-                        <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                        </svg>
-                    </div>
-                    <h3 id="service-1-title" class="text-2xl font-bold text-white mb-4">Web Design</h3>
-                    <p class="text-gray-400 text-base leading-relaxed mb-8">
-                        Bespoke interfaces crafted with precision. Every pixel serves a purpose.
-                    </p>
-                    <div class="pt-8 border-t border-white/5">
-                        <ul class="space-y-3 text-sm text-gray-500">
-                            <li class="flex items-center gap-3">
-                                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full flex-shrink-0"></span>
-                                UI/UX Design
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full flex-shrink-0"></span>
-                                Responsive Layouts
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full flex-shrink-0"></span>
-                                Design Systems
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Service 2 -->
-                <div class="service-card card-border bg-[#0f0f12] rounded-2xl p-10">
-                    <div class="w-14 h-14 bg-indigo-500/15 rounded-xl flex items-center justify-center mb-8">
-                        <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-                        </svg>
-                    </div>
-                    <h3 id="service-2-title" class="text-2xl font-bold text-white mb-4">Development</h3>
-                    <p class="text-gray-400 text-base leading-relaxed mb-8">
-                        Clean, performant code that scales. Built for speed and longevity.
-                    </p>
-                    <div class="pt-8 border-t border-white/5">
-                        <ul class="space-y-3 text-sm text-gray-500">
-                            <li class="flex items-center gap-3">
-                                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full flex-shrink-0"></span>
-                                Custom Development
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full flex-shrink-0"></span>
-                                CMS Integration
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full flex-shrink-0"></span>
-                                Performance Optimization
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Service 3 -->
-                <div class="service-card card-border bg-[#0f0f12] rounded-2xl p-10">
-                    <div class="w-14 h-14 bg-indigo-500/15 rounded-xl flex items-center justify-center mb-8">
-                        <svg class="w-7 h-7 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                        </svg>
-                    </div>
-                    <h3 id="service-3-title" class="text-2xl font-bold text-white mb-4">Strategy</h3>
-                    <p class="text-gray-400 text-base leading-relaxed mb-8">
-                        Data-driven decisions that align design with business goals.
-                    </p>
-                    <div class="pt-8 border-t border-white/5">
-                        <ul class="space-y-3 text-sm text-gray-500">
-                            <li class="flex items-center gap-3">
-                                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full flex-shrink-0"></span>
-                                Brand Strategy
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full flex-shrink-0"></span>
-                                Conversion Optimization
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <span class="w-1.5 h-1.5 bg-indigo-500 rounded-full flex-shrink-0"></span>
-                                Analytics Setup
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Divider -->
-    <div class="accent-line max-w-6xl mx-auto"></div>
-
-    <!-- Proof Section -->
-    <section id="proof" class="py-32 px-6 bg-gradient-to-b from-[#05050a] to-[#0a0a0d]">
-        <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-24">
-                <span class="section-label text-indigo-400 uppercase mb-4 block">Proven Results</span>
-                <h2 class="text-4xl md:text-5xl font-bold text-white leading-tight">Built for Impact</h2>
-            </div>
-
-            <div class="grid md:grid-cols-4 gap-6 mb-16">
-                <div class="text-center">
-                    <div class="stat-number text-6xl md:text-7xl font-bold mb-3">98%</div>
-                    <p class="text-gray-400 text-sm font-medium">Client Satisfaction</p>
-                </div>
-                <div class="text-center">
-                    <div class="stat-number text-6xl md:text-7xl font-bold mb-3">2.4s</div>
-                    <p class="text-gray-400 text-sm font-medium">Avg. Load Time</p>
-                </div>
-                <div class="text-center">
-                    <div class="stat-number text-6xl md:text-7xl font-bold mb-3">3x</div>
-                    <p class="text-gray-400 text-sm font-medium">Conversion Lift</p>
-                </div>
-                <div class="text-center">
-                    <div class="stat-number text-6xl md:text-7xl font-bold mb-3">50+</div>
-                    <p class="text-gray-400 text-sm font-medium">Projects Delivered</p>
-                </div>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="flex items-center gap-4 p-6 bg-[#0f0f12]/50 border border-indigo-500/10 rounded-xl">
-                    <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                        </svg>
-                    </div>
-                    <p class="text-sm text-gray-300 font-medium">On-time delivery, every project</p>
-                </div>
-                <div class="flex items-center gap-4 p-6 bg-[#0f0f12]/50 border border-indigo-500/10 rounded-xl">
-                    <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                        </svg>
-                    </div>
-                    <p class="text-sm text-gray-300 font-medium">Transparent, fixed-scope pricing</p>
-                </div>
-                <div class="flex items-center gap-4 p-6 bg-[#0f0f12]/50 border border-indigo-500/10 rounded-xl">
-                    <div class="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                        </svg>
-                    </div>
-                    <p class="text-sm text-gray-300 font-medium">30-day post-launch support</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Divider -->
-    <div class="accent-line max-w-6xl mx-auto"></div>
-
-    <!-- Process Section -->
-    <section id="process" class="py-32 px-6">
-        <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-20">
-                <span class="section-label text-indigo-400 uppercase mb-4 block">How We Work</span>
-                <h2 class="text-4xl md:text-5xl font-bold text-white leading-tight">Simple. Efficient. Effective.</h2>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-8">
-                <!-- Step 1 -->
-                <div class="relative p-10 bg-gradient-to-br from-[#0f0f12] to-[#0a0a0d] card-border rounded-2xl">
-                    <div class="absolute -top-5 -left-5 w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center text-white font-bold text-base shadow-lg shadow-indigo-500/20">
-                        1
-                    </div>
-                    <h3 class="text-2xl font-bold text-white mb-4 mt-4">Discovery & Strategy</h3>
-                    <p class="text-gray-400 text-base leading-relaxed mb-8">
-                        We start with deep understanding. Through focused conversations, we uncover your goals, challenges, and vision. Then we craft a strategic roadmap that aligns design decisions with business outcomes.
-                    </p>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="px-3 py-1.5 text-xs font-medium bg-indigo-500/10 border border-indigo-500/20 text-gray-300 rounded-full">Research</span>
-                        <span class="px-3 py-1.5 text-xs font-medium bg-indigo-500/10 border border-indigo-500/20 text-gray-300 rounded-full">Planning</span>
-                        <span class="px-3 py-1.5 text-xs font-medium bg-indigo-500/10 border border-indigo-500/20 text-gray-300 rounded-full">Wireframing</span>
-                    </div>
-                </div>
-
-                <!-- Step 2 -->
-                <div class="relative p-10 bg-gradient-to-br from-[#0f0f12] to-[#0a0a0d] card-border rounded-2xl">
-                    <div class="absolute -top-5 -left-5 w-10 h-10 bg-indigo-500 rounded-lg flex items-center justify-center text-white font-bold text-base shadow-lg shadow-indigo-500/20">
-                        2
-                    </div>
-                    <h3 class="text-2xl font-bold text-white mb-4 mt-4">Design & Development</h3>
-                    <p class="text-gray-400 text-base leading-relaxed mb-8">
-                        Ideas become reality. We design with intention, develop with precision, and iterate with your feedback. Every milestone is shared, every decision is transparent. Launch day is just the beginning.
-                    </p>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="px-3 py-1.5 text-xs font-medium bg-indigo-500/10 border border-indigo-500/20 text-gray-300 rounded-full">Design</span>
-                        <span class="px-3 py-1.5 text-xs font-medium bg-indigo-500/10 border border-indigo-500/20 text-gray-300 rounded-full">Build</span>
-                        <span class="px-3 py-1.5 text-xs font-medium bg-indigo-500/10 border border-indigo-500/20 text-gray-300 rounded-full">Launch</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Divider -->
-    <div class="accent-line max-w-6xl mx-auto"></div>
-
-    <!-- Final CTA Section -->
-    <section id="contact" class="py-40 px-6">
-        <div class="max-w-3xl mx-auto text-center">
-            <h2 class="text-4xl md:text-6xl font-bold text-white mb-8 leading-tight">
-                Ready to build something<br>
-                <span class="text-indigo-400">exceptional?</span>
-            </h2>
-            <p class="text-gray-300 text-lg mb-14 max-w-2xl mx-auto leading-relaxed">
-                Let's discuss your project. No pressure, no obligations—just a conversation about what's possible.
+        <div class="card">
+            <h3>Brand Systems</h3>
+            <p>
+                Typography, spacing, and visual hierarchy that feel premium and intentional.
             </p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
-                <button class="btn-primary px-12 py-5 bg-indigo-500 hover:bg-indigo-400 text-white font-semibold rounded-lg text-sm">
-                    Schedule a Call
-                </button>
-                <span class="text-gray-600 text-sm hidden sm:block">or</span>
-                <a href="mailto:hello@nixydigital.com" class="px-12 py-5 text-indigo-400 hover:text-indigo-300 font-semibold text-sm transition-colors underline underline-offset-4">
-                    hello@nixydigital.com
-                </a>
-            </div>
         </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="py-8 px-6 border-t border-white/5">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center">
-                <img
-                        src="assets/logo.png"
-                        alt="NixyDigital logo"
-                        class="h-8 md:h-10 w-auto object-contain"
-                        loading="lazy"
-                        onerror="console.error('Logo failed to load:', this.src); this.style.display='none';"
-                />
-            </div>
-            <p id="footer-text" class="text-gray-600 text-sm">
-                © 2024 NixyDigital. All rights reserved.
+        <div class="card">
+            <h3>Documented Journey</h3>
+            <p>
+                Every win, failure, and iteration shared openly as the brand grows.
             </p>
-            <div class="flex items-center gap-6">
-                <a href="#" class="text-gray-600 hover:text-gray-400 text-sm transition-colors">Privacy</a>
-                <a href="#" class="text-gray-600 hover:text-gray-400 text-sm transition-colors">Terms</a>
-            </div>
         </div>
-    </footer>
+    </div>
+</section>
 
-</div>
+<footer>
+    © 2026 Nixy Digital. All rights reserved.
+</footer>
 
-<script>
-    const defaultConfig = {
-      hero_headline: 'We build websites that<br><span class="text-indigo-400">drive results</span>',
-      hero_subheadline: 'Strategic design and development for ambitious brands ready to stand out in a crowded digital landscape.',
-      cta_button_text: 'Start Your Project',
-      services_title: 'What We Build',
-      service_1_title: 'Web Design',
-      service_2_title: 'Development',
-      service_3_title: 'Strategy',
-      footer_text: '© 2024 NixyDigital. All rights reserved.',
-      background_color: '#09090b',
-      surface_color: '#0f0f12',
-      text_color: '#9ca3af',
-      primary_action_color: '#6366f1',
-      secondary_action_color: '#818cf8'
-    };
-
-    let config = { ...defaultConfig };
-
-    async function onConfigChange(cfg) {
-      config = { ...defaultConfig, ...cfg };
-
-      // Update text content
-      document.getElementById('hero-headline').innerHTML = config.hero_headline || defaultConfig.hero_headline;
-      document.getElementById('hero-subheadline').textContent = config.hero_subheadline || defaultConfig.hero_subheadline;
-      document.getElementById('cta-button').textContent = config.cta_button_text || defaultConfig.cta_button_text;
-      document.getElementById('services-title').textContent = config.services_title || defaultConfig.services_title;
-      document.getElementById('service-1-title').textContent = config.service_1_title || defaultConfig.service_1_title;
-      document.getElementById('service-2-title').textContent = config.service_2_title || defaultConfig.service_2_title;
-      document.getElementById('service-3-title').textContent = config.service_3_title || defaultConfig.service_3_title;
-      document.getElementById('footer-text').textContent = config.footer_text || defaultConfig.footer_text;
-
-      // Apply colors
-      const bgColor = config.background_color || defaultConfig.background_color;
-      const surfaceColor = config.surface_color || defaultConfig.surface_color;
-      const textColor = config.text_color || defaultConfig.text_color;
-      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
-      const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
-
-      document.body.style.backgroundColor = bgColor;
-
-      document.querySelectorAll('.service-card, .bg-\\[\\#0f0f12\\]').forEach(el => {
-        el.style.backgroundColor = surfaceColor;
-      });
-
-      document.querySelectorAll('.text-gray-400, .text-gray-500, .text-gray-600').forEach(el => {
-        if (!el.classList.contains('text-indigo-400') && !el.classList.contains('text-white')) {
-          el.style.color = textColor;
-        }
-      });
-
-      document.querySelectorAll('.btn-primary, .bg-indigo-500').forEach(el => {
-        el.style.backgroundColor = primaryColor;
-      });
-
-      document.querySelectorAll('.text-indigo-400').forEach(el => {
-        el.style.color = secondaryColor;
-      });
-    }
-
-    function mapToCapabilities(cfg) {
-      return {
-        recolorables: [
-          {
-            get: () => cfg.background_color || defaultConfig.background_color,
-            set: (value) => {
-              config.background_color = value;
-              window.elementSdk.setConfig({ background_color: value });
-            }
-          },
-          {
-            get: () => cfg.surface_color || defaultConfig.surface_color,
-            set: (value) => {
-              config.surface_color = value;
-              window.elementSdk.setConfig({ surface_color: value });
-            }
-          },
-          {
-            get: () => cfg.text_color || defaultConfig.text_color,
-            set: (value) => {
-              config.text_color = value;
-              window.elementSdk.setConfig({ text_color: value });
-            }
-          },
-          {
-            get: () => cfg.primary_action_color || defaultConfig.primary_action_color,
-            set: (value) => {
-              config.primary_action_color = value;
-              window.elementSdk.setConfig({ primary_action_color: value });
-            }
-          },
-          {
-            get: () => cfg.secondary_action_color || defaultConfig.secondary_action_color,
-            set: (value) => {
-              config.secondary_action_color = value;
-              window.elementSdk.setConfig({ secondary_action_color: value });
-            }
-          }
-        ],
-        borderables: [],
-        fontEditable: undefined,
-        fontSizeable: undefined
-      };
-    }
-
-    function mapToEditPanelValues(cfg) {
-      return new Map([
-        ['hero_headline', cfg.hero_headline || defaultConfig.hero_headline],
-        ['hero_subheadline', cfg.hero_subheadline || defaultConfig.hero_subheadline],
-        ['cta_button_text', cfg.cta_button_text || defaultConfig.cta_button_text],
-        ['services_title', cfg.services_title || defaultConfig.services_title],
-        ['service_1_title', cfg.service_1_title || defaultConfig.service_1_title],
-        ['service_2_title', cfg.service_2_title || defaultConfig.service_2_title],
-        ['service_3_title', cfg.service_3_title || defaultConfig.service_3_title],
-        ['footer_text', cfg.footer_text || defaultConfig.footer_text]
-      ]);
-    }
-
-    // Initialize SDK
-    if (window.elementSdk) {
-      window.elementSdk.init({
-        defaultConfig,
-        onConfigChange,
-        mapToCapabilities,
-        mapToEditPanelValues
-      });
-    }
-
-    // Smooth scroll for navigation
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
-    });
-</script>
 </body>
 </html>

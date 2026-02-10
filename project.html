@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Start a Project — Nixy Digital</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+          --bg: #0b0b0f;
+          --panel: #111118;
+          --text: #f5f7fa;
+          --muted: #9aa3b2;
+          --accent: #5b7cff;
+          --border: rgba(255,255,255,0.08);
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+          background:
+            radial-gradient(1000px 500px at 70% -10%, rgba(91,124,255,0.15), transparent 60%),
+            var(--bg);
+          color: var(--text);
+        }
+
+        header {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 28px 24px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .brand {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .brand img {
+          height: 42px;
+        }
+
+        .brand span {
+          font-weight: 700;
+          font-size: 18px;
+        }
+
+        nav a {
+          color: var(--muted);
+          text-decoration: none;
+          margin-left: 28px;
+          font-size: 14px;
+          font-weight: 500;
+        }
+
+        nav a:hover {
+          color: var(--text);
+        }
+
+        .wrapper {
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 80px 24px 120px;
+        }
+
+        .header {
+          margin-bottom: 56px;
+        }
+
+        .header h1 {
+          font-size: 46px;
+          font-weight: 900;
+          letter-spacing: -1px;
+          margin-bottom: 16px;
+        }
+
+        .header p {
+          color: var(--muted);
+          max-width: 640px;
+          font-size: 18px;
+        }
+
+        form {
+          background: var(--panel);
+          border: 1px solid var(--border);
+          border-radius: 20px;
+          padding: 48px;
+        }
+
+        .grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 28px;
+        }
+
+        .field {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .field.full {
+          grid-column: span 2;
+        }
+
+        label {
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--muted);
+        }
+
+        input, textarea, select {
+          background: #0d0d13;
+          border: 1px solid var(--border);
+          color: var(--text);
+          padding: 14px 16px;
+          border-radius: 10px;
+          font-size: 14px;
+          resize: none;
+        }
+
+        textarea {
+          min-height: 140px;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+          outline: none;
+          border-color: rgba(91,124,255,0.6);
+        }
+
+        .submit {
+          margin-top: 40px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 24px;
+        }
+
+        .submit span {
+          color: var(--muted);
+          font-size: 13px;
+          max-width: 420px;
+        }
+
+        button {
+          background: linear-gradient(135deg, #5b7cff, #7f96ff);
+          border: none;
+          color: #fff;
+          padding: 16px 34px;
+          border-radius: 12px;
+          font-weight: 800;
+          font-size: 15px;
+          cursor: pointer;
+          box-shadow: 0 10px 30px rgba(91,124,255,0.35);
+        }
+
+        @media (max-width: 900px) {
+          nav {
+            display: none;
+          }
+
+          .grid {
+            grid-template-columns: 1fr;
+          }
+
+          .field.full {
+            grid-column: span 1;
+          }
+
+          form {
+            padding: 36px 24px;
+          }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="brand">
+        <img src="assets/logo.png" alt="Nixy Digital Logo">
+        <span>Nixy Digital</span>
+    </div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="project.html">Start Project</a>
+        <a href="journey.html">Journey</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+</header>
+
+<div class="wrapper">
+    <div class="header">
+        <h1>Start a Project</h1>
+        <p>
+            This form starts the conversation. Clear inputs lead to better outcomes.
+            No obligations. No pressure.
+        </p>
+    </div>
+
+    <form>
+        <div class="grid">
+
+            <div class="field">
+                <label>Your Name</label>
+                <input type="text" placeholder="John Doe">
+            </div>
+
+            <div class="field">
+                <label>Email Address</label>
+                <input type="email" placeholder="you@company.com">
+            </div>
+
+            <div class="field">
+                <label>Company / Brand</label>
+                <input type="text" placeholder="Business name">
+            </div>
+
+            <div class="field">
+                <label>Project Type</label>
+                <select>
+                    <option>Website</option>
+                    <option>Landing Page</option>
+                    <option>Redesign</option>
+                    <option>Brand System</option>
+                    <option>Not Sure Yet</option>
+                </select>
+            </div>
+
+            <div class="field full">
+                <label>Project Goals</label>
+                <textarea placeholder="What are you trying to achieve with this project?"></textarea>
+            </div>
+
+            <div class="field full">
+                <label>Timeline & Budget (Optional)</label>
+                <textarea placeholder="Deadlines, constraints, or expectations (if any)."></textarea>
+            </div>
+
+        </div>
+
+        <div class="submit">
+      <span>
+        Submissions are reviewed manually. If it’s a good fit, you’ll hear back within 48 hours.
+      </span>
+            <button type="submit">Submit Project Request</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

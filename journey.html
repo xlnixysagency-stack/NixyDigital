@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Journey — Nixy Digital</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+          --bg: #0b0b0f;
+          --panel: #111118;
+          --text: #f5f7fa;
+          --muted: #9aa3b2;
+          --accent: #5b7cff;
+          --border: rgba(255,255,255,0.08);
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: "Inter", system-ui, sans-serif;
+        }
+
+        body {
+          background:
+            radial-gradient(1200px 600px at 70% -10%, rgba(91,124,255,0.15), transparent 60%),
+            var(--bg);
+          color: var(--text);
+          line-height: 1.6;
+        }
+
+        header {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 28px 24px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .brand {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .brand img {
+          height: 42px;
+        }
+
+        .brand span {
+          font-weight: 700;
+          font-size: 18px;
+        }
+
+        nav a {
+          color: var(--muted);
+          text-decoration: none;
+          margin-left: 28px;
+          font-size: 14px;
+          font-weight: 500;
+        }
+
+        nav a:hover {
+          color: var(--text);
+        }
+
+        .hero {
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 110px 24px 90px;
+        }
+
+        .hero h1 {
+          font-size: 50px;
+          font-weight: 900;
+          letter-spacing: -1px;
+          margin-bottom: 20px;
+        }
+
+        .hero p {
+          color: var(--muted);
+          font-size: 18px;
+          max-width: 720px;
+        }
+
+        section {
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 0 24px 120px;
+        }
+
+        .timeline {
+          display: flex;
+          flex-direction: column;
+          gap: 40px;
+          margin-top: 60px;
+        }
+
+        .entry {
+          background: var(--panel);
+          border: 1px solid var(--border);
+          border-radius: 18px;
+          padding: 36px;
+        }
+
+        .entry span {
+          color: var(--accent);
+          font-size: 12px;
+          font-weight: 700;
+          letter-spacing: 0.6px;
+          text-transform: uppercase;
+          display: block;
+          margin-bottom: 12px;
+        }
+
+        .entry h3 {
+          font-size: 22px;
+          font-weight: 800;
+          margin-bottom: 12px;
+        }
+
+        .entry p {
+          color: var(--muted);
+          font-size: 15px;
+        }
+
+        .cta {
+          margin-top: 80px;
+          background: linear-gradient(135deg, rgba(91,124,255,0.18), rgba(127,150,255,0.08));
+          border: 1px solid var(--border);
+          border-radius: 20px;
+          padding: 48px;
+          text-align: center;
+        }
+
+        .cta h2 {
+          font-size: 32px;
+          font-weight: 900;
+          margin-bottom: 16px;
+        }
+
+        .cta p {
+          color: var(--muted);
+          margin-bottom: 32px;
+          font-size: 16px;
+        }
+
+        .cta a {
+          background: linear-gradient(135deg, #5b7cff, #7f96ff);
+          color: #fff;
+          padding: 16px 36px;
+          border-radius: 12px;
+          font-weight: 800;
+          font-size: 15px;
+          text-decoration: none;
+          box-shadow: 0 10px 30px rgba(91,124,255,0.35);
+          display: inline-block;
+        }
+
+        footer {
+          border-top: 1px solid var(--border);
+          padding: 40px 24px;
+          text-align: center;
+          color: var(--muted);
+          font-size: 14px;
+        }
+
+        @media (max-width: 900px) {
+          nav {
+            display: none;
+          }
+
+          .hero h1 {
+            font-size: 40px;
+          }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="brand">
+        <img src="assets/logo.png" alt="Nixy Digital Logo">
+        <span>Nixy Digital</span>
+    </div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="project.html">Start Project</a>
+        <a href="journey.html">Journey</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+</header>
+
+<div class="hero">
+    <h1>The Journey</h1>
+    <p>
+        This page documents the real build of Nixy Digital. No highlights-only version.
+        Decisions, experiments, failures, and improvements — all tracked openly.
+    </p>
+</div>
+
+<section>
+    <div class="timeline">
+
+        <div class="entry">
+            <span>Phase 01 · Foundation</span>
+            <h3>Starting From Zero</h3>
+            <p>
+                Brand identity, positioning, and the first version of the website built with
+                clarity over complexity.
+            </p>
+        </div>
+
+        <div class="entry">
+            <span>Phase 02 · Iteration</span>
+            <h3>Refining Structure & Messaging</h3>
+            <p>
+                Homepage rebuilt multiple times to improve hierarchy, flow, and conversion logic.
+            </p>
+        </div>
+
+        <div class="entry">
+            <span>Phase 03 · Systems</span>
+            <h3>Project Intake & Process</h3>
+            <p>
+                Creation of the Start a Project flow to reduce friction and attract serious clients.
+            </p>
+        </div>
+
+        <div class="entry">
+            <span>Phase 04 · Growth</span>
+            <h3>Public Documentation</h3>
+            <p>
+                Sharing progress publicly to build trust, authority, and long-term brand equity.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="cta">
+        <h2>Be Part of the Journey</h2>
+        <p>
+            If you want a website built with the same level of intention and transparency,
+            start a project.
+        </p>
+        <a href="project.html">Start a Project</a>
+    </div>
+</section>
+
+<footer>
+    © 2026 Nixy Digital. All rights reserved.
+</footer>
+
+</body>
+</html>

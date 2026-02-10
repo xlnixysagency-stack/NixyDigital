@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact — Nixy Digital</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0b0b0f;
+      --panel: #111118;
+      --text: #f5f7fa;
+      --muted: #9aa3b2;
+      --accent: #5b7cff;
+      --border: rgba(255,255,255,0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Inter", system-ui, sans-serif;
+    }
+
+    body {
+      background:
+        radial-gradient(1200px 600px at 70% -10%, rgba(91,124,255,0.15), transparent 60%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand img {
+      height: 42px;
+    }
+
+    .brand span {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      margin-left: 28px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: var(--text);
+    }
+
+    .hero {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 110px 24px 90px;
+    }
+
+    .hero h1 {
+      font-size: 50px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 720px;
+    }
+
+    section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 120px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 40px;
+      margin-top: 60px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 36px;
+    }
+
+    .card h3 {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: none;
+    }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    button {
+      margin-top: 8px;
+      align-self: flex-start;
+      background: linear-gradient(135deg, #5b7cff, #7f96ff);
+      color: #fff;
+      padding: 16px 36px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 15px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(91,124,255,0.35);
+    }
+
+    .cta {
+      margin-top: 80px;
+      background: linear-gradient(135deg, rgba(91,124,255,0.18), rgba(127,150,255,0.08));
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px;
+      text-align: center;
+    }
+
+    .cta h2 {
+      font-size: 32px;
+      font-weight: 900;
+      margin-bottom: 16px;
+    }
+
+    .cta p {
+      color: var(--muted);
+      margin-bottom: 32px;
+      font-size: 16px;
+    }
+
+    .cta a {
+      background: linear-gradient(135deg, #5b7cff, #7f96ff);
+      color: #fff;
+      padding: 16px 36px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 15px;
+      text-decoration: none;
+      box-shadow: 0 10px 30px rgba(91,124,255,0.35);
+      display: inline-block;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      nav {
+        display: none;
+      }
+
+      .hero h1 {
+        font-size: 40px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <img src="assets/logo.png" alt="Nixy Digital Logo">
+    <span>Nixy Digital</span>
+  </div>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="project.html">Start Project</a>
+    <a href="journey.html">Journey</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <h1>Contact</h1>
+  <p>
+    Direct line. No funnels. No bullshit. If there’s a fit, we’ll know fast.
+  </p>
+</div>
+
+<section>
+  <div class="grid">
+    <div class="card">
+      <h3>How This Works</h3>
+      <p>
+        Send a message with context. We review personally and respond if there’s alignment.
+        No spam. No outsourcing.
+      </p>
+    </div>
+
+    <div class="card">
+      <form>
+        <div>
+          <label>Name</label>
+          <input type="text" required>
+        </div>
+
+        <div>
+          <label>Email</label>
+          <input type="email" required>
+        </div>
+
+        <div>
+          <label>Message</label>
+          <textarea required></textarea>
+        </div>
+
+        <button type="submit">Send Message</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="cta">
+    <h2>Ready to Skip the Talk?</h2>
+    <p>
+      If you already know what you want, jump straight into the project flow.
+    </p>
+    <a href="project.html">Start a Project</a>
+  </div>
+</section>
+
+<footer>
+  © 2026 Nixy Digital. All rights reserved.
+</footer>
+
+</body>
+</html>
