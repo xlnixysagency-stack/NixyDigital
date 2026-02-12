@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NixyDigital Dashboard</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root{
+          --bg:#0b1120;
+          --panel:#111827;
+          --card:#1f2937;
+          --border:rgba(255,255,255,0.06);
+          --text:#f8fafc;
+          --muted:#94a3b8;
+          --grad:linear-gradient(90deg,#6366f1,#22d3ee);
+        }
+
+        *{
+          margin:0;
+          padding:0;
+          box-sizing:border-box;
+          font-family:Inter,sans-serif;
+        }
+
+        body{
+          background:radial-gradient(circle at 20% 20%,#1e293b, #0b1120 60%);
+          color:var(--text);
+          display:flex;
+          min-height:100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar{
+          width:270px;
+          background:rgba(15,23,42,0.9);
+          backdrop-filter:blur(20px);
+          border-right:1px solid var(--border);
+          padding:35px 22px;
+          display:flex;
+          flex-direction:column;
+        }
+
+        .brand{
+          font-size:24px;
+          font-weight:900;
+          margin-bottom:45px;
+          background:var(--grad);
+          -webkit-background-clip:text;
+          -webkit-text-fill-color:transparent;
+          letter-spacing:-0.5px;
+        }
+
+        .nav-btn{
+          padding:14px 18px;
+          margin-bottom:14px;
+          border-radius:12px;
+          background:transparent;
+          border:1px solid transparent;
+          color:var(--muted);
+          text-align:left;
+          font-weight:600;
+          cursor:pointer;
+          transition:0.25s ease;
+        }
+
+        .nav-btn:hover{
+          background:rgba(99,102,241,0.08);
+          color:#fff;
+        }
+
+        .nav-btn.active{
+          background:var(--grad);
+          color:#fff;
+          box-shadow:0 0 20px rgba(99,102,241,0.4);
+        }
+
+        /* MAIN */
+
+        .main{
+          flex:1;
+          display:flex;
+          flex-direction:column;
+        }
+
+        /* HEADER */
+
+        .top-header{
+          padding:60px 70px 40px 70px;
+          border-bottom:1px solid var(--border);
+        }
+
+        .welcome{
+          font-size:60px;
+          font-weight:900;
+          letter-spacing:-2px;
+          line-height:1.1;
+        }
+
+        .welcome span{
+          background:var(--grad);
+          -webkit-background-clip:text;
+          -webkit-text-fill-color:transparent;
+        }
+
+        .sub{
+          margin-top:16px;
+          font-size:14px;
+          letter-spacing:3px;
+          text-transform:uppercase;
+          color:var(--muted);
+        }
+
+        /* CONTENT */
+
+        .content{
+          padding:50px 70px;
+          flex:1;
+        }
+
+        .section{
+          display:none;
+        }
+
+        .section.active{
+          display:block;
+        }
+
+        .grid{
+          display:grid;
+          grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+          gap:25px;
+          margin-bottom:40px;
+        }
+
+        .card{
+          background:var(--card);
+          border:1px solid var(--border);
+          padding:28px;
+          border-radius:18px;
+          transition:0.3s ease;
+          position:relative;
+          overflow:hidden;
+        }
+
+        .card:hover{
+          transform:translateY(-6px);
+          box-shadow:0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        .card h3{
+          font-size:16px;
+          color:var(--muted);
+          margin-bottom:12px;
+          font-weight:600;
+          text-transform:uppercase;
+          letter-spacing:1px;
+        }
+
+        .metric{
+          font-size:36px;
+          font-weight:800;
+        }
+
+        /* FORM */
+
+        input, select{
+          width:100%;
+          padding:12px;
+          border-radius:10px;
+          border:1px solid var(--border);
+          background:#0f172a;
+          color:#fff;
+          margin-bottom:14px;
+        }
+
+        button.primary{
+          background:var(--grad);
+          border:none;
+          padding:12px 22px;
+          border-radius:12px;
+          font-weight:700;
+          color:#fff;
+          cursor:pointer;
+          transition:0.3s ease;
+        }
+
+        button.primary:hover{
+          opacity:0.85;
+        }
+
+        /* TABLE */
+
+        table{
+          width:100%;
+          border-collapse:collapse;
+          margin-top:15px;
+        }
+
+        th,td{
+          padding:14px;
+          border-bottom:1px solid var(--border);
+          text-align:left;
+          font-size:14px;
+        }
+
+        th{
+          color:var(--muted);
+          text-transform:uppercase;
+          letter-spacing:1px;
+          font-size:12px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="sidebar">
+    <div class="brand">NixyDigital</div>
+    <button class="nav-btn active" onclick="showTab(event,'dashboard')">Dashboard</button>
+    <button class="nav-btn" onclick="showTab(event,'leads')">Leads</button>
+    <button class="nav-btn" onclick="showTab(event,'assistant')">AI Assistant</button>
+    <button class="nav-btn" onclick="showTab(event,'settings')">Settings</button>
+</div>
+
+<div class="main">
+
+    <div class="top-header">
+        <div class="welcome">
+            Welcome Back <span id="lastNameDisplay">Mr. Enzaldo</span>
+        </div>
+        <div class="sub">NixyDigital Executive Panel</div>
+    </div>
+
+    <div class="content">
+
+        <!-- DASHBOARD -->
+        <div id="dashboard" class="section active">
+            <div class="grid">
+                <div class="card">
+                    <h3>Total Leads</h3>
+                    <div class="metric" id="leadCount">0</div>
+                </div>
+                <div class="card">
+                    <h3>Status</h3>
+                    <div class="metric">Operational</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LEADS -->
+        <div id="leads" class="section">
+            <div class="card">
+                <h3>Add New Lead</h3>
+                <input type="text" id="leadName" placeholder="Full Name">
+                <input type="text" id="leadCompany" placeholder="Company">
+                <input type="text" id="leadPhone" placeholder="Phone">
+                <input type="email" id="leadEmail" placeholder="Email">
+                <select id="leadStatus">
+                    <option value="New">New</option>
+                    <option value="Contacted">Contacted</option>
+                    <option value="Closed">Closed</option>
+                </select>
+                <button class="primary" onclick="addLead()">Add Lead</button>
+            </div>
+
+            <div class="card">
+                <h3>Lead Database</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Company</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody id="leadTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- AI ASSISTANT -->
+        <div id="assistant" class="section">
+            <div class="card">
+                <h3>AI Assistant</h3>
+                <div class="metric">Integration Pending</div>
+            </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div id="settings" class="section">
+            <div class="card">
+                <h3>Profile Settings</h3>
+                <input type="text" id="lastNameInput" placeholder="Last Name">
+                <button class="primary" onclick="saveLastName()">Save</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDzP5YsvL9PN4x7vTI9ofEWmDz6SyuFULU",
+      authDomain: "agencyos-ai.firebaseapp.com",
+      projectId: "agencyos-ai",
+      storageBucket: "agencyos-ai.firebasestorage.app",
+      messagingSenderId: "943979992113",
+      appId: "1:943979992113:web:0108f0471e3bbcb267f110"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    onAuthStateChanged(auth,(user)=>{
+      if(user){
+        const lastName = localStorage.getItem("lastName") || "Enzaldo";
+        document.getElementById("lastNameDisplay").textContent="Mr. "+lastName;
+        loadLeads();
+      } else {
+        window.location.href="auth.html";
+      }
+    });
+
+    window.showTab=function(e,tab){
+      document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+      document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+      document.getElementById(tab).classList.add("active");
+      e.target.classList.add("active");
+    };
+
+    window.saveLastName=function(){
+      const ln=document.getElementById("lastNameInput").value.trim();
+      if(ln){
+        localStorage.setItem("lastName",ln);
+        document.getElementById("lastNameDisplay").textContent="Mr. "+ln;
+      }
+    };
+
+    window.addLead=async function(){
+      const name=leadName.value;
+      const company=leadCompany.value;
+      const phone=leadPhone.value;
+      const email=leadEmail.value;
+      const status=leadStatus.value;
+      if(!name||!phone) return;
+
+      await addDoc(collection(db,"leads"),{name,company,phone,email,status});
+      leadName.value="";
+      leadCompany.value="";
+      leadPhone.value="";
+      leadEmail.value="";
+      loadLeads();
+    };
+
+    async function loadLeads(){
+      const snapshot=await getDocs(collection(db,"leads"));
+      leadTable.innerHTML="";
+      let count=0;
+      snapshot.forEach(doc=>{
+        const d=doc.data();
+        count++;
+        leadTable.innerHTML+=`
+          <tr>
+            <td>${d.name||""}</td>
+            <td>${d.company||""}</td>
+            <td>${d.phone||""}</td>
+            <td>${d.email||""}</td>
+            <td>${d.status||""}</td>
+          </tr>
+        `;
+      });
+      document.getElementById("leadCount").textContent=count;
+    }
+</script>
+
+</body>
+</html>

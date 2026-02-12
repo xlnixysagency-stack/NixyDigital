@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NixyDigital | Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif;}
+
+        body{
+        height:100vh;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background:radial-gradient(circle at top,#0f172a,#020617);
+        }
+
+        .container{
+        width:420px;
+        background:#0b1220;
+        padding:45px;
+        border-radius:18px;
+        border:1px solid rgba(255,255,255,0.06);
+        box-shadow:0 25px 70px rgba(0,0,0,0.6);
+        }
+
+        .brand{
+        font-size:22px;
+        font-weight:700;
+        color:#fff;
+        margin-bottom:8px;
+        }
+
+        .brand span{color:#3b82f6;}
+
+        h2{
+        color:#fff;
+        margin-bottom:20px;
+        }
+
+        input{
+        width:100%;
+        padding:14px;
+        margin-bottom:15px;
+        border-radius:12px;
+        border:1px solid rgba(255,255,255,0.08);
+        background:#111827;
+        color:#fff;
+        outline:none;
+        }
+
+        input:focus{border-color:#3b82f6;}
+
+        button{
+        width:100%;
+        padding:14px;
+        border-radius:12px;
+        border:none;
+        background:linear-gradient(90deg,#2563eb,#3b82f6);
+        color:#fff;
+        font-weight:600;
+        cursor:pointer;
+        }
+
+        .switch{
+        margin-top:18px;
+        font-size:13px;
+        color:#94a3b8;
+        cursor:pointer;
+        text-align:center;
+        }
+
+        .switch span{color:#3b82f6;font-weight:600;}
+
+        #error{
+        margin-top:10px;
+        color:#ef4444;
+        font-size:13px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="brand">Nixy<span>Digital</span></div>
+    <h2 id="formTitle">Create Account</h2>
+
+    <form id="authForm">
+        <div id="nameFields">
+            <input type="text" id="firstName" placeholder="First Name">
+            <input type="text" id="lastName" placeholder="Last Name">
+        </div>
+
+        <input type="email" id="email" placeholder="Email Address" required>
+        <input type="password" id="password" placeholder="Password" required>
+
+        <button type="submit">Continue</button>
+        <div id="error"></div>
+    </form>
+
+    <div class="switch" id="toggleMode">
+        Already have an account? <span>Sign In</span>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    setPersistence,
+    browserLocalPersistence
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+    getFirestore,
+    doc,
+    setDoc,
+    serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+    apiKey:"AIzaSyDzP5YsvL9PN4x7vTI9ofEWmDz6SyuFULU",
+    authDomain:"agencyos-ai.firebaseapp.com",
+    projectId:"agencyos-ai",
+    storageBucket:"agencyos-ai.firebasestorage.app",
+    messagingSenderId:"943979992113",
+    appId:"1:943979992113:web:0108f0471e3bbcb267f110"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    await setPersistence(auth, browserLocalPersistence);
+
+    let isLogin = false;
+
+    const toggle = document.getElementById("toggleMode");
+    const title = document.getElementById("formTitle");
+    const nameFields = document.getElementById("nameFields");
+    const errorDiv = document.getElementById("error");
+
+    toggle.addEventListener("click",()=>{
+    isLogin=!isLogin;
+    errorDiv.textContent="";
+
+    if(isLogin){
+    title.textContent="Sign In";
+    nameFields.style.display="none";
+    toggle.innerHTML=`Don't have an account? <span>Create Account</span>`;
+    }else{
+    title.textContent="Create Account";
+    nameFields.style.display="block";
+    toggle.innerHTML=`Already have an account? <span>Sign In</span>`;
+    }
+    });
+
+    document.getElementById("authForm").addEventListener("submit",async(e)=>{
+    e.preventDefault();
+    errorDiv.textContent="";
+
+    const email=document.getElementById("email").value.trim();
+    const password=document.getElementById("password").value.trim();
+    const firstName=document.getElementById("firstName").value.trim();
+    const lastName=document.getElementById("lastName").value.trim();
+
+    try{
+
+    if(isLogin){
+
+    await signInWithEmailAndPassword(auth,email,password);
+
+    }else{
+
+    if(!firstName||!lastName){
+    errorDiv.textContent="First and last name required.";
+    return;
+    }
+
+    const userCred=await createUserWithEmailAndPassword(auth,email,password);
+
+    await setDoc(
+    doc(db,"users",userCred.user.uid),
+    {
+    firstName:firstName,
+    lastName:lastName,
+    email:email,
+    createdAt:serverTimestamp()
+    }
+    );
+
+    }
+
+    window.location.replace("dashboard.html");
+
+    }catch(err){
+    errorDiv.textContent=err.message;
+    console.error(err);
+    }
+
+    });
+</script>
+
+</body>
+</html>
