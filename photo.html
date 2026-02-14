@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Photos — Study Buddy AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root{--black:#020202;--evergreen:#0d2818;--forest:#04471c;--seagreen:#058c42;--malachite:#16db65;--text:#e8f5ee;--muted:#7aad8f;--card:rgba(13,40,24,0.7);--border:rgba(22,219,101,0.15)}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:var(--black);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh}
+        body::before{content:'';position:fixed;top:-20%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,rgba(5,140,66,0.05) 0%,transparent 70%);pointer-events:none;z-index:0}
+        #ls{position:fixed;inset:0;background:var(--black);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;z-index:100}
+        .ring{width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--malachite);border-radius:50%;animation:spin .8s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        #ls p{color:var(--muted);font-size:14px}
+        .pg{min-height:100vh;padding:40px 20px;position:relative;z-index:1;display:flex;flex-direction:column;align-items:center}
+        .tb{width:100%;max-width:680px;display:flex;align-items:center;justify-content:space-between;margin-bottom:48px}
+        .logo{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;letter-spacing:.08em}
+        .logo span{color:var(--malachite)}
+        .back{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:8px 14px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+        .back:hover{border-color:var(--malachite);color:var(--malachite)}
+        .ptitle{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;width:100%;max-width:680px;margin-bottom:6px}
+        .ptitle span{color:var(--malachite)}
+        .psub{color:var(--muted);font-size:14px;width:100%;max-width:680px;margin-bottom:24px}
+        .altbar{width:100%;max-width:680px;background:rgba(13,40,24,.5);border:1px solid var(--border);border-radius:12px;padding:13px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;font-size:13px;color:var(--muted)}
+        .altbar a{color:var(--malachite);text-decoration:none;font-weight:600}
+        .card{width:100%;max-width:680px;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;backdrop-filter:blur(12px);position:relative;overflow:hidden}
+        .card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--seagreen),var(--malachite),transparent)}
+        .row{margin-bottom:22px}
+        .lbl{display:block;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:9px}
+        .inp,.sel{width:100%;background:rgba(4,71,28,.3);border:1px solid var(--border);border-radius:11px;padding:13px 15px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s}
+        .inp:focus,.sel:focus{border-color:var(--seagreen)}
+        .sel{-webkit-appearance:none;cursor:pointer}
+        .ta{width:100%;background:rgba(4,71,28,.3);border:1px solid var(--border);border-radius:11px;padding:14px 15px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;resize:vertical;min-height:160px;line-height:1.65;transition:border-color .2s}
+        .ta:focus{border-color:var(--seagreen)}
+        .dz{border:2px dashed var(--border);border-radius:16px;padding:48px 20px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+        .dz:hover,.dz.over{border-color:var(--seagreen);background:rgba(5,140,66,.04)}
+        .dz input{position:absolute;inset:0;opacity:0;cursor:pointer}
+        .dz-ico{font-size:44px;margin-bottom:14px}
+        .dz-ttl{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;margin-bottom:6px}
+        .dz-sub{font-size:13px;color:var(--muted);margin-bottom:16px}
+        .fmts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+        .fmt{font-size:11px;color:var(--muted);background:rgba(22,219,101,.06);border:1px solid var(--border);border-radius:6px;padding:3px 9px}
+        .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-top:18px}
+        .thb{position:relative;border-radius:11px;overflow:hidden;aspect-ratio:1;background:var(--evergreen);border:1px solid var(--border)}
+        .thb img{width:100%;height:100%;object-fit:cover}
+        .rm{position:absolute;top:6px;right:6px;width:24px;height:24px;background:rgba(2,2,2,.75);color:#fff;border:none;border-radius:50%;font-size:12px;cursor:pointer;font-weight:700;display:flex;align-items:center;justify-content:center;transition:background .15s;z-index:2}
+        .rm:hover{background:#f4442e}
+        .thb-ov{position:absolute;inset:0;background:rgba(2,2,2,.55);display:flex;align-items:center;justify-content:center}
+        .spin-sm{width:22px;height:22px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+        .thb-bar{position:absolute;bottom:0;left:0;right:0;background:rgba(2,2,2,.8);padding:5px 8px;font-size:10px;font-weight:600;text-align:center;letter-spacing:.05em}
+        .sd{color:var(--malachite)}.sp{color:#bc5f04}.se{color:#f4442e}
+        .ocr-row{display:none;align-items:center;gap:14px;background:rgba(22,219,101,.06);border:1px solid rgba(22,219,101,.15);border-radius:12px;padding:16px 20px;margin-top:18px}
+        .ocr-s{width:24px;height:24px;flex-shrink:0;border:2px solid var(--border);border-top-color:var(--malachite);border-radius:50%;animation:spin .9s linear infinite}
+        .ocr-l{font-size:13px;color:var(--muted)}
+        .ocr-l strong{color:var(--malachite)}
+        .extsec{display:none;margin-top:24px}
+        .ext-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+        .ext-tag{font-size:11px;font-weight:700;color:var(--malachite);letter-spacing:.1em;text-transform:uppercase;background:rgba(22,219,101,.1);border-radius:6px;padding:4px 10px}
+        .chr{font-size:11px;color:var(--muted)}
+        .div{border:none;border-top:1px solid var(--border);margin:24px 0}
+        .sbtn{width:100%;padding:16px;background:linear-gradient(135deg,var(--forest),var(--seagreen));border:none;border-radius:12px;color:#fff;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;letter-spacing:.04em;cursor:pointer;transition:all .2s;margin-top:8px}
+        .sbtn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 10px 28px rgba(5,140,66,.35)}
+        .sbtn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+        .st{margin-top:14px;padding:13px 16px;border-radius:10px;font-size:13px;text-align:center;display:none}
+        .st.err{background:rgba(244,68,46,.08);border:1px solid rgba(244,68,46,.2);color:#f4442e}
+        .st.ok{background:rgba(22,219,101,.08);border:1px solid rgba(22,219,101,.2);color:var(--malachite)}
+        .tip{width:100%;max-width:680px;margin-top:20px;background:rgba(13,40,24,.4);border:1px solid var(--border);border-radius:12px;padding:14px 18px;font-size:13px;color:var(--muted);line-height:1.65}
+        .tip strong{color:var(--text)}
+    </style>
+</head>
+<body>
+<div id="ls"><div class="ring"></div><p>Loading...</p></div>
+<div class="pg">
+    <div class="tb">
+        <div class="logo">NIXY<span>DIGITAL</span></div>
+        <button class="back" onclick="location.href='dashboard.html'">← Dashboard</button>
+    </div>
+    <div class="ptitle">Upload <span>Photos</span></div>
+    <div class="psub">Snap a photo of your notes — AI reads and extracts all the text automatically</div>
+    <div class="altbar">
+        <span>Prefer to type or paste notes instead?</span>
+        <a href="upload.html">Switch to text upload →</a>
+    </div>
+    <div class="card">
+        <div class="row">
+            <label class="lbl">Note Title</label>
+            <input type="text" id="ti" class="inp" placeholder="e.g. Chemistry Chapter 3 — Atomic Structure">
+        </div>
+        <div class="row">
+            <label class="lbl">Subject</label>
+            <select id="si" class="sel">
+                <option value="">Select a subject...</option>
+                <option>Biology</option><option>Chemistry</option><option>Physics</option>
+                <option>Mathematics</option><option>History</option><option>English</option>
+                <option>Psychology</option><option>Economics</option><option>Computer Science</option>
+                <option>Geography</option><option>Other</option>
+            </select>
+        </div>
+        <hr class="div">
+        <div class="row" style="margin-bottom:0">
+            <label class="lbl">Photos of Your Notes</label>
+            <div class="dz" id="dz">
+                <input type="file" id="fi" multiple accept="image/*" onchange="addFiles(this.files)">
+                <div class="dz-ico">📷</div>
+                <div class="dz-ttl">Drop photos here or tap to browse</div>
+                <div class="dz-sub">Handwritten notes, textbooks, slides, whiteboards — all work</div>
+                <div class="fmts"><span class="fmt">JPG</span><span class="fmt">PNG</span><span class="fmt">HEIC</span><span class="fmt">WEBP</span></div>
+            </div>
+            <div class="pgrid" id="pgrid"></div>
+            <div class="ocr-row" id="ocrRow">
+                <div class="ocr-s"></div>
+                <div class="ocr-l">Reading your notes... <strong id="ocrN">0 / 0</strong></div>
+            </div>
+        </div>
+        <div class="extsec" id="esec">
+            <hr class="div">
+            <div class="ext-hdr">
+                <div class="ext-tag">✓ Extracted Text — review &amp; edit</div>
+                <div class="chr" id="chr">0 chars</div>
+            </div>
+            <textarea class="ta" id="etxt" rows="8" placeholder="Extracted text appears here..." oninput="updChr()"></textarea>
+        </div>
+        <button class="sbtn" id="sbtn" onclick="go()">Extract Text &amp; Continue →</button>
+        <div class="st" id="st"></div>
+    </div>
+    <div class="tip"><strong>📸 Tips:</strong> Good lighting, flat surface, no shadows. Upload multiple photos — they'll be combined into one set of notes. You can always edit the extracted text before saving.</div>
+</div>
+<script type="module">
+    import{initializeApp}from'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import{getAuth,onAuthStateChanged}from'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import{getFirestore,collection,addDoc,serverTimestamp}from'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    const cfg={apiKey:"AIzaSyB3ZEv5TgFr8SM1jCLyHJow3N39xfHYZNk",authDomain:"studybuddyai-5561d.firebaseapp.com",projectId:"studybuddyai-5561d",storageBucket:"studybuddyai-5561d.firebasestorage.app",messagingSenderId:"559083222865",appId:"1:559083222865:web:26b4351fd26330716b4570"};
+    const auth=getAuth(initializeApp(cfg)),db=getFirestore(initializeApp(cfg));
+    let user=null,imgs=[],extracted=false,KEY=localStorage.getItem('groq_key')||'';
+    window.addFiles=addFiles;window.removeImg=removeImg;window.go=go;window.updChr=updChr;
+    onAuthStateChanged(auth,u=>{if(!u){location.href='auth.html';return}user=u;document.getElementById('ls').style.display='none'});
+    const dz=document.getElementById('dz');
+    dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('over')});
+    dz.addEventListener('dragleave',()=>dz.classList.remove('over'));
+    dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('over');addFiles(e.dataTransfer.files)});
+    function addFiles(files){for(const f of files){if(!f.type.startsWith('image/'))continue;const r=new FileReader();r.onload=e=>{imgs.push({file:f,url:e.target.result,st:'pending'});render();extracted=false;document.getElementById('esec').style.display='none';document.getElementById('sbtn').textContent='Extract Text & Continue →'};r.readAsDataURL(f)}}
+    function removeImg(i){imgs.splice(i,1);render();if(!imgs.length){document.getElementById('esec').style.display='none';extracted=false;document.getElementById('sbtn').textContent='Extract Text & Continue →'}}
+    function render(){document.getElementById('pgrid').innerHTML=imgs.map((im,i)=>`<div class="thb"><img src="${im.url}"><button class="rm" onclick="removeImg(${i})">✕</button>${im.st==='processing'?`<div class="thb-ov"><div class="spin-sm"></div></div>`:''} ${im.st==='done'?`<div class="thb-bar sd">✓ Done</div>`:''}${im.st==='error'?`<div class="thb-bar se">✗ Error</div>`:''}</div>`).join('')}
+    async function getKey(){if(KEY)return KEY;const k=prompt('Enter your Groq API key to extract text (free at console.groq.com):');if(!k)return null;KEY=k.trim();localStorage.setItem('groq_key',KEY);return KEY}
+    async function ocr(img){const k=await getKey();if(!k)return'';const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${k}`},body:JSON.stringify({model:'llama-3.2-11b-vision-preview',messages:[{role:'user',content:[{type:'image_url',image_url:{url:img.url}},{type:'text',text:'Extract all text from this image exactly as written. Preserve headings, bullets, equations. Do not summarize. Output only the extracted text.'}]}],max_tokens:2000,temperature:0.1})});if(!r.ok){const e=await r.json();throw new Error(e.error?.message||r.statusText)}const d=await r.json();return d.choices?.[0]?.message?.content?.trim()||''}
+    async function go(){
+      const title=document.getElementById('ti').value.trim(),subject=document.getElementById('si').value,btn=document.getElementById('sbtn');
+      if(!title){show('Please enter a title','err');return}
+      if(!subject){show('Please select a subject','err');return}
+      if(!extracted){
+        if(!imgs.length){show('Please upload at least one photo','err');return}
+        btn.disabled=true;btn.textContent='Reading photos with AI...';
+        document.getElementById('ocrRow').style.display='flex';
+        const nc=document.getElementById('ocrN');let all='';
+        for(let i=0;i<imgs.length;i++){nc.textContent=`${i+1} / ${imgs.length}`;imgs[i].st='processing';render();
+          try{const t=await ocr(imgs[i]);all+=(all?`\n\n--- Photo ${i+1} ---\n`:'')+t;imgs[i].st='done'}catch(e){imgs[i].st='error';console.error(e)}render()}
+        document.getElementById('ocrRow').style.display='none';
+        if(!all.trim()){show('Could not extract text. Check your API key.','err');btn.disabled=false;btn.textContent='Extract Text & Continue →';return}
+        document.getElementById('etxt').value=all;document.getElementById('chr').textContent=all.length.toLocaleString()+' chars';
+        document.getElementById('esec').style.display='block';extracted=true;btn.disabled=false;
+        btn.textContent='Save Notes & Generate Questions →';
+        show('Text extracted! Review above, then click Save.','ok');
+        document.getElementById('esec').scrollIntoView({behavior:'smooth',block:'nearest'});return;
+      }
+      const content=document.getElementById('etxt').value.trim();
+      if(!content){show('No text to save','err');return}
+      btn.disabled=true;btn.textContent='Saving...';
+      try{
+        const ref=await addDoc(collection(db,'study_materials'),{userId:user.uid,userEmail:user.email,title,subject,content,questions:[],questionsGenerated:false,flashcards:[],source:'photo',createdAt:serverTimestamp()});
+        show('Saved! Heading to question generator...','ok');
+        setTimeout(()=>location.href=`generate-groq.html?id=${ref.id}`,900);
+      }catch(e){show('Error: '+e.message,'err');btn.disabled=false;btn.textContent='Save Notes & Generate Questions →'}
+    }
+    function updChr(){document.getElementById('chr').textContent=document.getElementById('etxt').value.length.toLocaleString()+' chars'}
+    function show(msg,type){const el=document.getElementById('st');el.textContent=msg;el.className=`st ${type}`;el.style.display='block';if(type==='ok')setTimeout(()=>el.style.display='none',5000)}
+</script>
+</body>
+</html>

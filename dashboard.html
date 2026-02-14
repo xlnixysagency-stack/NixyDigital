@@ -3,770 +3,866 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Study Buddy AI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <title>Dashboard — Study Buddy AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+          --black:     #020202;
+          --evergreen: #0d2818;
+          --forest:    #04471c;
+          --seagreen:  #058c42;
+          --malachite: #16db65;
+          --text:      #e8f5ee;
+          --muted:     #6b9e80;
+          --card:      rgba(13,40,24,0.65);
+          --border:    rgba(22,219,101,0.12);
+          --border-hi: rgba(22,219,101,0.3);
         }
 
-        :root {
-            --black: #020202;
-            --evergreen: #0d2818;
-            --forest: #04471c;
-            --sea-green: #058c42;
-            --malachite: #16db65;
-            --white: #FAFAFA;
-            --gray: #999;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Space Grotesk', sans-serif;
-            background: var(--black);
-            color: var(--white);
-            overflow-x: hidden;
+          background: var(--black);
+          color: var(--text);
+          font-family: 'DM Sans', sans-serif;
+          min-height: 100vh;
+          overflow-x: hidden;
         }
 
-        /* Sidebar */
+        /* Subtle ambient orb */
+        body::after {
+          content: '';
+          position: fixed; top: -200px; right: -200px;
+          width: 700px; height: 700px;
+          background: radial-gradient(circle, rgba(5,140,66,0.055) 0%, transparent 65%);
+          pointer-events: none; z-index: 0;
+        }
+
+        /* ─── Loading ─── */
+        #loadingScreen {
+          position: fixed; inset: 0; background: var(--black);
+          display: flex; flex-direction: column;
+          align-items: center; justify-content: center;
+          z-index: 200; gap: 18px;
+        }
+        .ring {
+          width: 44px; height: 44px;
+          border: 3px solid var(--border);
+          border-top-color: var(--malachite);
+          border-radius: 50%;
+          animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        #loadingScreen span { color: var(--muted); font-size: 13px; }
+
+        /* ─── Shell ─── */
+        .shell {
+          display: grid;
+          grid-template-columns: 224px 1fr;
+          min-height: 100vh;
+          position: relative; z-index: 1;
+        }
+
+        /* ─── Sidebar ─── */
         .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 280px;
-            height: 100vh;
-            background: var(--evergreen);
-            border-right: 1px solid rgba(22, 219, 101, 0.1);
-            padding: 32px 0;
-            z-index: 1000;
-            transition: transform 0.3s ease;
-            overflow-y: auto;
+          background: var(--evergreen);
+          border-right: 1px solid var(--border);
+          display: flex; flex-direction: column;
+          position: sticky; top: 0; height: 100vh;
+          overflow-y: auto; overflow-x: hidden;
+          padding: 0 0 24px;
         }
 
+        .logo-wrap {
+          padding: 26px 22px 22px;
+          border-bottom: 1px solid var(--border);
+          margin-bottom: 8px;
+        }
         .logo {
-            padding: 0 24px;
-            margin-bottom: 48px;
+          font-family: 'Syne', sans-serif;
+          font-size: 18px; font-weight: 800;
+          letter-spacing: 0.1em; line-height: 1;
         }
+        .logo em { color: var(--malachite); font-style: normal; }
+        .logo-sub { font-size: 11px; color: var(--muted); margin-top: 5px; letter-spacing: 0.06em; }
 
-        .logo h1 {
-            font-family: 'Syne', sans-serif;
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--white);
-            word-break: break-word;
-            line-height: 1.2;
-        }
-
-        .logo span {
-            color: var(--malachite);
-            display: inline-block;
-        }
-
-        .nav-menu {
-            list-style: none;
-            padding: 0 16px;
+        /* Nav sections */
+        .nav-section {
+          padding: 16px 14px 6px;
+          font-size: 10px; font-weight: 700;
+          color: var(--muted); letter-spacing: 0.14em;
+          text-transform: uppercase;
         }
 
         .nav-item {
-            margin-bottom: 8px;
+          display: flex; align-items: center; gap: 11px;
+          padding: 10px 14px;
+          border-radius: 10px;
+          margin: 2px 8px;
+          cursor: pointer;
+          font-size: 13.5px; font-weight: 500;
+          color: var(--muted);
+          transition: all 0.18s;
+          text-decoration: none;
+          border: 1px solid transparent;
+          position: relative;
+        }
+        .nav-item:hover {
+          background: rgba(22,219,101,0.06);
+          color: var(--text);
+        }
+        .nav-item.active {
+          background: rgba(22,219,101,0.1);
+          color: var(--malachite);
+          border-color: var(--border);
+        }
+        .nav-item.active::before {
+          content: '';
+          position: absolute; left: -8px; top: 50%; transform: translateY(-50%);
+          width: 3px; height: 20px;
+          background: var(--malachite);
+          border-radius: 0 3px 3px 0;
+        }
+        .nav-icon { font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; }
+        .nav-badge {
+          margin-left: auto;
+          background: var(--forest);
+          color: var(--malachite);
+          font-size: 10px; font-weight: 700;
+          padding: 2px 7px; border-radius: 99px;
+          border: 1px solid var(--border);
         }
 
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            color: rgba(255, 255, 255, 0.6);
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            font-weight: 500;
+        /* Sidebar footer — user */
+        .sidebar-footer {
+          margin-top: auto;
+          padding: 16px 14px 0;
+          border-top: 1px solid var(--border);
+        }
+        .user-chip {
+          display: flex; align-items: center; gap: 10px;
+          padding: 10px 12px; border-radius: 10px;
+          background: rgba(4,71,28,0.4);
+          border: 1px solid var(--border);
+          cursor: pointer; transition: all 0.2s;
+        }
+        .user-chip:hover { border-color: var(--border-hi); }
+        .avatar {
+          width: 32px; height: 32px; border-radius: 50%;
+          background: linear-gradient(135deg, var(--forest), var(--seagreen));
+          display: flex; align-items: center; justify-content: center;
+          font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 800;
+          color: #fff; flex-shrink: 0;
+        }
+        .user-info { flex: 1; min-width: 0; }
+        .user-email { font-size: 12px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .user-plan  { font-size: 10px; color: var(--muted); }
+        .signout-btn {
+          background: none; border: none; color: var(--muted);
+          font-size: 16px; cursor: pointer; padding: 2px;
+          transition: color 0.2s;
+        }
+        .signout-btn:hover { color: #f4442e; }
+
+        /* ─── Main ─── */
+        .main {
+          display: flex; flex-direction: column;
+          padding: 36px 40px;
+          overflow-y: auto; min-height: 100vh;
         }
 
-        .nav-link:hover {
-            background: var(--forest);
-            color: var(--white);
+        /* ─── Top bar ─── */
+        .main-topbar {
+          display: flex; align-items: center; justify-content: space-between;
+          margin-bottom: 36px; gap: 16px; flex-wrap: wrap;
+        }
+        .greeting-block {}
+        .greeting {
+          font-family: 'Syne', sans-serif;
+          font-size: 26px; font-weight: 800;
+          line-height: 1.2; margin-bottom: 4px;
+        }
+        .greeting em { color: var(--malachite); font-style: normal; }
+        .greeting-sub { font-size: 13px; color: var(--muted); }
+
+        .date-chip {
+          font-size: 12px; color: var(--muted);
+          background: var(--card); border: 1px solid var(--border);
+          border-radius: 8px; padding: 8px 14px;
+          white-space: nowrap;
         }
 
-        .nav-link.active {
-            background: var(--malachite);
-            color: var(--black);
+        /* ─── Stats strip ─── */
+        .stats-strip {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 14px; margin-bottom: 36px;
         }
-
-        .nav-icon {
-            font-size: 20px;
-        }
-
-        .user-profile {
-            position: absolute;
-            bottom: 32px;
-            left: 16px;
-            right: 16px;
-            padding: 16px;
-            background: var(--forest);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .user-profile:hover {
-            background: var(--sea-green);
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: var(--malachite);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: var(--black);
-            font-size: 16px;
-        }
-
-        .user-info {
-            flex: 1;
-        }
-
-        .user-name {
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 2px;
-        }
-
-        .user-plan {
-            font-size: 12px;
-            color: var(--gray);
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: 280px;
-            padding: 40px;
-            min-height: 100vh;
-        }
-
-        /* Header */
-        .dashboard-header {
-            margin-bottom: 48px;
-        }
-
-        .welcome-text {
-            font-size: 16px;
-            color: var(--gray);
-            margin-bottom: 8px;
-        }
-
-        .dashboard-title {
-            font-family: 'Syne', sans-serif;
-            font-size: 48px;
-            font-weight: 800;
-            margin-bottom: 24px;
-            background: linear-gradient(135deg, var(--white) 0%, var(--malachite) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 24px;
-            margin-bottom: 48px;
-        }
-
         .stat-card {
-            background: var(--evergreen);
-            padding: 28px;
-            border-radius: 12px;
-            border: 1px solid rgba(22, 219, 101, 0.1);
-            transition: all 0.3s ease;
+          background: var(--card); border: 1px solid var(--border);
+          border-radius: 16px; padding: 20px;
+          position: relative; overflow: hidden;
+          transition: border-color 0.2s;
+          animation: fadeUp 0.4s ease both;
         }
-
-        .stat-card:hover {
-            border-color: var(--malachite);
-            transform: translateY(-4px);
-            box-shadow: 0 15px 40px rgba(22, 219, 101, 0.2);
+        .stat-card:hover { border-color: var(--border-hi); }
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(12px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
-
-        .stat-icon {
-            width: 48px;
-            height: 48px;
-            background: rgba(22, 219, 101, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            margin-bottom: 16px;
+        .stat-card:nth-child(1) { animation-delay: 0.05s; }
+        .stat-card:nth-child(2) { animation-delay: 0.1s; }
+        .stat-card:nth-child(3) { animation-delay: 0.15s; }
+        .stat-card:nth-child(4) { animation-delay: 0.2s; }
+        .stat-card::after {
+          content: '';
+          position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+          background: linear-gradient(90deg, var(--seagreen), transparent);
+          opacity: 0; transition: opacity 0.2s;
         }
-
-        .stat-value {
-            font-family: 'Syne', sans-serif;
-            font-size: 36px;
-            font-weight: 800;
-            color: var(--malachite);
-            margin-bottom: 4px;
+        .stat-card:hover::after { opacity: 1; }
+        .stat-icon { font-size: 22px; margin-bottom: 14px; }
+        .stat-val {
+          font-family: 'Syne', sans-serif;
+          font-size: 32px; font-weight: 800;
+          color: var(--malachite); line-height: 1;
+          margin-bottom: 4px;
         }
+        .stat-label { font-size: 12px; color: var(--muted); }
 
-        .stat-label {
-            font-size: 14px;
-            color: var(--gray);
+        /* ─── Section headers ─── */
+        .section-hdr {
+          display: flex; align-items: center; justify-content: space-between;
+          margin-bottom: 16px;
         }
-
-        /* Quick Actions */
-        .quick-actions {
-            margin-bottom: 48px;
-        }
-
         .section-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 24px;
+          font-family: 'Syne', sans-serif;
+          font-size: 16px; font-weight: 700;
         }
-
-        .action-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
+        .section-link {
+          font-size: 12px; color: var(--malachite); text-decoration: none;
+          font-weight: 600; transition: opacity 0.2s;
         }
+        .section-link:hover { opacity: 0.7; }
 
+        /* ─── Quick actions ─── */
+        .quick-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 14px; margin-bottom: 36px;
+        }
         .action-card {
-            background: var(--evergreen);
-            padding: 32px;
-            border-radius: 12px;
-            border: 1px solid rgba(22, 219, 101, 0.1);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
+          background: var(--card); border: 1px solid var(--border);
+          border-radius: 16px; padding: 22px 20px;
+          cursor: pointer; text-decoration: none;
+          transition: all 0.22s; display: block;
+          position: relative; overflow: hidden;
+          animation: fadeUp 0.4s ease both;
         }
+        .action-card:nth-child(1) { animation-delay: 0.1s; }
+        .action-card:nth-child(2) { animation-delay: 0.15s; }
+        .action-card:nth-child(3) { animation-delay: 0.2s; }
+        .action-card:nth-child(4) { animation-delay: 0.25s; }
+        .action-card:nth-child(5) { animation-delay: 0.3s; }
+        .action-card:nth-child(6) { animation-delay: 0.35s; }
+        .action-card::before {
+          content: '';
+          position: absolute; top: 0; left: 0; right: 0; height: 2px;
+          background: linear-gradient(90deg, var(--seagreen), var(--malachite));
+          transform: scaleX(0); transform-origin: left;
+          transition: transform 0.3s ease;
+        }
+        .action-card:hover { border-color: var(--border-hi); transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.35); }
+        .action-card:hover::before { transform: scaleX(1); }
+        .ac-icon {
+          font-size: 28px; margin-bottom: 14px;
+          display: block;
+          transition: transform 0.2s;
+        }
+        .action-card:hover .ac-icon { transform: scale(1.1); }
+        .ac-title {
+          font-family: 'Syne', sans-serif;
+          font-size: 14px; font-weight: 700;
+          margin-bottom: 5px;
+        }
+        .ac-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+        .ac-arrow {
+          position: absolute; bottom: 18px; right: 18px;
+          font-size: 16px; color: var(--border-hi);
+          transition: all 0.2s;
+        }
+        .action-card:hover .ac-arrow { color: var(--malachite); transform: translate(2px, -2px); }
 
-        .action-card:hover {
-            border-color: var(--malachite);
-            transform: translateY(-4px);
-            box-shadow: 0 15px 40px rgba(22, 219, 101, 0.2);
-        }
+        /* ─── Two-col row ─── */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 36px; }
 
-        .action-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
+        /* ─── Recent activity ─── */
+        .panel {
+          background: var(--card); border: 1px solid var(--border);
+          border-radius: 16px; overflow: hidden;
+          animation: fadeUp 0.5s ease both; animation-delay: 0.25s;
         }
-
-        .action-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 8px;
+        .panel-head {
+          padding: 18px 22px;
+          border-bottom: 1px solid var(--border);
+          display: flex; align-items: center; justify-content: space-between;
         }
-
-        .action-desc {
-            font-size: 14px;
-            color: var(--gray);
-            line-height: 1.6;
-        }
-
-        /* Recent Activity */
-        .recent-activity {
-            margin-bottom: 48px;
-        }
-
-        .activity-list {
-            background: var(--evergreen);
-            border-radius: 12px;
-            border: 1px solid rgba(22, 219, 101, 0.1);
-            overflow: hidden;
-        }
+        .panel-title { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; }
+        .panel-link  { font-size: 12px; color: var(--malachite); text-decoration: none; font-weight: 600; }
+        .panel-body  { padding: 8px 0; }
 
         .activity-item {
-            padding: 24px;
-            border-bottom: 1px solid rgba(22, 219, 101, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            transition: background 0.3s ease;
+          display: flex; align-items: center; gap: 14px;
+          padding: 12px 22px;
+          transition: background 0.15s;
+        }
+        .activity-item:hover { background: rgba(22,219,101,0.03); }
+        .act-dot {
+          width: 8px; height: 8px; border-radius: 50%;
+          background: var(--seagreen); flex-shrink: 0;
+        }
+        .act-dot.orange { background: #bc5f04; }
+        .act-dot.red    { background: #f4442e; }
+        .act-info { flex: 1; min-width: 0; }
+        .act-title { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .act-sub   { font-size: 11px; color: var(--muted); margin-top: 2px; }
+        .act-time  { font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+        .empty-panel {
+          padding: 40px 22px; text-align: center;
+        }
+        .empty-panel .ep-icon { font-size: 32px; margin-bottom: 10px; }
+        .empty-panel .ep-text { font-size: 13px; color: var(--muted); }
+
+        /* ─── Progress panel ─── */
+        .progress-list { padding: 8px 0; }
+        .prog-item {
+          padding: 12px 22px;
+          transition: background 0.15s;
+        }
+        .prog-item:hover { background: rgba(22,219,101,0.03); }
+        .prog-top {
+          display: flex; justify-content: space-between;
+          font-size: 13px; margin-bottom: 8px;
+        }
+        .prog-name { font-weight: 500; }
+        .prog-pct  { font-weight: 700; color: var(--malachite); }
+        .prog-track {
+          height: 4px; background: var(--border); border-radius: 99px; overflow: hidden;
+        }
+        .prog-fill {
+          height: 100%;
+          background: linear-gradient(90deg, var(--seagreen), var(--malachite));
+          border-radius: 99px;
+          transition: width 1s cubic-bezier(0.4,0,0.2,1);
         }
 
-        .activity-item:last-child {
-            border-bottom: none;
+        /* ─── Mobile hamburger ─── */
+        .mobile-bar {
+          display: none; align-items: center; justify-content: space-between;
+          padding: 16px 20px; background: var(--evergreen);
+          border-bottom: 1px solid var(--border);
+          position: sticky; top: 0; z-index: 50;
         }
-
-        .activity-item:hover {
-            background: var(--forest);
+        .ham-btn {
+          background: none; border: none; color: var(--text);
+          font-size: 20px; cursor: pointer;
         }
-
-        .activity-icon {
-            width: 48px;
-            height: 48px;
-            background: rgba(22, 219, 101, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            flex-shrink: 0;
+        .mobile-logo { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; }
+        .mobile-logo em { color: var(--malachite); font-style: normal; }
+        .mobile-overlay {
+          display: none; position: fixed; inset: 0;
+          background: rgba(2,2,2,0.7); z-index: 80;
         }
+        .mobile-overlay.open { display: block; }
+        .sidebar.open { transform: translateX(0) !important; }
 
-        .activity-content {
-            flex: 1;
+        /* Sign-out confirm */
+        .signout-modal {
+          display: none; position: fixed; inset: 0;
+          background: rgba(2,2,2,0.8); z-index: 300;
+          align-items: center; justify-content: center;
+          backdrop-filter: blur(4px);
         }
-
-        .activity-title {
-            font-weight: 600;
-            margin-bottom: 4px;
+        .signout-modal.open { display: flex; }
+        .modal-box {
+          background: var(--evergreen); border: 1px solid var(--border);
+          border-radius: 18px; padding: 32px; max-width: 360px; width: 90%;
+          text-align: center;
         }
-
-        .activity-time {
-            font-size: 13px;
-            color: var(--gray);
+        .modal-box h3 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+        .modal-box p  { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+        .modal-btns   { display: flex; gap: 10px; }
+        .modal-cancel {
+          flex: 1; padding: 12px; background: none;
+          border: 1px solid var(--border); border-radius: 10px;
+          color: var(--text); font-family: 'DM Sans', sans-serif;
+          font-size: 14px; cursor: pointer; transition: all 0.2s;
         }
-
-        .activity-score {
-            font-family: 'Syne', sans-serif;
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--malachite);
+        .modal-cancel:hover { border-color: var(--border-hi); }
+        .modal-confirm {
+          flex: 1; padding: 12px;
+          background: #f4442e; border: none; border-radius: 10px;
+          color: #fff; font-family: 'Syne', sans-serif;
+          font-size: 14px; font-weight: 700; cursor: pointer;
+          transition: all 0.2s;
         }
+        .modal-confirm:hover { background: #d63a26; }
 
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 80px 20px;
+        /* ─── Responsive ─── */
+        @media (max-width: 900px) {
+          .stats-strip { grid-template-columns: repeat(2, 1fr); }
+          .quick-grid  { grid-template-columns: repeat(2, 1fr); }
+          .two-col     { grid-template-columns: 1fr; }
         }
-
-        .empty-icon {
-            font-size: 80px;
-            margin-bottom: 24px;
-            opacity: 0.3;
-        }
-
-        .empty-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .empty-desc {
-            font-size: 16px;
-            color: var(--gray);
-            margin-bottom: 32px;
-        }
-
-        .cta-button {
-            display: inline-block;
-            padding: 16px 32px;
-            background: var(--malachite);
-            color: var(--black);
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 700;
-            transition: all 0.3s ease;
-        }
-
-        .cta-button:hover {
-            background: var(--sea-green);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(22, 219, 101, 0.3);
-        }
-
-        /* Mobile Menu Toggle */
-        .mobile-menu-toggle {
-            display: none;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 48px;
-            height: 48px;
-            background: var(--evergreen);
-            border: 1px solid rgba(22, 219, 101, 0.2);
-            border-radius: 8px;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            cursor: pointer;
-            z-index: 1001;
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-                padding: 80px 20px 40px;
-            }
-
-            .mobile-menu-toggle {
-                display: flex;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .action-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .dashboard-title {
-                font-size: 36px;
-            }
-        }
-
-        /* Loading State */
-        .loading {
-            text-align: center;
-            padding: 100px 20px;
-        }
-
-        .spinner {
-            width: 48px;
-            height: 48px;
-            border: 4px solid rgba(22, 219, 101, 0.1);
-            border-top-color: var(--malachite);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 24px;
-        }
-
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Logout Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--evergreen);
-            padding: 40px;
-            border-radius: 12px;
-            border: 1px solid rgba(22, 219, 101, 0.2);
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .modal-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .modal-text {
-            color: var(--gray);
-            margin-bottom: 32px;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: var(--malachite);
-            color: var(--black);
-        }
-
-        .btn-primary:hover {
-            background: var(--sea-green);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--white);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .btn-secondary:hover {
-            background: var(--forest);
+        @media (max-width: 700px) {
+          .shell { grid-template-columns: 1fr; }
+          .sidebar {
+            position: fixed; left: 0; top: 0; bottom: 0;
+            z-index: 90; transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            width: 260px;
+          }
+          .mobile-bar { display: flex; }
+          .main { padding: 24px 16px; }
+          .quick-grid  { grid-template-columns: 1fr; }
+          .stats-strip { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
-<!-- Mobile Menu Toggle -->
-<div class="mobile-menu-toggle" id="mobileMenuToggle">
-    ☰
+
+<!-- Loading -->
+<div id="loadingScreen">
+    <div class="ring"></div>
+    <span>Loading your dashboard...</span>
 </div>
 
-<!-- Sidebar -->
-<aside class="sidebar" id="sidebar">
-    <div class="logo">
-        <h1>NIXY<span>DIGITAL</span></h1>
-    </div>
+<!-- Mobile top bar -->
+<div class="mobile-bar">
+    <div class="mobile-logo">NIXY<em>DIGITAL</em></div>
+    <button class="ham-btn" onclick="toggleMobile()">☰</button>
+</div>
+<div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobile()"></div>
 
-    <ul class="nav-menu">
-        <li class="nav-item">
-            <a href="dashboard.html" class="nav-link active" data-page="dashboard">
-                <span class="nav-icon">🏠</span>
-                <span>Dashboard</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="study-materials.html" class="nav-link" data-page="study">
-                <span class="nav-icon">📚</span>
-                <span>Study Materials</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="my-quizzes.html" class="nav-link" data-page="quizzes">
-                <span class="nav-icon">✍️</span>
-                <span>My Quizzes</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="progress.html" class="nav-link" data-page="progress">
-                <span class="nav-icon">📊</span>
-                <span>Progress</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a href="settings.html" class="nav-link" data-page="settings">
-                <span class="nav-icon">⚙️</span>
-                <span>Settings</span>
-            </a>
-        </li>
-    </ul>
-
-    <div class="user-profile" id="userProfile">
-        <div class="user-avatar" id="userAvatar">?</div>
-        <div class="user-info">
-            <div class="user-name" id="userName">Loading...</div>
-            <div class="user-plan">Free Plan</div>
+<!-- Sign-out modal -->
+<div class="signout-modal" id="signoutModal">
+    <div class="modal-box">
+        <h3>Sign out?</h3>
+        <p>You'll need to sign back in to access your study materials.</p>
+        <div class="modal-btns">
+            <button class="modal-cancel" onclick="closeSignout()">Cancel</button>
+            <button class="modal-confirm" onclick="confirmSignout()">Sign Out</button>
         </div>
     </div>
-</aside>
+</div>
 
-<!-- Main Content -->
-<main class="main-content" id="mainContent">
-    <!-- Loading State -->
-    <div class="loading" id="loadingState">
-        <div class="spinner"></div>
-        <p>Loading your dashboard...</p>
-    </div>
-
-    <!-- Dashboard Content (Hidden Initially) -->
-    <div id="dashboardContent" style="display: none;">
-        <!-- Header -->
-        <div class="dashboard-header">
-            <div class="welcome-text">Welcome back,</div>
-            <h1 class="dashboard-title" id="dashboardTitle">Loading...</h1>
+<div class="shell">
+    <!-- ─── Sidebar ─── -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo-wrap">
+            <div class="logo">NIXY<em>DIGITAL</em></div>
+            <div class="logo-sub">STUDY BUDDY AI</div>
         </div>
 
-        <!-- Stats Grid -->
-        <div class="stats-grid">
+        <div class="nav-section">Study</div>
+        <a class="nav-item active" href="dashboard.html">
+            <span class="nav-icon">⊞</span> Dashboard
+        </a>
+        <a class="nav-item" href="upload.html">
+            <span class="nav-icon">✏️</span> Upload Notes
+        </a>
+        <a class="nav-item" href="photo.html">
+            <span class="nav-icon">📷</span> Upload Photos
+        </a>
+        <a class="nav-item" href="flashcards.html">
+            <span class="nav-icon">🃏</span> Flashcards
+            <span class="nav-badge" id="sideFlashBadge" style="display:none">NEW</span>
+        </a>
+
+        <div class="nav-section">Library</div>
+        <a class="nav-item" href="notes-organizer.html">
+            <span class="nav-icon">📂</span> My Notes
+            <span class="nav-badge" id="sideNotesBadge">0</span>
+        </a>
+        <a class="nav-item" href="my-quizzes.html">
+            <span class="nav-icon">✍️</span> My Quizzes
+            <span class="nav-badge" id="sideQuizBadge">0</span>
+        </a>
+
+        <div class="nav-section">Account</div>
+        <a class="nav-item" href="progress.html">
+            <span class="nav-icon">📊</span> Progress
+        </a>
+        <a class="nav-item" href="settings.html">
+            <span class="nav-icon">⚙️</span> Settings
+        </a>
+
+        <div class="sidebar-footer">
+            <div class="user-chip" onclick="openSignout()">
+                <div class="avatar" id="avatarLetter">?</div>
+                <div class="user-info">
+                    <div class="user-email" id="userEmail">Loading...</div>
+                    <div class="user-plan">Free plan</div>
+                </div>
+                <button class="signout-btn" title="Sign out">↪</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ─── Main ─── -->
+    <main class="main">
+        <!-- Top bar -->
+        <div class="main-topbar">
+            <div class="greeting-block">
+                <div class="greeting">Good <em id="timeGreet">day</em>, student 👋</div>
+                <div class="greeting-sub">Here's your study overview</div>
+            </div>
+            <div class="date-chip" id="dateBadge">—</div>
+        </div>
+
+        <!-- Stats strip -->
+        <div class="stats-strip">
             <div class="stat-card">
-                <div class="stat-icon">📝</div>
-                <div class="stat-value" id="statMaterials">0</div>
+                <div class="stat-icon">📚</div>
+                <div class="stat-val" id="statMaterials">0</div>
                 <div class="stat-label">Study Materials</div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon">✅</div>
-                <div class="stat-value" id="statQuizzes">0</div>
-                <div class="stat-label">Quizzes Completed</div>
+                <div class="stat-icon">✍️</div>
+                <div class="stat-val" id="statQuizzes">0</div>
+                <div class="stat-label">Quizzes Taken</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon">🎯</div>
-                <div class="stat-value" id="statAccuracy">0%</div>
-                <div class="stat-label">Average Score</div>
+                <div class="stat-val" id="statAccuracy">—%</div>
+                <div class="stat-label">Avg Accuracy</div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon">🔥</div>
-                <div class="stat-value" id="statStreak">0</div>
-                <div class="stat-label">Day Streak</div>
+                <div class="stat-icon">🃏</div>
+                <div class="stat-val" id="statFlash">0</div>
+                <div class="stat-label">Flashcard Sets</div>
             </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="quick-actions">
-            <h2 class="section-title">Quick Actions</h2>
-            <div class="action-grid">
-                <div class="action-card" onclick="window.location.href='upload.html'">
-                    <div class="action-icon">📤</div>
-                    <h3 class="action-title">Upload Notes</h3>
-                    <p class="action-desc">Paste your study notes or upload files to get started</p>
+        <!-- Quick actions -->
+        <div class="section-hdr">
+            <div class="section-title">Quick Actions</div>
+        </div>
+        <div class="quick-grid">
+            <a class="action-card" href="upload.html">
+                <span class="ac-icon">✏️</span>
+                <div class="ac-title">Type / Paste Notes</div>
+                <div class="ac-desc">Write or paste typed notes and generate a quiz instantly</div>
+                <span class="ac-arrow">↗</span>
+            </a>
+            <a class="action-card" href="photo.html">
+                <span class="ac-icon">📷</span>
+                <div class="ac-title">Upload Photos</div>
+                <div class="ac-desc">Photo of handwritten or printed notes — AI reads and extracts text</div>
+                <span class="ac-arrow">↗</span>
+            </a>
+            <a class="action-card" href="flashcards.html">
+                <span class="ac-icon">🃏</span>
+                <div class="ac-title">Flashcards</div>
+                <div class="ac-desc">AI-generated flip cards from your notes. Keyboard shortcuts included</div>
+                <span class="ac-arrow">↗</span>
+            </a>
+            <a class="action-card" href="notes-organizer.html">
+                <span class="ac-icon">📂</span>
+                <div class="ac-title">My Notes</div>
+                <div class="ac-desc">Search, filter, edit, and organise all your study materials</div>
+                <span class="ac-arrow">↗</span>
+            </a>
+            <a class="action-card" href="my-quizzes.html">
+                <span class="ac-icon">📝</span>
+                <div class="ac-title">Quiz History</div>
+                <div class="ac-desc">See all your past quizzes, scores, and retake any of them</div>
+                <span class="ac-arrow">↗</span>
+            </a>
+            <a class="action-card" href="progress.html">
+                <span class="ac-icon">📊</span>
+                <div class="ac-title">My Progress</div>
+                <div class="ac-desc">Track your accuracy over time and see which subjects need work</div>
+                <span class="ac-arrow">↗</span>
+            </a>
+        </div>
+
+        <!-- Two column: activity + subject progress -->
+        <div class="two-col">
+            <!-- Recent activity -->
+            <div class="panel">
+                <div class="panel-head">
+                    <div class="panel-title">Recent Activity</div>
+                    <a class="panel-link" href="my-quizzes.html">See all →</a>
                 </div>
-                <div class="action-card" onclick="window.location.href='upload.html'">
-                    <div class="action-icon">✨</div>
-                    <h3 class="action-title">Generate Questions</h3>
-                    <p class="action-desc">Turn your notes into practice questions instantly</p>
+                <div class="panel-body" id="activityFeed">
+                    <div class="empty-panel">
+                        <div class="ep-icon">🌱</div>
+                        <div class="ep-text">No activity yet — upload your first notes to get started!</div>
+                    </div>
                 </div>
-                <div class="action-card" onclick="window.location.href='upload.html'">
-                    <div class="action-icon">🎓</div>
-                    <h3 class="action-title">Take a Quiz</h3>
-                    <p class="action-desc">Test your knowledge with adaptive quizzes</p>
+            </div>
+
+            <!-- Subject breakdown -->
+            <div class="panel">
+                <div class="panel-head">
+                    <div class="panel-title">Notes by Subject</div>
+                    <a class="panel-link" href="notes-organizer.html">View all →</a>
+                </div>
+                <div class="panel-body" id="subjectPanel">
+                    <div class="empty-panel">
+                        <div class="ep-icon">📖</div>
+                        <div class="ep-text">Upload notes to see your subject breakdown here</div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Recent Activity -->
-        <div class="recent-activity">
-            <h2 class="section-title">Recent Activity</h2>
-            <div class="activity-list" id="activityList">
-                <!-- Empty State -->
-                <div class="empty-state">
-                    <div class="empty-icon">📚</div>
-                    <h3 class="empty-title">No Activity Yet</h3>
-                    <p class="empty-desc">Start by uploading your first study material!</p>
-                    <a href="upload.html" class="cta-button">Upload Notes</a>
-                </div>
-            </div>
+        <!-- Recent notes row -->
+        <div class="section-hdr">
+            <div class="section-title">Recent Notes</div>
+            <a class="section-link" href="notes-organizer.html">View all →</a>
         </div>
-    </div>
-</main>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:40px" id="recentNotesGrid">
+            <div style="color:var(--muted);font-size:13px;padding:20px 0;grid-column:1/-1">Loading recent notes...</div>
+        </div>
 
-<!-- Logout Modal -->
-<div class="modal" id="logoutModal">
-    <div class="modal-content">
-        <h3 class="modal-title">Sign Out</h3>
-        <p class="modal-text">Are you sure you want to sign out?</p>
-        <div class="modal-buttons">
-            <button class="btn btn-secondary" onclick="closeLogoutModal()">Cancel</button>
-            <button class="btn btn-primary" onclick="confirmLogout()">Sign Out</button>
-        </div>
-    </div>
+    </main>
 </div>
 
-<!-- Firebase SDK -->
+<!-- Firebase -->
 <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-    import { getFirestore, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { initializeApp }    from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut }
+      from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getFirestore, collection, query, where, getDocs, orderBy, limit }
+      from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-    // Firebase configuration
     const firebaseConfig = {
-        apiKey: "AIzaSyB3ZEv5TgFr8SM1jCLyHJow3N39xfHYZNk",
-        authDomain: "studybuddyai-5561d.firebaseapp.com",
-        projectId: "studybuddyai-5561d",
-        storageBucket: "studybuddyai-5561d.firebasestorage.app",
-        messagingSenderId: "559083222865",
-        appId: "1:559083222865:web:26b4351fd26330716b4570"
+      apiKey: "AIzaSyB3ZEv5TgFr8SM1jCLyHJow3N39xfHYZNk",
+      authDomain: "studybuddyai-5561d.firebaseapp.com",
+      projectId: "studybuddyai-5561d",
+      storageBucket: "studybuddyai-5561d.firebasestorage.app",
+      messagingSenderId: "559083222865",
+      appId: "1:559083222865:web:26b4351fd26330716b4570"
     };
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
+    const app  = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db = getFirestore(app);
+    const db   = getFirestore(app);
 
-    console.log('✅ Firebase initialized');
+    // ── Greetings ──
+    const hr = new Date().getHours();
+    document.getElementById('timeGreet').textContent =
+      hr < 12 ? 'morning' : hr < 17 ? 'afternoon' : 'evening';
+    document.getElementById('dateBadge').textContent =
+      new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
 
-    // Check authentication
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            console.log('✅ User logged in:', user.email);
+    // ── Global fns ──
+    window.toggleMobile  = toggleMobile;
+    window.openSignout   = openSignout;
+    window.closeSignout  = closeSignout;
+    window.confirmSignout = confirmSignout;
 
-            // Get first name from email
-            const firstName = user.email.split('@')[0];
-            const displayName = user.displayName || firstName;
-            const initial = displayName.charAt(0).toUpperCase();
-
-            // Update UI
-            document.getElementById('userName').textContent = displayName;
-            document.getElementById('userAvatar').textContent = initial;
-            document.getElementById('dashboardTitle').textContent = `${displayName}!`;
-
-            // Load user data
-            await loadUserData(user.uid);
-
-            // Show dashboard
-            document.getElementById('loadingState').style.display = 'none';
-            document.getElementById('dashboardContent').style.display = 'block';
-
-        } else {
-            console.log('❌ No user logged in, redirecting...');
-            window.location.href = 'auth.html';
-        }
-    });
-
-    // Load user data from Firestore
-    async function loadUserData(userId) {
-        try {
-            // TODO: Load actual data from Firestore
-            // For now, show placeholder stats
-            document.getElementById('statMaterials').textContent = '0';
-            document.getElementById('statQuizzes').textContent = '0';
-            document.getElementById('statAccuracy').textContent = '0%';
-            document.getElementById('statStreak').textContent = '0';
-
-            console.log('📊 User data loaded');
-        } catch (error) {
-            console.error('❌ Error loading user data:', error);
-        }
+    function toggleMobile() {
+      document.getElementById('sidebar').classList.toggle('open');
+      document.getElementById('mobileOverlay').classList.toggle('open');
+    }
+    function openSignout()   { document.getElementById('signoutModal').classList.add('open'); }
+    function closeSignout()  { document.getElementById('signoutModal').classList.remove('open'); }
+    function confirmSignout() {
+      signOut(auth).then(() => window.location.href = 'auth.html');
     }
 
-    // User profile click - show logout modal
-    document.getElementById('userProfile').addEventListener('click', () => {
-        document.getElementById('logoutModal').classList.add('show');
+    // ── Auth ──
+    onAuthStateChanged(auth, async user => {
+      if (!user) { window.location.href = 'auth.html'; return; }
+
+      const email  = user.email || '';
+      const letter = (user.displayName?.[0] || email[0] || '?').toUpperCase();
+      document.getElementById('avatarLetter').textContent = letter;
+      document.getElementById('userEmail').textContent = email;
+
+      document.getElementById('loadingScreen').style.display = 'none';
+
+      await loadDashboardData(user.uid);
     });
 
-    // Close logout modal
-    window.closeLogoutModal = () => {
-        document.getElementById('logoutModal').classList.remove('show');
-    };
+    async function loadDashboardData(uid) {
+      try {
+        // Materials
+        const mSnap = await getDocs(query(collection(db, 'study_materials'), where('userId','==',uid)));
+        const materials = mSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
-    // Confirm logout
-    window.confirmLogout = async () => {
-        try {
-            await signOut(auth);
-            console.log('✅ Logged out successfully');
-            window.location.href = 'auth.html';
-        } catch (error) {
-            console.error('❌ Logout error:', error);
-            alert('Failed to sign out. Please try again.');
+        // Quiz results
+        const qSnap = await getDocs(query(collection(db, 'quiz_results'), where('userId','==',uid)));
+        const quizzes = qSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        // ── Stats ──
+        document.getElementById('statMaterials').textContent = materials.length;
+        document.getElementById('statQuizzes').textContent   = quizzes.length;
+
+        const flashSets = materials.filter(m => m.flashcards && m.flashcards.length).length;
+        document.getElementById('statFlash').textContent = flashSets;
+
+        const avgAcc = quizzes.length
+          ? Math.round(quizzes.reduce((s, q) => s + (q.accuracy || 0), 0) / quizzes.length)
+          : null;
+        document.getElementById('statAccuracy').textContent = avgAcc !== null ? `${avgAcc}%` : '—%';
+
+        // ── Sidebar badges ──
+        document.getElementById('sideNotesBadge').textContent = materials.length;
+        document.getElementById('sideQuizBadge').textContent  = quizzes.length;
+        if (flashSets > 0) {
+          document.getElementById('sideFlashBadge').style.display = 'inline';
         }
-    };
 
-    // Mobile menu toggle
-    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-    const sidebar = document.getElementById('sidebar');
+        // ── Activity feed ──
+        renderActivity(quizzes, materials);
 
-    mobileMenuToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('open');
-    });
+        // ── Subject breakdown ──
+        renderSubjects(materials);
 
-    // Close sidebar when clicking outside on mobile
-    document.addEventListener('click', (e) => {
-        if (window.innerWidth <= 1024) {
-            if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
-                sidebar.classList.remove('open');
-            }
-        }
-    });
+        // ── Recent notes ──
+        renderRecentNotes(materials);
+
+      } catch (e) {
+        console.error('Dashboard load error:', e);
+      }
+    }
+
+    function renderActivity(quizzes, materials) {
+      const feed = document.getElementById('activityFeed');
+
+      // Combine and sort by date desc
+      const events = [];
+      quizzes.forEach(q => events.push({
+        type: 'quiz', title: `Completed a quiz`,
+        sub: `Score: ${q.accuracy || 0}% · ${q.totalQuestions || 0} questions`,
+        time: q.completedAt?.toDate ? q.completedAt.toDate() : null,
+        dot: q.accuracy >= 70 ? '' : 'orange'
+      }));
+      materials.forEach(m => events.push({
+        type: 'upload', title: m.title || 'Uploaded notes',
+        sub: m.subject || 'General',
+        time: m.createdAt?.toDate ? m.createdAt.toDate() : null,
+        dot: ''
+      }));
+
+      events.sort((a,b) => (b.time||0) - (a.time||0));
+      const recent = events.slice(0, 6);
+
+      if (!recent.length) {
+        feed.innerHTML = `<div class="empty-panel">
+          <div class="ep-icon">🌱</div>
+          <div class="ep-text">No activity yet — upload your first notes!</div>
+        </div>`;
+        return;
+      }
+
+      feed.innerHTML = recent.map(e => `
+        <div class="activity-item">
+          <div class="act-dot ${e.dot}"></div>
+          <div class="act-info">
+            <div class="act-title">${e.title}</div>
+            <div class="act-sub">${e.sub}</div>
+          </div>
+          <div class="act-time">${e.time ? timeAgo(e.time) : '—'}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderSubjects(materials) {
+      const panel = document.getElementById('subjectPanel');
+      if (!materials.length) return;
+
+      const counts = {};
+      materials.forEach(m => { const s = m.subject || 'General'; counts[s] = (counts[s]||0)+1; });
+      const total = materials.length;
+      const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+
+      panel.innerHTML = `<div class="progress-list">${
+        sorted.map(([subj, n]) => `
+          <div class="prog-item">
+            <div class="prog-top">
+              <span class="prog-name">${subj}</span>
+              <span class="prog-pct">${n} note${n>1?'s':''}</span>
+            </div>
+            <div class="prog-track">
+              <div class="prog-fill" style="width:${Math.round((n/total)*100)}%"></div>
+            </div>
+          </div>
+        `).join('')
+      }</div>`;
+    }
+
+    function renderRecentNotes(materials) {
+      const grid = document.getElementById('recentNotesGrid');
+      if (!materials.length) {
+        grid.innerHTML = `
+          <div style="grid-column:1/-1;text-align:center;padding:40px 0">
+            <div style="font-size:36px;margin-bottom:12px">📝</div>
+            <div style="font-size:14px;color:var(--muted);margin-bottom:16px">No notes uploaded yet</div>
+            <a href="upload.html" style="display:inline-block;padding:10px 22px;
+              background:linear-gradient(135deg,var(--forest),var(--seagreen));
+              color:#fff;border-radius:10px;text-decoration:none;
+              font-family:'Syne',sans-serif;font-size:13px;font-weight:700">
+              Upload your first notes
+            </a>
+          </div>`;
+        return;
+      }
+
+      // Sort newest first, take 4
+      const sorted = [...materials].sort((a,b)=>
+        (b.createdAt?.seconds||0)-(a.createdAt?.seconds||0)
+      ).slice(0,4);
+
+      grid.innerHTML = sorted.map(m => {
+        const preview = (m.content||'').replace(/\s+/g,' ').substring(0,100);
+        const date = m.createdAt?.toDate
+          ? m.createdAt.toDate().toLocaleDateString('en-US',{month:'short',day:'numeric'})
+          : 'Recent';
+        return `
+          <div onclick="window.location.href='notes-organizer.html'" style="
+            background:var(--card);border:1px solid var(--border);border-radius:14px;
+            padding:18px;cursor:pointer;transition:all 0.2s;
+            animation:fadeUp 0.4s ease both;
+          " onmouseenter="this.style.borderColor='var(--border-hi)';this.style.transform='translateY(-2px)'"
+             onmouseleave="this.style.borderColor='var(--border)';this.style.transform='translateY(0)'">
+            <div style="font-size:11px;font-weight:600;color:var(--malachite);letter-spacing:0.08em;
+              text-transform:uppercase;background:rgba(22,219,101,0.1);display:inline-block;
+              border-radius:5px;padding:2px 7px;margin-bottom:10px">${m.subject||'General'}</div>
+            <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;
+              margin-bottom:6px;overflow:hidden;display:-webkit-box;
+              -webkit-line-clamp:1;-webkit-box-orient:vertical">${m.title||'Untitled'}</div>
+            <div style="font-size:12px;color:var(--muted);line-height:1.5;
+              overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+              margin-bottom:12px">${preview}</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <a href="generate-groq.html?id=${m.id}" onclick="event.stopPropagation()"
+                style="font-size:11px;font-weight:600;color:var(--malachite);
+                border:1px solid rgba(22,219,101,0.25);border-radius:6px;
+                padding:3px 9px;text-decoration:none;background:rgba(22,219,101,0.06)">Quiz</a>
+              <a href="flashcards.html?id=${m.id}" onclick="event.stopPropagation()"
+                style="font-size:11px;font-weight:600;color:#bc5f04;
+                border:1px solid rgba(188,95,4,0.25);border-radius:6px;
+                padding:3px 9px;text-decoration:none;background:rgba(188,95,4,0.06)">Cards</a>
+              <span style="margin-left:auto;font-size:11px;color:var(--muted)">${date}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function timeAgo(date) {
+      const s = Math.floor((Date.now() - date.getTime()) / 1000);
+      if (s < 60)   return 'just now';
+      if (s < 3600) return `${Math.floor(s/60)}m ago`;
+      if (s < 86400)return `${Math.floor(s/3600)}h ago`;
+      return `${Math.floor(s/86400)}d ago`;
+    }
 </script>
 </body>
 </html>

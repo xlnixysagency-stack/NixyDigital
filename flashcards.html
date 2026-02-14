@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards — Study Buddy AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+          --black: #020202;
+          --evergreen: #0d2818;
+          --forest: #04471c;
+          --seagreen: #058c42;
+          --malachite: #16db65;
+          --text: #e8f5ee;
+          --muted: #7aad8f;
+          --card: rgba(13,40,24,0.7);
+          --border: rgba(22,219,101,0.15);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+          background: var(--black);
+          color: var(--text);
+          font-family: 'DM Sans', sans-serif;
+          min-height: 100vh;
+          overflow-x: hidden;
+        }
+        body::before {
+          content: '';
+          position: fixed; top: -30%; right: -10%;
+          width: 600px; height: 600px;
+          background: radial-gradient(circle, rgba(5,140,66,0.05) 0%, transparent 70%);
+          pointer-events: none; z-index: 0;
+        }
+
+        /* Loading */
+        #loadingScreen {
+          position: fixed; inset: 0;
+          background: var(--black);
+          display: flex; flex-direction: column;
+          align-items: center; justify-content: center;
+          z-index: 100; gap: 16px;
+        }
+        .loader-ring {
+          width: 48px; height: 48px;
+          border: 3px solid var(--border);
+          border-top-color: var(--malachite);
+          border-radius: 50%;
+          animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        #loadingScreen p { color: var(--muted); font-size: 14px; }
+
+        /* Layout */
+        .page { display: none; min-height: 100vh; padding: 40px 20px; position: relative; z-index: 1; }
+        .page.active { display: flex; flex-direction: column; align-items: center; }
+
+        /* Topbar */
+        .topbar {
+          width: 100%; max-width: 780px;
+          display: flex; align-items: center; justify-content: space-between;
+          margin-bottom: 40px;
+        }
+        .logo { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: 0.08em; }
+        .logo span { color: var(--malachite); }
+        .back-btn {
+          display: flex; align-items: center; gap: 8px;
+          background: none; border: 1px solid var(--border);
+          color: var(--muted); border-radius: 8px;
+          padding: 8px 14px; font-size: 13px;
+          cursor: pointer; font-family: 'DM Sans', sans-serif;
+          transition: all 0.2s;
+        }
+        .back-btn:hover { border-color: var(--malachite); color: var(--malachite); }
+
+        /* Select material */
+        #selectPage { gap: 0; }
+        .section-title {
+          font-family: 'Syne', sans-serif;
+          font-size: 28px; font-weight: 800;
+          width: 100%; max-width: 780px;
+          margin-bottom: 8px;
+        }
+        .section-title span { color: var(--malachite); }
+        .section-sub {
+          color: var(--muted); font-size: 14px;
+          width: 100%; max-width: 780px;
+          margin-bottom: 32px;
+        }
+        .materials-grid {
+          width: 100%; max-width: 780px;
+          display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+          gap: 16px;
+        }
+        .material-card {
+          background: var(--card);
+          border: 1px solid var(--border);
+          border-radius: 16px; padding: 24px;
+          cursor: pointer; transition: all 0.2s;
+          position: relative; overflow: hidden;
+        }
+        .material-card::before {
+          content: '';
+          position: absolute; top: 0; left: 0; right: 0; height: 2px;
+          background: linear-gradient(90deg, var(--seagreen), var(--malachite), transparent);
+          transform: scaleX(0); transition: transform 0.3s;
+        }
+        .material-card:hover { border-color: rgba(22,219,101,0.35); transform: translateY(-2px); }
+        .material-card:hover::before { transform: scaleX(1); }
+        .m-subject {
+          display: inline-block;
+          font-size: 11px; font-weight: 600;
+          color: var(--malachite); letter-spacing: 0.1em;
+          text-transform: uppercase;
+          background: rgba(22,219,101,0.1);
+          border-radius: 6px; padding: 4px 8px;
+          margin-bottom: 12px;
+        }
+        .m-title {
+          font-family: 'Syne', sans-serif;
+          font-size: 16px; font-weight: 700;
+          margin-bottom: 8px;
+          display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        .m-date { font-size: 12px; color: var(--muted); }
+
+        /* Flashcard stage */
+        #flashcardPage { gap: 0; }
+
+        .fc-header {
+          width: 100%; max-width: 640px;
+          margin-bottom: 32px;
+        }
+        .fc-title {
+          font-family: 'Syne', sans-serif;
+          font-size: 22px; font-weight: 700;
+          margin-bottom: 6px;
+        }
+        .fc-meta { display: flex; align-items: center; gap: 16px; }
+        .fc-subject {
+          font-size: 12px; color: var(--malachite); font-weight: 600;
+          letter-spacing: 0.08em; text-transform: uppercase;
+        }
+        .fc-count { font-size: 12px; color: var(--muted); }
+
+        /* Progress */
+        .fc-progress {
+          width: 100%; max-width: 640px;
+          margin-bottom: 28px;
+        }
+        .fc-prog-meta {
+          display: flex; justify-content: space-between;
+          font-size: 12px; color: var(--muted);
+          margin-bottom: 8px;
+        }
+        .fc-prog-track {
+          height: 3px; background: var(--border); border-radius: 99px; overflow: hidden;
+        }
+        .fc-prog-fill {
+          height: 100%;
+          background: linear-gradient(90deg, var(--seagreen), var(--malachite));
+          border-radius: 99px; transition: width 0.4s ease;
+        }
+
+        /* The flip card */
+        .card-wrap {
+          width: 100%; max-width: 640px;
+          perspective: 1400px;
+          margin-bottom: 28px;
+          cursor: pointer;
+        }
+        .flip-card {
+          width: 100%; min-height: 260px;
+          position: relative;
+          transform-style: preserve-3d;
+          transition: transform 0.55s cubic-bezier(0.4,0.2,0.2,1);
+        }
+        .flip-card.flipped { transform: rotateY(180deg); }
+        .card-face {
+          position: absolute; inset: 0;
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
+          border-radius: 20px;
+          padding: 40px;
+          display: flex; flex-direction: column;
+          justify-content: center; align-items: center;
+          text-align: center;
+        }
+        .card-front {
+          background: var(--card);
+          border: 1px solid var(--border);
+        }
+        .card-back {
+          background: linear-gradient(135deg, var(--evergreen), var(--forest));
+          border: 1px solid rgba(22,219,101,0.25);
+          transform: rotateY(180deg);
+        }
+        .card-label {
+          font-size: 11px; font-weight: 600;
+          letter-spacing: 0.1em; text-transform: uppercase;
+          margin-bottom: 20px;
+          opacity: 0.6;
+        }
+        .card-front .card-label { color: var(--muted); }
+        .card-back .card-label { color: var(--malachite); }
+        .card-content {
+          font-family: 'Syne', sans-serif;
+          font-size: 20px; font-weight: 600;
+          line-height: 1.5; color: var(--text);
+        }
+        .card-back .card-content { font-size: 17px; font-weight: 500; font-family: 'DM Sans', sans-serif; }
+        .flip-hint {
+          font-size: 12px; color: var(--muted);
+          margin-top: 20px; opacity: 0.7;
+        }
+
+        /* Navigation */
+        .fc-nav {
+          display: flex; align-items: center; gap: 16px;
+          width: 100%; max-width: 640px;
+          margin-bottom: 24px;
+        }
+        .nav-btn {
+          flex: 1; padding: 13px;
+          background: none; border: 1px solid var(--border);
+          border-radius: 12px; color: var(--text);
+          font-family: 'Syne', sans-serif;
+          font-size: 14px; font-weight: 600;
+          cursor: pointer; transition: all 0.2s;
+        }
+        .nav-btn:hover:not(:disabled) {
+          border-color: var(--malachite); color: var(--malachite);
+          background: rgba(22,219,101,0.05);
+        }
+        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .nav-center {
+          font-size: 13px; color: var(--muted);
+          white-space: nowrap; min-width: 80px; text-align: center;
+        }
+
+        /* Known / Unknown */
+        .fc-rate {
+          display: flex; gap: 12px;
+          width: 100%; max-width: 640px;
+        }
+        .rate-btn {
+          flex: 1; padding: 13px;
+          border-radius: 12px;
+          font-family: 'DM Sans', sans-serif;
+          font-size: 14px; font-weight: 500;
+          cursor: pointer; transition: all 0.2s;
+          border: none;
+        }
+        .rate-known {
+          background: rgba(22,219,101,0.12);
+          color: var(--malachite);
+          border: 1px solid rgba(22,219,101,0.25);
+        }
+        .rate-known:hover { background: rgba(22,219,101,0.2); }
+        .rate-unknown {
+          background: rgba(244,68,46,0.08);
+          color: #f4442e;
+          border: 1px solid rgba(244,68,46,0.2);
+        }
+        .rate-unknown:hover { background: rgba(244,68,46,0.15); }
+
+        /* Keyboard hint */
+        .kb-hint {
+          margin-top: 20px;
+          font-size: 12px; color: var(--muted);
+          display: flex; gap: 20px; align-items: center;
+        }
+        .kb-key {
+          display: inline-block;
+          background: rgba(22,219,101,0.08);
+          border: 1px solid var(--border);
+          border-radius: 5px; padding: 2px 8px;
+          font-size: 11px; color: var(--muted);
+          font-family: monospace;
+        }
+
+        /* Done state */
+        .done-card {
+          width: 100%; max-width: 640px;
+          background: var(--card);
+          border: 1px solid var(--border);
+          border-radius: 20px; padding: 48px 36px;
+          text-align: center;
+          margin-bottom: 24px;
+        }
+        .done-icon { font-size: 48px; margin-bottom: 16px; }
+        .done-title {
+          font-family: 'Syne', sans-serif;
+          font-size: 26px; font-weight: 800;
+          margin-bottom: 8px;
+        }
+        .done-sub { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+        .done-stats { display: flex; gap: 16px; justify-content: center; margin-bottom: 28px; }
+        .done-stat {
+          background: var(--evergreen); border: 1px solid var(--border);
+          border-radius: 12px; padding: 16px 24px; text-align: center;
+        }
+        .done-stat .n {
+          font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800;
+          color: var(--malachite);
+        }
+        .done-stat .l { font-size: 12px; color: var(--muted); margin-top: 2px; }
+        .done-actions { display: flex; gap: 12px; justify-content: center; }
+        .btn-primary, .btn-outline {
+          padding: 13px 28px; border-radius: 12px;
+          font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+          cursor: pointer; transition: all 0.2s;
+        }
+        .btn-primary {
+          background: linear-gradient(135deg, var(--forest), var(--seagreen));
+          border: none; color: #fff;
+        }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(5,140,66,0.3); }
+        .btn-outline {
+          background: none; border: 1px solid var(--border); color: var(--text);
+        }
+        .btn-outline:hover { border-color: var(--malachite); color: var(--malachite); }
+
+        /* Generating state */
+        .generating-box {
+          width: 100%; max-width: 640px;
+          background: var(--card);
+          border: 1px solid var(--border);
+          border-radius: 20px; padding: 60px;
+          text-align: center; display: none;
+        }
+        .gen-loader {
+          width: 56px; height: 56px;
+          border: 3px solid var(--border);
+          border-top-color: var(--malachite);
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+          margin: 0 auto 20px;
+        }
+        .gen-title {
+          font-family: 'Syne', sans-serif;
+          font-size: 18px; font-weight: 700;
+          margin-bottom: 8px;
+        }
+        .gen-sub { color: var(--muted); font-size: 14px; }
+
+        .empty-state {
+          width: 100%; max-width: 780px;
+          text-align: center; padding: 60px 20px;
+        }
+        .empty-state h3 {
+          font-family: 'Syne', sans-serif;
+          font-size: 20px; font-weight: 700; margin-bottom: 8px;
+        }
+        .empty-state p { color: var(--muted); font-size: 14px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+<div id="loadingScreen">
+    <div class="loader-ring"></div>
+    <p>Loading flashcards...</p>
+</div>
+
+<!-- Select material page -->
+<div id="selectPage" class="page">
+    <div class="topbar">
+        <div class="logo">NIXY<span>DIGITAL</span></div>
+        <button class="back-btn" onclick="window.location.href='dashboard.html'">← Dashboard</button>
+    </div>
+    <div class="section-title">Flash<span>cards</span></div>
+    <div class="section-sub">Pick a study material to generate flashcards from</div>
+    <div class="materials-grid" id="materialsGrid">
+        <div style="color:var(--muted);font-size:14px;padding:20px;">Loading materials...</div>
+    </div>
+</div>
+
+<!-- Flashcard study page -->
+<div id="flashcardPage" class="page">
+    <div class="topbar">
+        <div class="logo">NIXY<span>DIGITAL</span></div>
+        <button class="back-btn" onclick="backToSelect()">← Choose material</button>
+    </div>
+
+    <div class="fc-header">
+        <div class="fc-title" id="fcTitle">Flashcards</div>
+        <div class="fc-meta">
+            <div class="fc-subject" id="fcSubject">—</div>
+            <div class="fc-count" id="fcCount">0 cards</div>
+        </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="fc-progress">
+        <div class="fc-prog-meta">
+            <span id="fcProgLabel">Card 1 of 10</span>
+            <span id="fcKnownCount">0 known</span>
+        </div>
+        <div class="fc-prog-track">
+            <div class="fc-prog-fill" id="fcProgFill" style="width:0%"></div>
+        </div>
+    </div>
+
+    <!-- Generating overlay -->
+    <div class="generating-box" id="generatingBox">
+        <div class="gen-loader"></div>
+        <div class="gen-title">Generating flashcards...</div>
+        <div class="gen-sub">AI is creating cards from your notes</div>
+    </div>
+
+    <!-- The card -->
+    <div class="card-wrap" id="cardWrap" onclick="flipCard()">
+        <div class="flip-card" id="flipCard">
+            <div class="card-face card-front">
+                <div class="card-label">TERM / CONCEPT</div>
+                <div class="card-content" id="cardFront">Loading...</div>
+                <div class="flip-hint">Click to reveal answer</div>
+            </div>
+            <div class="card-face card-back">
+                <div class="card-label">ANSWER</div>
+                <div class="card-content" id="cardBack">—</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="fc-nav">
+        <button class="nav-btn" id="prevBtn" onclick="prevCard()" disabled>← Prev</button>
+        <div class="nav-center" id="navCenter">1 / 10</div>
+        <button class="nav-btn" id="nextBtn" onclick="nextCard()">Next →</button>
+    </div>
+
+    <!-- Rate yourself -->
+    <div class="fc-rate">
+        <button class="rate-btn rate-unknown" onclick="rateCard(false)">✗ Still learning</button>
+        <button class="rate-btn rate-known" onclick="rateCard(true)">✓ Got it!</button>
+    </div>
+
+    <div class="kb-hint">
+        <span><span class="kb-key">Space</span> flip</span>
+        <span><span class="kb-key">←</span> prev</span>
+        <span><span class="kb-key">→</span> next</span>
+        <span><span class="kb-key">1</span> still learning &nbsp; <span class="kb-key">2</span> got it</span>
+    </div>
+</div>
+
+<!-- Done page -->
+<div id="donePage" class="page">
+    <div class="topbar">
+        <div class="logo">NIXY<span>DIGITAL</span></div>
+        <button class="back-btn" onclick="backToSelect()">← Choose material</button>
+    </div>
+    <div class="done-card">
+        <div class="done-icon">🎉</div>
+        <div class="done-title">Set complete!</div>
+        <div class="done-sub">You've gone through all the flashcards</div>
+        <div class="done-stats">
+            <div class="done-stat">
+                <div class="n" id="doneKnown">0</div>
+                <div class="l">Known</div>
+            </div>
+            <div class="done-stat">
+                <div class="n" id="doneReview">0</div>
+                <div class="l">Review</div>
+            </div>
+            <div class="done-stat">
+                <div class="n" id="donePct">0%</div>
+                <div class="l">Mastered</div>
+            </div>
+        </div>
+        <div class="done-actions">
+            <button class="btn-primary" onclick="restartCards()">Study again</button>
+            <button class="btn-outline" onclick="studyUnknown()">Review missed</button>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc }
+      from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB3ZEv5TgFr8SM1jCLyHJow3N39xfHYZNk",
+      authDomain: "studybuddyai-5561d.firebaseapp.com",
+      projectId: "studybuddyai-5561d",
+      storageBucket: "studybuddyai-5561d.firebasestorage.app",
+      messagingSenderId: "559083222865",
+      appId: "1:559083222865:web:26b4351fd26330716b4570"
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    let currentUser = null;
+    let cards = [];
+    let currentCardIdx = 0;
+    let knownSet = new Set();
+    let currentMaterialId = null;
+    let GROQ_KEY = localStorage.getItem('groq_key') || '';
+
+    window.flipCard   = flipCard;
+    window.nextCard   = nextCard;
+    window.prevCard   = prevCard;
+    window.rateCard   = rateCard;
+    window.backToSelect = backToSelect;
+    window.restartCards = restartCards;
+    window.studyUnknown = studyUnknown;
+
+    onAuthStateChanged(auth, async user => {
+      if (!user) { window.location.href = 'auth.html'; return; }
+      currentUser = user;
+
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+
+      await loadMaterials();
+      document.getElementById('loadingScreen').style.display = 'none';
+
+      if (id) {
+        await openMaterial(id);
+      } else {
+        document.getElementById('selectPage').classList.add('active');
+      }
+    });
+
+    async function loadMaterials() {
+      try {
+        const q = query(collection(db, 'study_materials'), where('userId', '==', currentUser.uid));
+        const snap = await getDocs(q);
+        const grid = document.getElementById('materialsGrid');
+
+        if (snap.empty) {
+          grid.innerHTML = `<div class="empty-state">
+            <h3>No study materials yet</h3>
+            <p>Upload some notes first, then come back to make flashcards</p>
+            <button class="btn-primary" onclick="window.location.href='upload.html'">Upload Notes</button>
+          </div>`;
+          return;
+        }
+
+        grid.innerHTML = '';
+        snap.forEach(d => {
+          const m = d.data();
+          const card = document.createElement('div');
+          card.className = 'material-card';
+          card.onclick = () => openMaterial(d.id);
+          card.innerHTML = `
+            <div class="m-subject">${m.subject || 'General'}</div>
+            <div class="m-title">${m.title || 'Untitled'}</div>
+            <div class="m-date">${m.createdAt?.toDate ? m.createdAt.toDate().toLocaleDateString() : 'Recent'}</div>
+          `;
+          grid.appendChild(card);
+        });
+      } catch(e) { console.error(e); }
+    }
+
+    async function openMaterial(id) {
+      currentMaterialId = id;
+      document.getElementById('selectPage').classList.remove('active');
+      document.getElementById('flashcardPage').classList.add('active');
+      document.getElementById('generatingBox').style.display = 'block';
+      document.getElementById('cardWrap').style.display = 'none';
+      document.getElementById('fcTitle').style.display = 'none';
+
+      try {
+        const snap = await getDoc(doc(db, 'study_materials', id));
+        if (!snap.exists()) { backToSelect(); return; }
+
+        const data = snap.data();
+        document.getElementById('fcTitle').textContent = data.title || 'Flashcards';
+        document.getElementById('fcSubject').textContent = data.subject || 'General';
+        document.getElementById('fcTitle').style.display = 'block';
+
+        // Use cached flashcards if they exist
+        if (data.flashcards && data.flashcards.length) {
+          loadCards(data.flashcards);
+        } else {
+          const generated = await generateFlashcards(data.content, data.subject);
+          // save back
+          await updateDoc(doc(db, 'study_materials', id), { flashcards: generated });
+          loadCards(generated);
+        }
+      } catch(e) {
+        console.error(e);
+        document.getElementById('generatingBox').innerHTML =
+          '<p style="color:#f4442e;padding:20px">Error generating flashcards</p>';
+      }
+    }
+
+    async function generateFlashcards(content, subject) {
+      if (!GROQ_KEY) {
+        const key = prompt('Enter your Groq API key to generate flashcards:');
+        if (key) { GROQ_KEY = key.trim(); localStorage.setItem('groq_key', GROQ_KEY); }
+        else { return [{ front: 'No API key', back: 'Please add a Groq API key to generate flashcards' }]; }
+      }
+
+      const prompt = `Create 12 high-quality flashcards from these ${subject || ''} study notes.
+
+    Notes:
+    ${content.substring(0, 3000)}
+
+    Respond ONLY with a JSON array (no markdown, no explanation):
+    [
+      {"front": "term or concept or question", "back": "definition or answer (2-3 sentences max)"},
+      ...
+    ]
+
+    Make the fronts specific terms, key concepts, or short questions. Backs should be clear and concise.`;
+
+      const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${GROQ_KEY}`
+        },
+        body: JSON.stringify({
+          model: 'llama-3.3-70b-versatile',
+          messages: [{ role: 'user', content: prompt }],
+          temperature: 0.4,
+          max_tokens: 1500
+        })
+      });
+
+      const data = await resp.json();
+      const raw = data.choices[0].message.content.trim().replace(/```json|```/g, '').trim();
+      return JSON.parse(raw);
+    }
+
+    function loadCards(cardData) {
+      cards = cardData;
+      currentCardIdx = 0;
+      knownSet = new Set();
+
+      document.getElementById('generatingBox').style.display = 'none';
+      document.getElementById('cardWrap').style.display = 'block';
+      document.getElementById('fcCount').textContent = `${cards.length} cards`;
+      renderCard();
+    }
+
+    function renderCard() {
+      const c = cards[currentCardIdx];
+      const total = cards.length;
+
+      document.getElementById('cardFront').textContent = c.front;
+      document.getElementById('cardBack').textContent   = c.back;
+      document.getElementById('flipCard').classList.remove('flipped');
+      document.getElementById('navCenter').textContent = `${currentCardIdx + 1} / ${total}`;
+      document.getElementById('fcProgLabel').textContent = `Card ${currentCardIdx + 1} of ${total}`;
+      document.getElementById('fcKnownCount').textContent = `${knownSet.size} known`;
+      document.getElementById('fcProgFill').style.width = `${Math.round((currentCardIdx / total) * 100)}%`;
+
+      document.getElementById('prevBtn').disabled = currentCardIdx === 0;
+      document.getElementById('nextBtn').disabled = currentCardIdx === total - 1;
+    }
+
+    function flipCard() {
+      document.getElementById('flipCard').classList.toggle('flipped');
+    }
+
+    function nextCard() {
+      if (currentCardIdx < cards.length - 1) {
+        currentCardIdx++;
+        renderCard();
+      } else {
+        showDone();
+      }
+    }
+
+    function prevCard() {
+      if (currentCardIdx > 0) {
+        currentCardIdx--;
+        renderCard();
+      }
+    }
+
+    function rateCard(known) {
+      if (known) knownSet.add(currentCardIdx);
+      else knownSet.delete(currentCardIdx);
+      document.getElementById('fcKnownCount').textContent = `${knownSet.size} known`;
+      nextCard();
+    }
+
+    function showDone() {
+      document.getElementById('flashcardPage').classList.remove('active');
+      document.getElementById('donePage').classList.add('active');
+
+      const total = cards.length;
+      const known = knownSet.size;
+      const review = total - known;
+      const pct = Math.round((known / total) * 100);
+
+      document.getElementById('doneKnown').textContent = known;
+      document.getElementById('doneReview').textContent = review;
+      document.getElementById('donePct').textContent = `${pct}%`;
+    }
+
+    function restartCards() {
+      currentCardIdx = 0; knownSet = new Set();
+      document.getElementById('donePage').classList.remove('active');
+      document.getElementById('flashcardPage').classList.add('active');
+      renderCard();
+    }
+
+    function studyUnknown() {
+      const unknown = cards.filter((_, i) => !knownSet.has(i));
+      if (!unknown.length) { restartCards(); return; }
+      cards = unknown;
+      currentCardIdx = 0; knownSet = new Set();
+      document.getElementById('donePage').classList.remove('active');
+      document.getElementById('flashcardPage').classList.add('active');
+      renderCard();
+    }
+
+    function backToSelect() {
+      document.getElementById('flashcardPage').classList.remove('active');
+      document.getElementById('donePage').classList.remove('active');
+      document.getElementById('selectPage').classList.add('active');
+      history.pushState({}, '', 'flashcards.html');
+    }
+
+    // Keyboard controls
+    document.addEventListener('keydown', e => {
+      const fp = document.getElementById('flashcardPage');
+      if (!fp.classList.contains('active')) return;
+      if (e.key === ' ') { e.preventDefault(); flipCard(); }
+      else if (e.key === 'ArrowRight') nextCard();
+      else if (e.key === 'ArrowLeft') prevCard();
+      else if (e.key === '1') rateCard(false);
+      else if (e.key === '2') rateCard(true);
+    });
+</script>
+</body>
+</html>

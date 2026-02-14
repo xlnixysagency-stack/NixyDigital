@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Notes — Study Buddy AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+          --black: #020202;
+          --evergreen: #0d2818;
+          --forest: #04471c;
+          --seagreen: #058c42;
+          --malachite: #16db65;
+          --text: #e8f5ee;
+          --muted: #7aad8f;
+          --card: rgba(13,40,24,0.7);
+          --border: rgba(22,219,101,0.15);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+          background: var(--black);
+          color: var(--text);
+          font-family: 'DM Sans', sans-serif;
+          min-height: 100vh;
+        }
+
+        /* Loading */
+        #loadingScreen {
+          position: fixed; inset: 0; background: var(--black);
+          display: flex; align-items: center; justify-content: center;
+          flex-direction: column; gap: 16px; z-index: 100;
+        }
+        .loader-ring {
+          width: 44px; height: 44px;
+          border: 3px solid var(--border);
+          border-top-color: var(--malachite);
+          border-radius: 50%;
+          animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        #loadingScreen p { color: var(--muted); font-size: 14px; }
+
+        /* Shell */
+        .shell {
+          display: flex; min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+          width: 240px; min-width: 240px;
+          background: var(--evergreen);
+          border-right: 1px solid var(--border);
+          padding: 28px 0;
+          position: sticky; top: 0; height: 100vh;
+          overflow-y: auto;
+          display: flex; flex-direction: column;
+        }
+        .sidebar-logo {
+          font-family: 'Syne', sans-serif;
+          font-size: 17px; font-weight: 800;
+          letter-spacing: 0.08em;
+          padding: 0 24px 24px;
+          border-bottom: 1px solid var(--border);
+          margin-bottom: 20px;
+        }
+        .sidebar-logo span { color: var(--malachite); }
+        .sidebar-section {
+          font-size: 10px; font-weight: 600;
+          color: var(--muted); letter-spacing: 0.12em;
+          text-transform: uppercase;
+          padding: 0 24px 8px;
+        }
+        .subject-list { flex: 1; }
+        .subject-item {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: 10px 24px;
+          cursor: pointer;
+          transition: all 0.15s;
+          font-size: 14px;
+          border-left: 2px solid transparent;
+        }
+        .subject-item:hover { background: rgba(22,219,101,0.05); }
+        .subject-item.active {
+          background: rgba(22,219,101,0.08);
+          border-left-color: var(--malachite);
+          color: var(--malachite);
+        }
+        .subject-badge {
+          font-size: 11px; color: var(--muted);
+          background: rgba(22,219,101,0.08);
+          border-radius: 99px; padding: 1px 8px;
+        }
+        .sidebar-footer {
+          padding: 20px 24px 0;
+          border-top: 1px solid var(--border);
+        }
+        .btn-upload {
+          width: 100%; padding: 11px;
+          background: linear-gradient(135deg, var(--forest), var(--seagreen));
+          border: none; border-radius: 10px;
+          color: #fff; font-family: 'Syne', sans-serif;
+          font-size: 13px; font-weight: 700;
+          cursor: pointer; transition: all 0.2s;
+          letter-spacing: 0.03em;
+        }
+        .btn-upload:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(5,140,66,0.3); }
+        .btn-back {
+          width: 100%; padding: 10px;
+          background: none; border: 1px solid var(--border);
+          border-radius: 10px; color: var(--muted);
+          font-family: 'DM Sans', sans-serif;
+          font-size: 13px; cursor: pointer;
+          transition: all 0.2s; margin-top: 8px;
+        }
+        .btn-back:hover { border-color: var(--malachite); color: var(--malachite); }
+
+        /* Main */
+        .main { flex: 1; padding: 36px 40px; overflow-y: auto; }
+
+        /* Header */
+        .main-header {
+          display: flex; align-items: flex-start; justify-content: space-between;
+          margin-bottom: 28px; gap: 20px; flex-wrap: wrap;
+        }
+        .main-title-group {}
+        .main-title {
+          font-family: 'Syne', sans-serif;
+          font-size: 26px; font-weight: 800;
+          margin-bottom: 4px;
+        }
+        .main-title span { color: var(--malachite); }
+        .main-sub { color: var(--muted); font-size: 14px; }
+        .header-actions { display: flex; gap: 10px; align-items: center; }
+        .view-toggle {
+          display: flex; gap: 4px;
+          background: var(--card); border: 1px solid var(--border);
+          border-radius: 10px; padding: 4px;
+        }
+        .view-btn {
+          padding: 6px 12px; border-radius: 7px;
+          background: none; border: none;
+          color: var(--muted); cursor: pointer;
+          font-size: 16px; transition: all 0.15s;
+        }
+        .view-btn.active { background: var(--forest); color: var(--malachite); }
+
+        /* Search + filter */
+        .toolbar {
+          display: flex; gap: 12px; margin-bottom: 24px;
+          flex-wrap: wrap;
+        }
+        .search-wrap {
+          flex: 1; min-width: 200px;
+          position: relative;
+        }
+        .search-icon {
+          position: absolute; left: 14px; top: 50%;
+          transform: translateY(-50%);
+          color: var(--muted); font-size: 14px;
+          pointer-events: none;
+        }
+        .search-input {
+          width: 100%; padding: 11px 14px 11px 40px;
+          background: var(--card); border: 1px solid var(--border);
+          border-radius: 10px; color: var(--text);
+          font-family: 'DM Sans', sans-serif; font-size: 14px;
+          outline: none; transition: border-color 0.2s;
+        }
+        .search-input:focus { border-color: var(--seagreen); }
+        .search-input::placeholder { color: var(--muted); }
+        .sort-select {
+          padding: 11px 14px;
+          background: var(--card); border: 1px solid var(--border);
+          border-radius: 10px; color: var(--text);
+          font-family: 'DM Sans', sans-serif; font-size: 14px;
+          outline: none; cursor: pointer;
+          -webkit-appearance: none;
+        }
+
+        /* Grid view */
+        #notesGrid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 16px;
+        }
+        #notesGrid.list-view {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        /* Note card */
+        .note-card {
+          background: var(--card);
+          border: 1px solid var(--border);
+          border-radius: 16px; padding: 24px;
+          cursor: pointer; transition: all 0.2s;
+          position: relative; overflow: hidden;
+        }
+        .note-card::before {
+          content: '';
+          position: absolute; top: 0; left: 0; right: 0; height: 2px;
+          background: linear-gradient(90deg, var(--seagreen), var(--malachite), transparent);
+          transform: scaleX(0); transition: transform 0.3s;
+          transform-origin: left;
+        }
+        .note-card:hover { border-color: rgba(22,219,101,0.3); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        .note-card:hover::before { transform: scaleX(1); }
+        #notesGrid.list-view .note-card {
+          display: flex; gap: 20px; align-items: flex-start;
+          transform: none;
+          padding: 18px 24px;
+        }
+        #notesGrid.list-view .note-card:hover { transform: none; }
+
+        .note-card-top {
+          display: flex; align-items: flex-start; justify-content: space-between;
+          margin-bottom: 12px;
+        }
+        .note-subject {
+          font-size: 11px; font-weight: 600;
+          color: var(--malachite); letter-spacing: 0.1em;
+          text-transform: uppercase;
+          background: rgba(22,219,101,0.1);
+          border-radius: 6px; padding: 3px 8px;
+        }
+        .note-menu-btn {
+          background: none; border: none;
+          color: var(--muted); cursor: pointer;
+          font-size: 18px; padding: 0 4px;
+          transition: color 0.15s; line-height: 1;
+        }
+        .note-menu-btn:hover { color: var(--text); }
+        .note-title {
+          font-family: 'Syne', sans-serif;
+          font-size: 16px; font-weight: 700;
+          margin-bottom: 8px;
+          display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        .note-preview {
+          font-size: 13px; color: var(--muted); line-height: 1.5;
+          display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+          overflow: hidden;
+          margin-bottom: 16px;
+        }
+        #notesGrid.list-view .note-preview { -webkit-line-clamp: 1; margin-bottom: 0; }
+        .note-footer {
+          display: flex; align-items: center; justify-content: space-between;
+          border-top: 1px solid var(--border); padding-top: 12px;
+          margin-top: auto;
+        }
+        #notesGrid.list-view .note-footer { border: none; padding: 0; }
+        .note-date { font-size: 11px; color: var(--muted); }
+        .note-actions { display: flex; gap: 6px; }
+        .note-action-btn {
+          padding: 5px 10px; border-radius: 7px;
+          font-size: 12px; font-weight: 600;
+          cursor: pointer; transition: all 0.15s;
+          border: 1px solid var(--border);
+          background: none;
+          font-family: 'DM Sans', sans-serif;
+        }
+        .note-action-btn.quiz {
+          color: var(--malachite); border-color: rgba(22,219,101,0.25);
+        }
+        .note-action-btn.quiz:hover { background: rgba(22,219,101,0.1); }
+        .note-action-btn.flash {
+          color: #bc5f04; border-color: rgba(188,95,4,0.25);
+        }
+        .note-action-btn.flash:hover { background: rgba(188,95,4,0.1); }
+        .note-action-btn.delete {
+          color: #f4442e; border-color: rgba(244,68,46,0.2);
+        }
+        .note-action-btn.delete:hover { background: rgba(244,68,46,0.08); }
+
+        #notesGrid.list-view .note-card-top { margin-bottom: 0; }
+        #notesGrid.list-view .note-info { flex: 1; min-width: 0; }
+        #notesGrid.list-view .note-title { margin-bottom: 4px; }
+
+        /* Detail modal */
+        .modal-bg {
+          position: fixed; inset: 0;
+          background: rgba(2,2,2,0.85);
+          z-index: 50; display: none;
+          align-items: center; justify-content: center;
+          padding: 20px;
+          backdrop-filter: blur(4px);
+        }
+        .modal-bg.open { display: flex; }
+        .modal {
+          background: var(--evergreen);
+          border: 1px solid var(--border);
+          border-radius: 20px;
+          width: 100%; max-width: 680px;
+          max-height: 85vh;
+          display: flex; flex-direction: column;
+          overflow: hidden;
+        }
+        .modal-header {
+          padding: 24px 28px;
+          border-bottom: 1px solid var(--border);
+          display: flex; align-items: flex-start; justify-content: space-between;
+          gap: 16px;
+        }
+        .modal-title {
+          font-family: 'Syne', sans-serif;
+          font-size: 20px; font-weight: 700;
+        }
+        .modal-subject {
+          font-size: 12px; color: var(--malachite);
+          margin-top: 4px; font-weight: 600;
+          letter-spacing: 0.08em; text-transform: uppercase;
+        }
+        .modal-close {
+          background: none; border: none;
+          color: var(--muted); font-size: 22px;
+          cursor: pointer; flex-shrink: 0;
+          transition: color 0.15s; padding: 0 4px;
+        }
+        .modal-close:hover { color: var(--text); }
+        .modal-body {
+          flex: 1; overflow-y: auto;
+          padding: 24px 28px;
+        }
+        /* editing */
+        .modal-editable {
+          width: 100%;
+          background: rgba(4,71,28,0.3);
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 16px;
+          color: var(--text);
+          font-family: 'DM Sans', sans-serif;
+          font-size: 14px; line-height: 1.7;
+          resize: vertical; min-height: 240px;
+          outline: none;
+          transition: border-color 0.2s;
+        }
+        .modal-editable:focus { border-color: var(--seagreen); }
+        .note-content-display {
+          font-size: 14px; line-height: 1.75;
+          color: var(--text); white-space: pre-wrap;
+          word-wrap: break-word;
+        }
+        .modal-footer {
+          padding: 16px 28px;
+          border-top: 1px solid var(--border);
+          display: flex; gap: 10px; flex-wrap: wrap;
+        }
+        .modal-btn {
+          padding: 10px 20px; border-radius: 10px;
+          font-family: 'Syne', sans-serif;
+          font-size: 13px; font-weight: 700;
+          cursor: pointer; transition: all 0.2s;
+          letter-spacing: 0.03em;
+        }
+        .modal-btn.primary {
+          background: linear-gradient(135deg, var(--forest), var(--seagreen));
+          border: none; color: #fff;
+        }
+        .modal-btn.primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(5,140,66,0.3); }
+        .modal-btn.outline {
+          background: none; border: 1px solid var(--border); color: var(--text);
+        }
+        .modal-btn.outline:hover { border-color: var(--malachite); color: var(--malachite); }
+        .modal-btn.danger {
+          background: none; border: 1px solid rgba(244,68,46,0.3); color: #f4442e;
+          margin-left: auto;
+        }
+        .modal-btn.danger:hover { background: rgba(244,68,46,0.08); }
+        .edit-badge {
+          font-size: 11px; color: var(--malachite);
+          background: rgba(22,219,101,0.1); border-radius: 6px;
+          padding: 3px 8px; margin-left: 8px;
+        }
+
+        /* Empty state */
+        .empty-state {
+          text-align: center; padding: 80px 20px;
+        }
+        .empty-state .icon { font-size: 48px; margin-bottom: 16px; }
+        .empty-state h3 {
+          font-family: 'Syne', sans-serif;
+          font-size: 20px; font-weight: 700; margin-bottom: 8px;
+        }
+        .empty-state p { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+        .btn-primary {
+          padding: 12px 24px; border-radius: 10px;
+          background: linear-gradient(135deg, var(--forest), var(--seagreen));
+          border: none; color: #fff;
+          font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
+          cursor: pointer; transition: all 0.2s;
+        }
+        .btn-primary:hover { transform: translateY(-1px); }
+
+        /* Stats bar */
+        .stats-bar {
+          display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap;
+        }
+        .stat-chip {
+          background: var(--card); border: 1px solid var(--border);
+          border-radius: 10px; padding: 12px 18px;
+          display: flex; align-items: center; gap: 10px;
+        }
+        .stat-chip .n {
+          font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800;
+          color: var(--malachite);
+        }
+        .stat-chip .l { font-size: 12px; color: var(--muted); }
+
+        @media (max-width: 768px) {
+          .sidebar { display: none; }
+          .main { padding: 24px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="loadingScreen">
+    <div class="loader-ring"></div>
+    <p>Loading your notes...</p>
+</div>
+
+<div class="shell">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">NIXY<span>DIGITAL</span></div>
+        <div class="sidebar-section">Subjects</div>
+        <div class="subject-list" id="subjectList">
+            <div class="subject-item active" data-subject="all" onclick="filterSubject('all')">
+                <span>All Notes</span>
+                <span class="subject-badge" id="countAll">0</span>
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <button class="btn-upload" onclick="window.location.href='upload.html'">+ Upload Notes</button>
+            <button class="btn-back" onclick="window.location.href='dashboard.html'">← Dashboard</button>
+        </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main">
+        <div class="main-header">
+            <div class="main-title-group">
+                <div class="main-title">My <span>Notes</span></div>
+                <div class="main-sub" id="mainSub">All your study materials in one place</div>
+            </div>
+            <div class="header-actions">
+                <div class="view-toggle">
+                    <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')">⊞</button>
+                    <button class="view-btn" id="listViewBtn" onclick="setView('list')">☰</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-bar">
+            <div class="stat-chip"><div class="n" id="statTotal">0</div><div class="l">Total Notes</div></div>
+            <div class="stat-chip"><div class="n" id="statSubjects">0</div><div class="l">Subjects</div></div>
+            <div class="stat-chip"><div class="n" id="statWithQuiz">0</div><div class="l">Have Quizzes</div></div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="search-wrap">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" id="searchInput"
+                       placeholder="Search notes by title or content..."
+                       oninput="applyFilters()">
+            </div>
+            <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+                <option value="alpha">A → Z</option>
+                <option value="alpha-desc">Z → A</option>
+            </select>
+        </div>
+
+        <!-- Grid -->
+        <div id="notesGrid"></div>
+    </main>
+</div>
+
+<!-- Note detail modal -->
+<div class="modal-bg" id="modalBg" onclick="closeModalBg(event)">
+    <div class="modal">
+        <div class="modal-header">
+            <div>
+                <div class="modal-title" id="modalTitle">Title</div>
+                <div class="modal-subject" id="modalSubject">Subject</div>
+            </div>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body" id="modalBody">
+            <div class="note-content-display" id="noteDisplay"></div>
+            <textarea class="modal-editable" id="noteEdit" style="display:none"></textarea>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-btn primary" onclick="goToGenerate()">Generate Quiz</button>
+            <button class="modal-btn outline" onclick="goToFlashcards()">Flashcards</button>
+            <button class="modal-btn outline" id="editToggleBtn" onclick="toggleEdit()">Edit Notes</button>
+            <button class="modal-btn danger" onclick="deleteCurrentNote()">Delete</button>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getFirestore, collection, query, where, getDocs, doc, updateDoc, deleteDoc }
+      from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB3ZEv5TgFr8SM1jCLyHJow3N39xfHYZNk",
+      authDomain: "studybuddyai-5561d.firebaseapp.com",
+      projectId: "studybuddyai-5561d",
+      storageBucket: "studybuddyai-5561d.firebasestorage.app",
+      messagingSenderId: "559083222855",
+      appId: "1:559083222865:web:26b4351fd26330716b4570"
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    let currentUser = null;
+    let allNotes = [];
+    let filteredNotes = [];
+    let activeSubject = 'all';
+    let currentView = 'grid';
+    let openNoteId = null;
+    let isEditing = false;
+
+    window.filterSubject = filterSubject;
+    window.setView = setView;
+    window.applyFilters = applyFilters;
+    window.openNote = openNote;
+    window.closeModal = closeModal;
+    window.closeModalBg = closeModalBg;
+    window.goToGenerate = goToGenerate;
+    window.goToFlashcards = goToFlashcards;
+    window.toggleEdit = toggleEdit;
+    window.saveEdit = saveEdit;
+    window.deleteNote = deleteNote;
+    window.deleteCurrentNote = deleteCurrentNote;
+
+    onAuthStateChanged(auth, async user => {
+      if (!user) { window.location.href = 'auth.html'; return; }
+      currentUser = user;
+      await loadNotes();
+      document.getElementById('loadingScreen').style.display = 'none';
+    });
+
+    async function loadNotes() {
+      try {
+        const q = query(collection(db, 'study_materials'), where('userId', '==', currentUser.uid));
+        const snap = await getDocs(q);
+        allNotes = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        buildSidebar();
+        applyFilters();
+        updateStats();
+      } catch(e) {
+        console.error(e);
+      }
+    }
+
+    function buildSidebar() {
+      const subjects = {};
+      allNotes.forEach(n => {
+        const s = n.subject || 'General';
+        subjects[s] = (subjects[s] || 0) + 1;
+      });
+
+      document.getElementById('countAll').textContent = allNotes.length;
+
+      const list = document.getElementById('subjectList');
+      list.innerHTML = `
+        <div class="subject-item ${activeSubject === 'all' ? 'active' : ''}" data-subject="all" onclick="filterSubject('all')">
+          <span>All Notes</span>
+          <span class="subject-badge" id="countAll">${allNotes.length}</span>
+        </div>
+      `;
+
+      Object.entries(subjects).sort((a,b) => b[1]-a[1]).forEach(([s, c]) => {
+        const item = document.createElement('div');
+        item.className = `subject-item ${activeSubject === s ? 'active' : ''}`;
+        item.setAttribute('data-subject', s);
+        item.onclick = () => filterSubject(s);
+        item.innerHTML = `<span>${s}</span><span class="subject-badge">${c}</span>`;
+        list.appendChild(item);
+      });
+    }
+
+    function filterSubject(subject) {
+      activeSubject = subject;
+      document.querySelectorAll('.subject-item').forEach(el => {
+        el.classList.toggle('active', el.getAttribute('data-subject') === subject);
+      });
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const sort = document.getElementById('sortSelect').value;
+
+      let notes = allNotes.filter(n => {
+        if (activeSubject !== 'all' && n.subject !== activeSubject) return false;
+        if (q && !n.title?.toLowerCase().includes(q) && !n.content?.toLowerCase().includes(q)) return false;
+        return true;
+      });
+
+      notes.sort((a, b) => {
+        if (sort === 'newest') return (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0);
+        if (sort === 'oldest') return (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0);
+        if (sort === 'alpha') return (a.title || '').localeCompare(b.title || '');
+        if (sort === 'alpha-desc') return (b.title || '').localeCompare(a.title || '');
+        return 0;
+      });
+
+      filteredNotes = notes;
+      renderNotes();
+
+      const sub = document.getElementById('mainSub');
+      if (activeSubject !== 'all') sub.textContent = `${notes.length} note${notes.length !== 1 ? 's' : ''} in ${activeSubject}`;
+      else sub.textContent = `${notes.length} note${notes.length !== 1 ? 's' : ''} total`;
+    }
+
+    function updateStats() {
+      const subjects = new Set(allNotes.map(n => n.subject || 'General'));
+      const withQuiz = allNotes.filter(n => n.questionsGenerated || (n.questions && n.questions.length)).length;
+      document.getElementById('statTotal').textContent = allNotes.length;
+      document.getElementById('statSubjects').textContent = subjects.size;
+      document.getElementById('statWithQuiz').textContent = withQuiz;
+    }
+
+    function renderNotes() {
+      const grid = document.getElementById('notesGrid');
+
+      if (!filteredNotes.length) {
+        grid.innerHTML = `<div class="empty-state">
+          <div class="icon">📂</div>
+          <h3>${allNotes.length ? 'No matching notes' : 'No notes yet'}</h3>
+          <p>${allNotes.length ? 'Try a different search or subject' : 'Upload your first set of study notes to get started'}</p>
+          ${!allNotes.length ? '<button class="btn-primary" onclick="window.location.href=\'upload.html\'">Upload Notes</button>' : ''}
+        </div>`;
+        return;
+      }
+
+      grid.innerHTML = '';
+      filteredNotes.forEach(note => {
+        const card = document.createElement('div');
+        card.className = 'note-card';
+        const date = note.createdAt?.toDate ? note.createdAt.toDate().toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : 'Recent';
+        const preview = note.content?.replace(/\s+/g, ' ').substring(0, 200) || 'No content';
+
+        if (currentView === 'list') {
+          card.innerHTML = `
+            <div class="note-info" onclick="openNote('${note.id}')">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+                <div class="note-subject">${note.subject || 'General'}</div>
+                <div class="note-title" style="-webkit-line-clamp:1;margin:0">${note.title || 'Untitled'}</div>
+              </div>
+              <div class="note-preview">${preview}</div>
+            </div>
+            <div class="note-footer">
+              <div class="note-date">${date}</div>
+              <div class="note-actions">
+                <button class="note-action-btn quiz" onclick="event.stopPropagation();goToGenerateId('${note.id}')">Quiz</button>
+                <button class="note-action-btn flash" onclick="event.stopPropagation();goToFlashcardsId('${note.id}')">Cards</button>
+                <button class="note-action-btn delete" onclick="event.stopPropagation();deleteNote('${note.id}')">✕</button>
+              </div>
+            </div>`;
+        } else {
+          card.innerHTML = `
+            <div onclick="openNote('${note.id}')">
+              <div class="note-card-top">
+                <div class="note-subject">${note.subject || 'General'}</div>
+              </div>
+              <div class="note-title">${note.title || 'Untitled'}</div>
+              <div class="note-preview">${preview}</div>
+            </div>
+            <div class="note-footer">
+              <div class="note-date">${date}</div>
+              <div class="note-actions">
+                <button class="note-action-btn quiz" onclick="event.stopPropagation();goToGenerateId('${note.id}')">Quiz</button>
+                <button class="note-action-btn flash" onclick="event.stopPropagation();goToFlashcardsId('${note.id}')">Cards</button>
+                <button class="note-action-btn delete" onclick="event.stopPropagation();deleteNote('${note.id}')">✕</button>
+              </div>
+            </div>`;
+        }
+        grid.appendChild(card);
+      });
+    }
+
+    window.goToGenerateId = id => window.location.href = `generate-groq.html?id=${id}`;
+    window.goToFlashcardsId = id => window.location.href = `flashcards.html?id=${id}`;
+
+    function setView(v) {
+      currentView = v;
+      document.getElementById('gridViewBtn').classList.toggle('active', v === 'grid');
+      document.getElementById('listViewBtn').classList.toggle('active', v === 'list');
+      const grid = document.getElementById('notesGrid');
+      grid.className = v === 'list' ? 'list-view' : '';
+      renderNotes();
+    }
+
+    function openNote(id) {
+      const note = allNotes.find(n => n.id === id);
+      if (!note) return;
+      openNoteId = id;
+      isEditing = false;
+
+      document.getElementById('modalTitle').textContent = note.title || 'Untitled';
+      document.getElementById('modalSubject').textContent = note.subject || 'General';
+      document.getElementById('noteDisplay').textContent = note.content || 'No content';
+      document.getElementById('noteDisplay').style.display = 'block';
+      document.getElementById('noteEdit').style.display = 'none';
+      document.getElementById('editToggleBtn').textContent = 'Edit Notes';
+      document.getElementById('modalBg').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('modalBg').classList.remove('open');
+      openNoteId = null;
+      isEditing = false;
+    }
+
+    function closeModalBg(e) {
+      if (e.target === document.getElementById('modalBg')) closeModal();
+    }
+
+    function toggleEdit() {
+      isEditing = !isEditing;
+      const note = allNotes.find(n => n.id === openNoteId);
+      if (!note) return;
+
+      if (isEditing) {
+        document.getElementById('noteEdit').value = note.content || '';
+        document.getElementById('noteDisplay').style.display = 'none';
+        document.getElementById('noteEdit').style.display = 'block';
+        document.getElementById('editToggleBtn').textContent = 'Save Changes';
+        document.getElementById('noteEdit').focus();
+      } else {
+        saveEdit();
+      }
+    }
+
+    async function saveEdit() {
+      const note = allNotes.find(n => n.id === openNoteId);
+      if (!note) return;
+      const newContent = document.getElementById('noteEdit').value.trim();
+      if (!newContent) return;
+
+      try {
+        await updateDoc(doc(db, 'study_materials', openNoteId), { content: newContent, questions: [], questionsGenerated: false, flashcards: [] });
+        note.content = newContent;
+        note.questions = []; note.flashcards = [];
+        document.getElementById('noteDisplay').textContent = newContent;
+        document.getElementById('noteDisplay').style.display = 'block';
+        document.getElementById('noteEdit').style.display = 'none';
+        document.getElementById('editToggleBtn').textContent = 'Edit Notes';
+        isEditing = false;
+        renderNotes();
+        updateStats();
+      } catch(e) { console.error(e); }
+    }
+
+    async function deleteNote(id) {
+      if (!confirm('Delete this note? This also removes generated questions and flashcards.')) return;
+      try {
+        await deleteDoc(doc(db, 'study_materials', id));
+        allNotes = allNotes.filter(n => n.id !== id);
+        buildSidebar();
+        applyFilters();
+        updateStats();
+      } catch(e) { console.error(e); }
+    }
+
+    async function deleteCurrentNote() {
+      if (!openNoteId) return;
+      closeModal();
+      await deleteNote(openNoteId);
+    }
+
+    function goToGenerate() {
+      if (openNoteId) window.location.href = `generate-groq.html?id=${openNoteId}`;
+    }
+    function goToFlashcards() {
+      if (openNoteId) window.location.href = `flashcards.html?id=${openNoteId}`;
+    }
+</script>
+</body>
+</html>
