@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Study Buddy AI - Premium Study Tools by NixyDigital</title>
@@ -1308,89 +1309,65 @@
     </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-    // Waitlist counter
-    let waitlistCount = parseInt(localStorage.getItem('waitlistCount')) || 523;
-    document.getElementById('waitlistCount').textContent = waitlistCount;
+    const supabaseUrl = "https://fcsamuucwjdqiorkgvts.supabase.co";
+    const supabaseKey = "sb_publishable_pXM4hJZVsFZvqETGQwkF9Q_P_TzovMO";
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    // Signup float toggle
-    const signupFloat = document.getElementById('signupFloat');
-    const openSignup = document.getElementById('openSignup');
-    const closeSignup = document.getElementById('closeSignup');
-    const heroCta = document.getElementById('heroCta');
+    const form = document.getElementById("signupForm");
+    const emailInput = document.getElementById("emailInput");
+    const submitBtn = document.getElementById("submitBtn");
+    const successMsg = document.getElementById("successMsg");
+    const waitlistCount = document.getElementById("waitlistCount");
 
-    [openSignup, heroCta].forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            signupFloat.classList.add('show');
-        });
-    });
+    async function loadWaitlistCount() {
+      const { count } = await supabase
+        .from("waitlist")
+        .select("*", { count: "exact", head: true });
 
-    closeSignup.addEventListener('click', () => {
-        signupFloat.classList.remove('show');
-    });
+      if (waitlistCount) {
+        waitlistCount.textContent = count || 0;
+      }
+    }
 
-    // Form submission
-    document.getElementById('signupForm').addEventListener('submit', (e) => {
-        e.preventDefault();
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-        const email = document.getElementById('emailInput').value;
-        const submitBtn = document.getElementById('submitBtn');
-        const successMsg = document.getElementById('successMsg');
+      const email = emailInput.value.trim();
+      if (!email) return;
 
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'JOINING...';
+      submitBtn.disabled = true;
+      submitBtn.textContent = "JOINING...";
 
-        let emails = JSON.parse(localStorage.getItem('waitlistEmails') || '[]');
+      const { error } = await supabase
+        .from("waitlist")
+        .insert([{ email }]);
 
-        if (emails.includes(email)) {
-            alert('You\'re already on the waitlist!');
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'JOIN WAITLIST';
-            return;
+      if (error) {
+        if (error.code === "23505") {
+          successMsg.textContent = "You're already on the waitlist.";
+        } else {
+          successMsg.textContent = "Something went wrong.";
         }
+      } else {
+        successMsg.textContent = "You're on the waitlist.";
+        emailInput.value = "";
+        loadWaitlistCount();
+      }
 
-        setTimeout(() => {
-            emails.push(email);
-            localStorage.setItem('waitlistEmails', JSON.stringify(emails));
+      successMsg.classList.add("show");
 
-            waitlistCount++;
-            localStorage.setItem('waitlistCount', waitlistCount);
-            document.getElementById('waitlistCount').textContent = waitlistCount;
+      setTimeout(() => {
+        successMsg.classList.remove("show");
+      }, 2500);
 
-            successMsg.classList.add('show');
-            document.getElementById('emailInput').value = '';
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'JOIN WAITLIST';
-
-            setTimeout(() => {
-                successMsg.classList.remove('show');
-                signupFloat.classList.remove('show');
-            }, 3000);
-
-            // TODO: Replace with real API call
-            // fetch('YOUR_API_ENDPOINT', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({ email: email })
-            // });
-
-        }, 1000);
+      submitBtn.disabled = false;
+      submitBtn.textContent = "JOIN WAITLIST";
     });
 
-    // Smooth scroll
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            const href = this.getAttribute('href');
-            if (href.length > 1) {
-                e.preventDefault();
-                const target = document.querySelector(href);
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }
-        });
-    });
+    loadWaitlistCount();
 </script>
 </body>
 </html>
