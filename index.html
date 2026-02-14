@@ -1309,65 +1309,134 @@
     </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Firebase SDKs (Modular v9+) -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged,
+      sendPasswordResetEmail,
+      updateProfile
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-<script>
-    const supabaseUrl = "https://fcsamuucwjdqiorkgvts.supabase.co";
-    const supabaseKey = "sb_publishable_pXM4hJZVsFZvqETGQwkF9Q_P_TzovMO";
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    /* ==============================
+       Firebase Configuration
+    ============================== */
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_ID",
+      appId: "YOUR_APP_ID"
+    };
 
-    const form = document.getElementById("signupForm");
-    const emailInput = document.getElementById("emailInput");
-    const submitBtn = document.getElementById("submitBtn");
-    const successMsg = document.getElementById("successMsg");
-    const waitlistCount = document.getElementById("waitlistCount");
+    /* ==============================
+       Initialize Firebase
+    ============================== */
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-    async function loadWaitlistCount() {
-      const { count } = await supabase
-        .from("waitlist")
-        .select("*", { count: "exact", head: true });
+    /* ==============================
+       UI Elements (Update IDs as needed)
+    ============================== */
+    const registerForm = document.getElementById("registerForm");
+    const loginForm = document.getElementById("loginForm");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const resetForm = document.getElementById("resetForm");
 
-      if (waitlistCount) {
-        waitlistCount.textContent = count || 0;
-      }
+    const authStatus = document.getElementById("authStatus");
+
+    /* ==============================
+       Register
+    ============================== */
+    if (registerForm) {
+      registerForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const name = registerForm.name.value;
+        const email = registerForm.email.value;
+        const password = registerForm.password.value;
+
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          await updateProfile(userCredential.user, { displayName: name });
+
+          registerForm.reset();
+        } catch (error) {
+          console.error(error.message);
+        }
+      });
     }
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    /* ==============================
+       Login
+    ============================== */
+    if (loginForm) {
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-      const email = emailInput.value.trim();
-      if (!email) return;
+        const email = loginForm.email.value;
+        const password = loginForm.password.value;
 
-      submitBtn.disabled = true;
-      submitBtn.textContent = "JOINING...";
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+          loginForm.reset();
+        } catch (error) {
+          console.error(error.message);
+        }
+      });
+    }
 
-      const { error } = await supabase
-        .from("waitlist")
-        .insert([{ email }]);
+    /* ==============================
+       Logout
+    ============================== */
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", async () => {
+        try {
+          await signOut(auth);
+        } catch (error) {
+          console.error(error.message);
+        }
+      });
+    }
 
-      if (error) {
-        if (error.code === "23505") {
-          successMsg.textContent = "You're already on the waitlist.";
-        } else {
-          successMsg.textContent = "Something went wrong.";
+    /* ==============================
+       Password Reset
+    ============================== */
+    if (resetForm) {
+      resetForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = resetForm.email.value;
+
+        try {
+          await sendPasswordResetEmail(auth, email);
+          resetForm.reset();
+        } catch (error) {
+          console.error(error.message);
+        }
+      });
+    }
+
+    /* ==============================
+       Auth State Listener
+    ============================== */
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        if (authStatus) {
+          authStatus.textContent = `Logged in as ${user.displayName || user.email}`;
         }
       } else {
-        successMsg.textContent = "You're on the waitlist.";
-        emailInput.value = "";
-        loadWaitlistCount();
+        if (authStatus) {
+          authStatus.textContent = "Not logged in";
+        }
       }
-
-      successMsg.classList.add("show");
-
-      setTimeout(() => {
-        successMsg.classList.remove("show");
-      }, 2500);
-
-      submitBtn.disabled = false;
-      submitBtn.textContent = "JOIN WAITLIST";
     });
-
-    loadWaitlistCount();
 </script>
+
 </body>
 </html>
