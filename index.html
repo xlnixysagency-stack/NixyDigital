@@ -1,231 +1,1396 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>nIxydigital | Leads CRM</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    :root {
-        --bg: #070B14;
-        --card: #0E1424;
-        --border: #1A2236;
-        --accent: #5B7CFF;
-        --accent-hover: #6F8CFF;
-        --text-primary: #E6EAF2;
-        --text-secondary: #9AA4B2;
-    }
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        background: var(--bg);
-        color: var(--text-primary);
-    }
-
-    .container {
-        max-width: 1150px;
-        margin: auto;
-        padding: 0 24px;
-    }
-
-    /* NAVIGATION */
-    nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 30px 0;
-    }
-
-    .logo {
-        font-weight: 700;
-        font-size: 20px;
-        letter-spacing: 0.5px;
-    }
-
-    .nav-btn {
-        padding: 10px 20px;
-        border-radius: 14px;
-        border: 1px solid var(--border);
-        background: transparent;
-        color: var(--text-primary);
-        cursor: pointer;
-        transition: 0.2s ease;
-    }
-
-    .nav-btn:hover {
-        border-color: var(--accent);
-        color: var(--accent);
-    }
-
-    /* HERO */
-    .hero {
-        text-align: center;
-        padding: 140px 0 120px 0;
-    }
-
-    .badge {
-        color: var(--accent);
-        font-size: 13px;
-        letter-spacing: 2px;
-        margin-bottom: 25px;
-    }
-
-    h1 {
-        font-size: 60px;
-        font-weight: 800;
-        line-height: 1.1;
-        margin-bottom: 30px;
-    }
-
-    .accent-text {
-        color: var(--accent);
-    }
-
-    .subtext {
-        font-size: 20px;
-        color: var(--text-secondary);
-        margin-bottom: 45px;
-        max-width: 700px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .buttons {
-        display: flex;
-        justify-content: center;
-        gap: 22px;
-        flex-wrap: wrap;
-    }
-
-    .btn-primary {
-        background: var(--accent);
-        color: white;
-        padding: 16px 32px;
-        border: none;
-        border-radius: 18px;
-        font-size: 16px;
-        cursor: pointer;
-        box-shadow: 0 0 35px rgba(91, 124, 255, 0.35);
-        transition: 0.2s ease;
-    }
-
-    .btn-primary:hover {
-        background: var(--accent-hover);
-        transform: translateY(-2px);
-    }
-
-    .btn-secondary {
-        background: transparent;
-        padding: 16px 32px;
-        border-radius: 18px;
-        border: 1px solid var(--border);
-        font-size: 16px;
-        color: var(--text-primary);
-        cursor: pointer;
-        transition: 0.2s ease;
-    }
-
-    .btn-secondary:hover {
-        border-color: var(--accent);
-        color: var(--accent);
-    }
-
-    /* FEATURE STRIP */
-    .features {
-        padding: 80px 0;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 25px;
-    }
-
-    .feature-card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 20px;
-        padding: 30px;
-        transition: 0.2s ease;
-    }
-
-    .feature-card:hover {
-        border-color: var(--accent);
-    }
-
-    .feature-card h3 {
-        margin-bottom: 15px;
-        font-size: 18px;
-    }
-
-    .feature-card p {
-        color: var(--text-secondary);
-        font-size: 15px;
-    }
-
-    @media (max-width: 768px) {
-        h1 {
-            font-size: 38px;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Buddy AI - Premium Study Tools by NixyDigital</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
+        :root {
+            --black: #020202;
+            --evergreen: #0d2818;
+            --forest: #04471c;
+            --sea-green: #058c42;
+            --malachite: #16db65;
+            --white: #FAFAFA;
+            --off-white: #F5F5F5;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated gradient background */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(ellipse at 20% 30%, rgba(22, 219, 101, 0.15), transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(5, 140, 66, 0.1), transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(4, 71, 28, 0.2), transparent 70%);
+            animation: drift 15s ease-in-out infinite;
+        }
+
+        @keyframes drift {
+            0%, 100% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.1) translate(20px, -20px); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 28px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(2, 2, 2, 0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(22, 219, 101, 0.15);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--white);
+        }
+
+        .logo span {
+            color: var(--malachite);
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--malachite);
+        }
+
+        .nav-cta {
+            background: var(--malachite);
+            color: var(--black);
+            padding: 12px 28px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 15px;
+            border-radius: 4px;
+        }
+
+        .nav-cta:hover {
+            background: var(--sea-green);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(22, 219, 101, 0.3);
+        }
+
+        /* Hero Section */
         .hero {
-            padding: 100px 0 80px 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 140px 60px 100px;
+            position: relative;
         }
-    }
-  </style>
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(22, 219, 101, 0.1);
+            border: 1px solid rgba(22, 219, 101, 0.3);
+            color: var(--malachite);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 40px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(48px, 7vw, 88px);
+            line-height: 1.1;
+            margin-bottom: 28px;
+            font-weight: 800;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, var(--white) 0%, var(--malachite) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(18px, 2.5vw, 24px);
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 48px;
+            max-width: 700px;
+            line-height: 1.6;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-primary {
+            background: var(--malachite);
+            color: var(--black);
+            padding: 20px 48px;
+            font-size: 17px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Space Grotesk', sans-serif;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .cta-primary:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cta-primary:hover {
+            background: var(--sea-green);
+            transform: translateY(-3px);
+            box-shadow: 0 20px 50px rgba(22, 219, 101, 0.5);
+        }
+
+        .cta-secondary {
+            color: var(--white);
+            padding: 20px 48px;
+            font-size: 18px;
+            font-weight: 600;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+            font-family: 'Space Grotesk', sans-serif;
+            border-radius: 4px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-secondary:hover {
+            border-color: var(--malachite);
+            color: var(--malachite);
+        }
+
+        .trust-line {
+            margin-top: 32px;
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Floating signup form */
+        .signup-float {
+            position: fixed;
+            right: -400px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 400px;
+            background: var(--evergreen);
+            padding: 48px;
+            border-left: 3px solid var(--malachite);
+            z-index: 999;
+            transition: right 0.5s ease;
+            box-shadow: -10px 0 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .signup-float.show {
+            right: 0;
+        }
+
+        .signup-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 24px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .signup-close:hover {
+            opacity: 1;
+        }
+
+        .signup-float h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 32px;
+            margin-bottom: 12px;
+            font-weight: 800;
+        }
+
+        .signup-float p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 32px;
+            font-size: 15px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 18px;
+            font-size: 16px;
+            border: 1px solid rgba(22, 219, 101, 0.3);
+            background: var(--forest);
+            color: var(--white);
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--malachite);
+            background: var(--sea-green);
+            box-shadow: 0 0 0 3px rgba(22, 219, 101, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: var(--malachite);
+            color: var(--black);
+            border: none;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            border-radius: 4px;
+        }
+
+        .submit-btn:hover {
+            background: var(--sea-green);
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .success-msg {
+            display: none;
+            background: var(--malachite);
+            color: var(--black);
+            padding: 16px;
+            margin-top: 16px;
+            font-weight: 600;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+
+        .success-msg.show {
+            display: block;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 100px 60px;
+            background: var(--evergreen);
+            border-top: 1px solid rgba(22, 219, 101, 0.1);
+            border-bottom: 1px solid rgba(22, 219, 101, 0.1);
+        }
+
+        .stats-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 60px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 56px;
+            font-weight: 800;
+            color: var(--malachite);
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 140px 60px;
+        }
+
+        .section-header {
+            max-width: 800px;
+            margin: 0 auto 100px;
+            text-align: center;
+        }
+
+        .section-header h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(36px, 5vw, 56px);
+            margin-bottom: 20px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+        }
+
+        .section-header p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        .features-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: var(--evergreen);
+            padding: 48px;
+            border: 1px solid rgba(22, 219, 101, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--malachite), var(--sea-green));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(22, 219, 101, 0.08), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover::after {
+            opacity: 1;
+        }
+
+        .feature-card:hover {
+            border-color: var(--malachite);
+            transform: translateY(-10px);
+            box-shadow: 0 25px 70px rgba(22, 219, 101, 0.25);
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(22, 219, 101, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 28px;
+            color: var(--malachite);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        .feature-desc {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 140px 60px;
+            background: var(--evergreen);
+        }
+
+        .timeline {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--malachite), var(--sea-green));
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 60px;
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: var(--forest);
+            padding: 40px;
+            border-radius: 8px;
+            border: 1px solid rgba(22, 219, 101, 0.2);
+        }
+
+        .timeline-number {
+            width: 80px;
+            height: 80px;
+            background: var(--malachite);
+            color: var(--black);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            box-shadow: 0 10px 30px rgba(22, 219, 101, 0.4);
+        }
+
+        .timeline-content h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        .timeline-content p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.7;
+        }
+
+        /* Pricing */
+        .pricing {
+            padding: 140px 60px;
+        }
+
+        .pricing-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 80px;
+        }
+
+        .price-card {
+            background: var(--evergreen);
+            padding: 60px;
+            border: 2px solid rgba(22, 219, 101, 0.2);
+            border-radius: 12px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .price-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(22, 219, 101, 0.1), transparent 50%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .price-card:hover::before {
+            opacity: 1;
+        }
+
+        .price-card.featured {
+            border-color: var(--malachite);
+            transform: scale(1.05);
+            box-shadow: 0 30px 90px rgba(22, 219, 101, 0.4);
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 30px 90px rgba(22, 219, 101, 0.4);
+            }
+            50% {
+                box-shadow: 0 35px 100px rgba(22, 219, 101, 0.5);
+            }
+        }
+
+        .price-card:hover {
+            border-color: var(--malachite);
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 35px 100px rgba(22, 219, 101, 0.45);
+        }
+
+        .price-badge {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--malachite);
+            color: var(--black);
+            padding: 8px 24px;
+            font-size: 13px;
+            font-weight: 700;
+            border-radius: 20px;
+            letter-spacing: 1px;
+        }
+
+        .price-name {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .price-amount {
+            font-family: 'Syne', sans-serif;
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+
+        .price-period {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 40px;
+        }
+
+        .price-features {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+
+        .price-features li {
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+        }
+
+        .price-features li:last-child {
+            border-bottom: none;
+        }
+
+        .price-features li::before {
+            content: '✓';
+            color: var(--malachite);
+            font-weight: 700;
+            margin-right: 12px;
+        }
+
+        .price-cta {
+            width: 100%;
+            padding: 20px;
+            background: var(--malachite);
+            color: var(--black);
+            border: none;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Space Grotesk', sans-serif;
+            border-radius: 4px;
+        }
+
+        .price-cta:hover {
+            background: var(--sea-green);
+            transform: translateY(-2px);
+        }
+
+        .price-card.featured .price-cta {
+            background: var(--malachite);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 140px 60px;
+            background: var(--evergreen);
+        }
+
+        .testimonials-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 80px;
+        }
+
+        .testimonial-card {
+            background: var(--forest);
+            padding: 40px;
+            border-radius: 8px;
+            border: 1px solid rgba(22, 219, 101, 0.15);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            font-size: 80px;
+            color: rgba(22, 219, 101, 0.1);
+            font-family: serif;
+            line-height: 1;
+        }
+
+        .testimonial-card:hover {
+            border-color: var(--malachite);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(22, 219, 101, 0.2);
+        }
+
+        .testimonial-text {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 24px;
+            color: rgba(255, 255, 255, 0.8);
+            position: relative;
+            z-index: 1;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            background: var(--malachite);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--black);
+        }
+
+        .author-info h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .author-info p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Final CTA */
+        .final-cta {
+            padding: 140px 60px;
+            text-align: center;
+        }
+
+        .final-cta h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(40px, 6vw, 64px);
+            margin-bottom: 28px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+        }
+
+        .final-cta p {
+            font-size: 19px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 44px;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--evergreen);
+            padding: 80px 60px 40px;
+            border-top: 1px solid rgba(22, 219, 101, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-brand h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 32px;
+            margin-bottom: 16px;
+            font-weight: 800;
+        }
+
+        .footer-brand h3 span {
+            color: var(--malachite);
+        }
+
+        .footer-brand p {
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.7;
+            max-width: 350px;
+        }
+
+        .footer-links h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 15px;
+            display: block;
+            margin-bottom: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--malachite);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-links a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--malachite);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            nav {
+                padding: 20px 30px;
+            }
+
+            .hero,
+            .features,
+            .how-it-works,
+            .pricing,
+            .testimonials,
+            .final-cta,
+            .stats {
+                padding: 80px 30px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 40px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline::before {
+                left: 40px;
+            }
+
+            .timeline-item,
+            .timeline-item:nth-child(even) {
+                flex-direction: row;
+                margin-left: 100px;
+            }
+
+            .timeline-number {
+                left: 40px;
+            }
+
+            .pricing-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .price-card.featured {
+                transform: scale(1);
+            }
+
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .signup-float {
+                width: 100%;
+                right: -100%;
+            }
+
+            .nav-right {
+                gap: 16px;
+            }
+
+            .nav-link {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
+<div class="gradient-bg"></div>
 
-<div class="container">
-
-  <nav>
-    <div class="logo">nIxydigital</div>
-    <button class="nav-btn" onclick="location.href='auth.html'">Login</button>
-  </nav>
-
-  <section class="hero">
-    <div class="badge">LEADS • PIPELINE • REVENUE</div>
-
-    <h1>
-      Manage your leads.<br>
-      Close more <span class="accent-text">deals.</span>
-    </h1>
-
-    <p class="subtext">
-      nIxydigital is a modern CRM built for agencies that want full control over their pipeline, follow-ups, and revenue.
-    </p>
-
-    <div class="buttons">
-      <button class="btn-primary" onclick="location.href='auth.html'">
-        Get Started
-      </button>
-      <button class="btn-secondary" onclick="location.href='auth.html'">
-        Login
-      </button>
+<!-- Navigation -->
+<nav>
+    <div class="logo">NIXY<span>DIGITAL</span></div>
+    <div class="nav-right">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#pricing" class="nav-link">Pricing</a>
+        <a href="#" class="nav-cta" id="openSignup">Join Waitlist</a>
     </div>
-  </section>
+</nav>
 
-  <section class="features">
-    <div class="feature-card">
-      <h3>Lead Tracking</h3>
-      <p>Organize, categorize, and monitor every prospect in one secure dashboard.</p>
-    </div>
-
-    <div class="feature-card">
-      <h3>Pipeline Control</h3>
-      <p>Move leads from cold to closed with structured status tracking.</p>
-    </div>
-
-    <div class="feature-card">
-      <h3>Revenue Visibility</h3>
-      <p>Track deal values and understand the real performance of your agency.</p>
-    </div>
-  </section>
-
+<!-- Floating Signup Form -->
+<div class="signup-float" id="signupFloat">
+    <button class="signup-close" id="closeSignup">×</button>
+    <h3>Get Early Access</h3>
+    <p>Join the waitlist and be among the first 100 to get 50% off for life.</p>
+    <form id="signupForm">
+        <input
+                type="email"
+                class="form-input"
+                placeholder="your@email.com"
+                required
+                id="emailInput"
+        >
+        <button type="submit" class="submit-btn" id="submitBtn">
+            JOIN WAITLIST
+        </button>
+        <div class="success-msg" id="successMsg">
+            ✓ You're on the list! We'll email you when we launch.
+        </div>
+    </form>
 </div>
 
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <span>🚀</span> Built by students, for students
+        </div>
+        <h1>Master Any Subject<br>With AI-Powered<br>Study Tools</h1>
+        <p class="hero-subtitle">
+            Transform your notes into practice questions, get instant explanations,
+            and ace every test. Study Buddy AI makes learning actually enjoyable.
+        </p>
+        <div class="cta-group">
+            <a href="#" class="cta-primary" id="heroCta">Start Your Journey</a>
+            <a href="#features" class="cta-secondary">See How It Works</a>
+        </div>
+        <p class="trust-line">🔒 Join 500+ students on the waitlist. No credit card required.</p>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats">
+    <div class="stats-grid">
+        <div class="stat">
+            <div class="stat-value" id="waitlistCount">0</div>
+            <div class="stat-label">Students Waiting</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">10K+</div>
+            <div class="stat-label">Questions Generated</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">24/7</div>
+            <div class="stat-label">Always Available</div>
+        </div>
+        <div class="stat">
+            <div class="stat-value">95%</div>
+            <div class="stat-label">Success Rate</div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="features" id="features">
+    <div class="section-header">
+        <h2>Everything You Need to Excel</h2>
+        <p>Powerful features designed to make studying efficient, effective, and actually enjoyable.</p>
+    </div>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3 class="feature-title">Instant Question Generation</h3>
+            <p class="feature-desc">
+                Upload your notes and get comprehensive practice questions in seconds.
+                No more hours spent creating flashcards manually.
+            </p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3 class="feature-title">Smart Learning Analytics</h3>
+            <p class="feature-desc">
+                Track your progress and identify weak spots. Our AI adapts to your learning
+                patterns and focuses on what you need most.
+            </p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">💡</div>
+            <h3 class="feature-title">Crystal Clear Explanations</h3>
+            <p class="feature-desc">
+                Struggling with a concept? Get it explained in multiple ways with real-world
+                examples until it clicks.
+            </p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📚</div>
+            <h3 class="feature-title">All Subjects Supported</h3>
+            <p class="feature-desc">
+                From AP Biology to Calculus, History to Chemistry. Works with any subject,
+                any grade level, any material.
+            </p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🔄</div>
+            <h3 class="feature-title">Adaptive Quizzing</h3>
+            <p class="feature-desc">
+                Take unlimited practice tests that adapt to your skill level. The more you
+                use it, the smarter it gets.
+            </p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📱</div>
+            <h3 class="feature-title">Study Anywhere</h3>
+            <p class="feature-desc">
+                Access your study materials on any device. Web, mobile, tablet—study whenever
+                inspiration strikes.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="how-it-works">
+    <div class="section-header">
+        <h2>Simple, Powerful, Effective</h2>
+        <p>Get from zero to studying smarter in three easy steps.</p>
+    </div>
+    <div class="timeline">
+        <div class="timeline-item">
+            <div class="timeline-number">1</div>
+            <div class="timeline-content">
+                <h3>Upload Your Material</h3>
+                <p>
+                    Copy and paste your class notes, textbook chapters, or study guides.
+                    Upload PDFs, images, or just type directly into the app.
+                </p>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-number">2</div>
+            <div class="timeline-content">
+                <h3>AI Creates Your Study Plan</h3>
+                <p>
+                    Our AI instantly generates practice questions, identifies key concepts,
+                    and creates personalized quizzes based on your content.
+                </p>
+            </div>
+        </div>
+        <div class="timeline-item">
+            <div class="timeline-number">3</div>
+            <div class="timeline-content">
+                <h3>Master the Material</h3>
+                <p>
+                    Study with adaptive quizzes, get explanations when stuck, and track
+                    your progress. Watch your grades improve week by week.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing -->
+<section class="pricing" id="pricing">
+    <div class="pricing-container">
+        <div class="section-header">
+            <h2>Invest in Your Future</h2>
+            <p>Professional-grade study tools for less than a textbook.</p>
+        </div>
+        <div class="pricing-cards">
+            <div class="price-card">
+                <div class="price-name">Monthly</div>
+                <div class="price-amount">$20</div>
+                <div class="price-period">per month</div>
+                <ul class="price-features">
+                    <li>Unlimited practice questions</li>
+                    <li>All subjects supported</li>
+                    <li>Progress tracking</li>
+                    <li>Adaptive quizzing</li>
+                    <li>24/7 access</li>
+                    <li>Cancel anytime</li>
+                </ul>
+                <button class="price-cta" onclick="document.getElementById('openSignup').click()">
+                    START FREE TRIAL
+                </button>
+            </div>
+            <div class="price-card featured">
+                <div class="price-badge">BEST VALUE</div>
+                <div class="price-name">Early Bird Special</div>
+                <div class="price-amount">$10</div>
+                <div class="price-period">per month, forever</div>
+                <ul class="price-features">
+                    <li>Everything in Monthly</li>
+                    <li>50% off for LIFE</li>
+                    <li>Priority support</li>
+                    <li>Early access to new features</li>
+                    <li>Exclusive study resources</li>
+                    <li>Founding member badge</li>
+                </ul>
+                <button class="price-cta" onclick="document.getElementById('openSignup').click()">
+                    LOCK IN 50% OFF
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="testimonials">
+    <div class="section-header">
+        <h2>Students Love Study Buddy AI</h2>
+        <p>See what early testers are saying about their experience.</p>
+    </div>
+    <div class="testimonials-grid">
+        <div class="testimonial-card">
+            <p class="testimonial-text">
+                "Went from a C+ to an A- in Chemistry in just 3 weeks. The practice questions
+                are exactly what I needed to actually understand the material."
+            </p>
+            <div class="testimonial-author">
+                <div class="author-avatar">SK</div>
+                <div class="author-info">
+                    <h4>Sarah K.</h4>
+                    <p>11th Grade, Chemistry</p>
+                </div>
+            </div>
+        </div>
+        <div class="testimonial-card">
+            <p class="testimonial-text">
+                "I used to spend hours making flashcards. Now I just paste my notes and get
+                better questions in seconds. Game changer for AP studying."
+            </p>
+            <div class="testimonial-author">
+                <div class="author-avatar">MR</div>
+                <div class="author-info">
+                    <h4>Marcus R.</h4>
+                    <p>12th Grade, AP Biology</p>
+                </div>
+            </div>
+        </div>
+        <div class="testimonial-card">
+            <p class="testimonial-text">
+                "The explanations are so much better than my textbook. It's like having a
+                tutor available 24/7 for $20/month. No brainer."
+            </p>
+            <div class="testimonial-author">
+                <div class="author-avatar">EP</div>
+                <div class="author-info">
+                    <h4>Emma P.</h4>
+                    <p>10th Grade, Math</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Final CTA -->
+<section class="final-cta">
+    <h2>Ready to Transform<br>How You Study?</h2>
+    <p>
+        Join 500+ students on the waitlist. First 100 members get lifetime 50% off.
+        Don't miss out on smarter studying.
+    </p>
+    <div class="cta-group" style="justify-content: center;">
+        <a href="#" class="cta-primary" onclick="document.getElementById('openSignup').click(); return false;">
+            Join the Waitlist Now
+        </a>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-brand">
+            <h3>NIXY<span>DIGITAL</span></h3>
+            <p>
+                Building the future of education with AI-powered tools
+                that make learning accessible, efficient, and enjoyable for everyone.
+            </p>
+        </div>
+        <div class="footer-links">
+            <h4>Product</h4>
+            <ul>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#">Roadmap</a></li>
+                <li><a href="#">Updates</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h4>Company</h4>
+            <ul>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Careers</a></li>
+                <li><a href="mailto:hello@nixydigital.com">Contact</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h4>Legal</h4>
+            <ul>
+                <li><a href="#">Privacy</a></li>
+                <li><a href="#">Terms</a></li>
+                <li><a href="#">Security</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2026 NixyDigital. All rights reserved.</p>
+        <div class="social-links">
+            <a href="#">Twitter</a>
+            <a href="#">Instagram</a>
+            <a href="#">LinkedIn</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Waitlist counter
+    let waitlistCount = parseInt(localStorage.getItem('waitlistCount')) || 523;
+    document.getElementById('waitlistCount').textContent = waitlistCount;
+
+    // Signup float toggle
+    const signupFloat = document.getElementById('signupFloat');
+    const openSignup = document.getElementById('openSignup');
+    const closeSignup = document.getElementById('closeSignup');
+    const heroCta = document.getElementById('heroCta');
+
+    [openSignup, heroCta].forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupFloat.classList.add('show');
+        });
+    });
+
+    closeSignup.addEventListener('click', () => {
+        signupFloat.classList.remove('show');
+    });
+
+    // Form submission
+    document.getElementById('signupForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('emailInput').value;
+        const submitBtn = document.getElementById('submitBtn');
+        const successMsg = document.getElementById('successMsg');
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'JOINING...';
+
+        let emails = JSON.parse(localStorage.getItem('waitlistEmails') || '[]');
+
+        if (emails.includes(email)) {
+            alert('You\'re already on the waitlist!');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'JOIN WAITLIST';
+            return;
+        }
+
+        setTimeout(() => {
+            emails.push(email);
+            localStorage.setItem('waitlistEmails', JSON.stringify(emails));
+
+            waitlistCount++;
+            localStorage.setItem('waitlistCount', waitlistCount);
+            document.getElementById('waitlistCount').textContent = waitlistCount;
+
+            successMsg.classList.add('show');
+            document.getElementById('emailInput').value = '';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'JOIN WAITLIST';
+
+            setTimeout(() => {
+                successMsg.classList.remove('show');
+                signupFloat.classList.remove('show');
+            }, 3000);
+
+            // TODO: Replace with real API call
+            // fetch('YOUR_API_ENDPOINT', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ email: email })
+            // });
+
+        }, 1000);
+    });
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href.length > 1) {
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        });
+    });
+</script>
 </body>
 </html>
