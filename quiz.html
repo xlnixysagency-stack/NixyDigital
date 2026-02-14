@@ -434,7 +434,7 @@
 <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-    import { getFirestore, doc, getDoc, collection, addDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { getFirestore, doc, getDoc, collection, addDoc, Timestamp, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
     // Firebase configuration
     const firebaseConfig = {
@@ -481,6 +481,29 @@
     // Load quiz from Firestore
     async function loadQuiz() {
         try {
+            // 🔒 CHECK FREE PLAN QUIZ LIMIT (5 per month)
+            const now = new Date();
+            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+            const monthStartTimestamp = Timestamp.fromDate(monthStart);
+
+            const resultsRef = collection(db, 'quiz_results');
+            const limitQuery = query(
+                resultsRef,
+                where('userId', '==', currentUser.uid),
+                where('completedAt', '>=', monthStartTimestamp)
+            );
+            const limitSnapshot = await getDocs(limitQuery);
+
+            const FREE_QUIZ_LIMIT = 5;
+
+            if (limitSnapshot.size >= FREE_QUIZ_LIMIT) {
+                alert(`Free Plan Limit Reached!\n\nYou've taken ${limitSnapshot.size}/${FREE_QUIZ_LIMIT} quizzes this month.\n\nUpgrade to Starter ($10/mo) or Pro ($20/mo) for unlimited quizzes!\n\n(Stripe payments coming soon)`);
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            console.log(`📊 Quiz ${limitSnapshot.size + 1}/${FREE_QUIZ_LIMIT} this month`);
+
             // If no material ID, redirect to upload page
             if (!materialId) {
                 alert('No quiz selected. Please upload notes and generate questions first.');

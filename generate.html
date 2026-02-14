@@ -347,6 +347,10 @@
             Our AI (powered by Groq) will analyze your notes and create practice questions to help you study effectively.
             This usually takes 5-10 seconds.
         </p>
+        <p style="font-size:12px;color:#6b9e80;margin-top:12px;padding:12px;background:rgba(22,219,101,0.05);border:1px solid rgba(22,219,101,0.1);border-radius:8px">
+            <strong style="color:#16db65">Free Plan:</strong> Generates 5 questions per material.
+            Upgrade for unlimited questions per material!
+        </p>
         <button class="btn btn-primary" id="generateBtn">
             Generate Practice Questions
         </button>
@@ -468,7 +472,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer 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' // Get free at console.groq.com
+                    'Authorization': 'Bearer gsk_your_api_key_here' // Get free at console.groq.com
                 },
                 body: JSON.stringify({
                     model: 'llama-3.3-70b-versatile', // Fast and smart!

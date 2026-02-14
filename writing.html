@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Writing - Study Buddy AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #020202;
+            --evergreen: #0d2818;
+            --forest: #04471c;
+            --sea-green: #058c42;
+            --malachite: #16db65;
+            --white: #FAFAFA;
+            --gray: #999;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--evergreen);
+            border-right: 1px solid rgba(22, 219, 101, 0.1);
+            padding: 32px 0;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .logo {
+            padding: 0 24px;
+            margin-bottom: 48px;
+        }
+
+        .logo h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--white);
+            word-break: break-word;
+            line-height: 1.2;
+        }
+
+        .logo span {
+            color: var(--malachite);
+            display: inline-block;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0 16px;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            background: var(--forest);
+            color: var(--white);
+        }
+
+        .nav-link.active {
+            background: var(--malachite);
+            color: var(--black);
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        .user-profile {
+            position: absolute;
+            bottom: 32px;
+            left: 16px;
+            right: 16px;
+            padding: 16px;
+            background: var(--forest);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-profile:hover {
+            background: var(--sea-green);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--malachite);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--black);
+            font-size: 16px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .user-plan {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .dashboard-header {
+            margin-bottom: 48px;
+        }
+
+        .dashboard-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--white) 0%, var(--malachite) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .dashboard-subtitle {
+            font-size: 18px;
+            color: var(--gray);
+        }
+
+        /* Writing Modes */
+        .writing-modes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .mode-btn {
+            padding: 20px;
+            background: var(--evergreen);
+            border: 2px solid rgba(22, 219, 101, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .mode-btn:hover {
+            border-color: var(--malachite);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(22, 219, 101, 0.2);
+        }
+
+        .mode-btn.active {
+            border-color: var(--malachite);
+            background: var(--forest);
+        }
+
+        .mode-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .mode-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .mode-desc {
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        /* Input Section */
+        .input-section {
+            background: var(--evergreen);
+            border: 1px solid rgba(22, 219, 101, 0.2);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--forest);
+            border: 1px solid rgba(22, 219, 101, 0.2);
+            border-radius: 8px;
+            color: var(--white);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 15px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--malachite);
+            box-shadow: 0 0 0 3px rgba(22, 219, 101, 0.1);
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 16px;
+            background: var(--forest);
+            border: 1px solid rgba(22, 219, 101, 0.2);
+            border-radius: 8px;
+            color: var(--white);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 15px;
+            line-height: 1.6;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--malachite);
+            box-shadow: 0 0 0 3px rgba(22, 219, 101, 0.1);
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 16px 32px;
+            background: var(--malachite);
+            color: var(--black);
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .generate-btn:hover {
+            background: var(--sea-green);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(22, 219, 101, 0.3);
+        }
+
+        .generate-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Output Section */
+        .output-section {
+            background: var(--evergreen);
+            border: 1px solid rgba(22, 219, 101, 0.2);
+            border-radius: 12px;
+            padding: 32px;
+            display: none;
+        }
+
+        .output-section.show {
+            display: block;
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .output-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .copy-btn {
+            padding: 10px 20px;
+            background: var(--forest);
+            color: var(--white);
+            border: 1px solid rgba(22, 219, 101, 0.2);
+            border-radius: 6px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--sea-green);
+            border-color: var(--malachite);
+        }
+
+        .output-content {
+            background: var(--forest);
+            padding: 24px;
+            border-radius: 8px;
+            line-height: 1.8;
+            font-size: 15px;
+            white-space: pre-wrap;
+        }
+
+        /* Loading State */
+        .loading-state {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading-state.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(22, 219, 101, 0.1);
+            border-top-color: var(--malachite);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        .word-count {
+            text-align: right;
+            font-size: 13px;
+            color: var(--gray);
+            margin-top: 8px;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 48px;
+            height: 48px;
+            background: var(--evergreen);
+            border: 1px solid rgba(22, 219, 101, 0.2);
+            border-radius: 8px;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 80px 20px 40px;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .dashboard-title {
+                font-size: 36px;
+            }
+
+            .writing-modes {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .input-section, .output-section {
+                padding: 24px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .writing-modes {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Mobile Menu Toggle -->
+<div class="mobile-menu-toggle" id="mobileMenuToggle">
+    ☰
+</div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+    <div class="logo">
+        <h1>NIXY<span>DIGITAL</span></h1>
+    </div>
+
+    <ul class="nav-menu">
+        <li class="nav-item">
+            <a href="dashboard.html" class="nav-link">
+                <span class="nav-icon">🏠</span>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="study-materials.html" class="nav-link">
+                <span class="nav-icon">📚</span>
+                <span>Study Materials</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="my-quizzes.html" class="nav-link">
+                <span class="nav-icon">✍️</span>
+                <span>My Quizzes</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="writing.html" class="nav-link active">
+                <span class="nav-icon">✨</span>
+                <span>AI Writing</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="progress.html" class="nav-link">
+                <span class="nav-icon">📊</span>
+                <span>Progress</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="settings.html" class="nav-link">
+                <span class="nav-icon">⚙️</span>
+                <span>Settings</span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="user-profile" id="userProfile" onclick="window.location.href='settings.html'">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <div class="user-info">
+            <div class="user-name" id="userName">Loading...</div>
+            <div class="user-plan">Free Plan</div>
+        </div>
+    </div>
+</aside>
+
+<!-- Main Content -->
+<main class="main-content">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">AI Writing Assistant</h1>
+        <p class="dashboard-subtitle">Generate essays, summaries, and explanations instantly</p>
+    </div>
+
+    <!-- Writing Modes -->
+    <div class="writing-modes">
+        <div class="mode-btn active" data-mode="essay" onclick="selectMode('essay')">
+            <div class="mode-icon">📝</div>
+            <div class="mode-title">Essay</div>
+            <div class="mode-desc">Write full essays</div>
+        </div>
+        <div class="mode-btn" data-mode="summary" onclick="selectMode('summary')">
+            <div class="mode-icon">📄</div>
+            <div class="mode-title">Summary</div>
+            <div class="mode-desc">Summarize text</div>
+        </div>
+        <div class="mode-btn" data-mode="explain" onclick="selectMode('explain')">
+            <div class="mode-icon">💡</div>
+            <div class="mode-title">Explain</div>
+            <div class="mode-desc">Explain concepts</div>
+        </div>
+        <div class="mode-btn" data-mode="outline" onclick="selectMode('outline')">
+            <div class="mode-icon">📋</div>
+            <div class="mode-title">Outline</div>
+            <div class="mode-desc">Create outlines</div>
+        </div>
+    </div>
+
+    <!-- Input Section -->
+    <div class="input-section">
+        <div id="essayInputs">
+            <label class="form-label">Essay Topic</label>
+            <input
+                    type="text"
+                    class="form-input"
+                    id="essayTopic"
+                    placeholder="e.g., The Impact of Social Media on Society"
+            >
+
+            <label class="form-label">Essay Length</label>
+            <select class="form-input" id="essayLength">
+                <option value="short">Short (250 words)</option>
+                <option value="medium" selected>Medium (500 words)</option>
+                <option value="long">Long (1000 words)</option>
+            </select>
+
+            <label class="form-label">Additional Instructions (Optional)</label>
+            <textarea
+                    class="form-textarea"
+                    id="essayInstructions"
+                    placeholder="e.g., Include examples, focus on modern technology, argumentative style..."
+                    style="min-height: 100px;"
+            ></textarea>
+        </div>
+
+        <div id="summaryInputs" style="display: none;">
+            <label class="form-label">Text to Summarize</label>
+            <textarea
+                    class="form-textarea"
+                    id="summaryText"
+                    placeholder="Paste the text you want summarized here..."
+            ></textarea>
+            <div class="word-count">
+                <span id="summaryWordCount">0</span> words
+            </div>
+        </div>
+
+        <div id="explainInputs" style="display: none;">
+            <label class="form-label">Concept to Explain</label>
+            <input
+                    type="text"
+                    class="form-input"
+                    id="explainTopic"
+                    placeholder="e.g., Quantum Physics, Photosynthesis, The French Revolution"
+            >
+
+            <label class="form-label">Explanation Level</label>
+            <select class="form-input" id="explainLevel">
+                <option value="simple">Simple (Explain like I'm 10)</option>
+                <option value="medium" selected>Medium (High school level)</option>
+                <option value="advanced">Advanced (College level)</option>
+            </select>
+        </div>
+
+        <div id="outlineInputs" style="display: none;">
+            <label class="form-label">Topic for Outline</label>
+            <input
+                    type="text"
+                    class="form-input"
+                    id="outlineTopic"
+                    placeholder="e.g., Research paper on climate change"
+            >
+
+            <label class="form-label">Number of Main Points</label>
+            <select class="form-input" id="outlinePoints">
+                <option value="3">3 main points</option>
+                <option value="5" selected>5 main points</option>
+                <option value="7">7 main points</option>
+            </select>
+        </div>
+
+        <button class="generate-btn" id="generateBtn">Generate Content</button>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-state" id="loadingState">
+        <div class="spinner"></div>
+        <p>AI is writing for you...</p>
+        <p style="font-size: 14px; color: var(--gray); margin-top: 8px;">Generating & humanizing... 15-25 seconds</p>
+    </div>
+
+    <!-- Output Section -->
+    <div class="output-section" id="outputSection">
+        <div class="output-header">
+            <h2 class="output-title">✨ Generated Content</h2>
+            <button class="copy-btn" id="copyBtn">Copy to Clipboard</button>
+        </div>
+        <div class="output-content" id="outputContent"></div>
+        <div class="word-count" style="margin-top: 12px;">
+            <span id="outputWordCount">0</span> words
+        </div>
+    </div>
+</main>
+
+<!-- Firebase SDK -->
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyB3ZEv5TgFr8SM1jCLyHJow3N39xfHYZNk",
+        authDomain: "studybuddyai-5561d.firebaseapp.com",
+        projectId: "studybuddyai-5561d",
+        storageBucket: "studybuddyai-5561d.firebasestorage.app",
+        messagingSenderId: "559083222865",
+        appId: "1:559083222865:web:26b4351fd26330716b4570"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let currentUser = null;
+    let currentMode = 'essay';
+
+    // Check authentication
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            console.log('✅ User logged in:', user.email);
+            currentUser = user;
+
+            // Update UI
+            const displayName = user.displayName || user.email.split('@')[0];
+            const initial = displayName.charAt(0).toUpperCase();
+            document.getElementById('userName').textContent = displayName;
+            document.getElementById('userAvatar').textContent = initial;
+        } else {
+            console.log('❌ Not logged in, redirecting...');
+            window.location.href = 'auth.html';
+        }
+    });
+
+    // Mobile menu toggle
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const sidebar = document.getElementById('sidebar');
+
+    mobileMenuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 1024) {
+            if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                sidebar.classList.remove('open');
+            }
+        }
+    });
+
+    // Mode selection
+    window.selectMode = function(mode) {
+        currentMode = mode;
+
+        // Update active button
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+
+        // Show/hide inputs
+        document.getElementById('essayInputs').style.display = mode === 'essay' ? 'block' : 'none';
+        document.getElementById('summaryInputs').style.display = mode === 'summary' ? 'block' : 'none';
+        document.getElementById('explainInputs').style.display = mode === 'explain' ? 'block' : 'none';
+        document.getElementById('outlineInputs').style.display = mode === 'outline' ? 'block' : 'none';
+
+        // Hide output
+        document.getElementById('outputSection').classList.remove('show');
+    };
+
+    // Word count for summary
+    document.getElementById('summaryText')?.addEventListener('input', (e) => {
+        const words = e.target.value.trim().split(/\s+/).filter(w => w.length > 0).length;
+        document.getElementById('summaryWordCount').textContent = words;
+    });
+
+    // Generate content
+    document.getElementById('generateBtn').addEventListener('click', async () => {
+        // 🔒 CHECK FREE PLAN AI WRITING LIMIT (1 per day)
+        try {
+            const { getFirestore, collection, query, where, getDocs, Timestamp, addDoc } =
+                await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+
+            const db = getFirestore();
+
+            // Get start of today
+            const now = new Date();
+            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const todayStartTimestamp = Timestamp.fromDate(todayStart);
+
+            const writingsRef = collection(db, 'ai_writings');
+            const limitQuery = query(
+                writingsRef,
+                where('userId', '==', currentUser.uid),
+                where('createdAt', '>=', todayStartTimestamp)
+            );
+            const limitSnapshot = await getDocs(limitQuery);
+
+            const FREE_WRITING_LIMIT = 1;
+
+            if (limitSnapshot.size >= FREE_WRITING_LIMIT) {
+                alert(`Free Plan Limit Reached!\n\nYou've used your ${FREE_WRITING_LIMIT} AI writing for today.\n\nUpgrade to:\n• Starter ($10/mo) - 10 writings/day\n• Pro ($20/mo) - Unlimited writings\n\n(Stripe payments coming soon)`);
+                return;
+            }
+
+            console.log(`✍️ Writing ${limitSnapshot.size + 1}/${FREE_WRITING_LIMIT} today`);
+        } catch (limitError) {
+            console.error('Error checking limit:', limitError);
+        }
+
+        let prompt = '';
+
+        // Build prompt based on mode
+        if (currentMode === 'essay') {
+            const topic = document.getElementById('essayTopic').value.trim();
+            const length = document.getElementById('essayLength').value;
+            const instructions = document.getElementById('essayInstructions').value.trim();
+
+            if (!topic) {
+                alert('Please enter an essay topic');
+                return;
+            }
+
+            const wordCount = length === 'short' ? 250 : length === 'medium' ? 500 : 1000;
+            prompt = `Write a ${wordCount}-word essay on the topic: "${topic}". ${instructions ? 'Additional instructions: ' + instructions : ''}`;
+
+        } else if (currentMode === 'summary') {
+            const text = document.getElementById('summaryText').value.trim();
+
+            if (!text) {
+                alert('Please enter text to summarize');
+                return;
+            }
+
+            prompt = `Summarize the following text in a clear and concise way:\n\n${text}`;
+
+        } else if (currentMode === 'explain') {
+            const topic = document.getElementById('explainTopic').value.trim();
+            const level = document.getElementById('explainLevel').value;
+
+            if (!topic) {
+                alert('Please enter a concept to explain');
+                return;
+            }
+
+            const levelText = level === 'simple' ? 'Explain like I\'m 10 years old' : level === 'medium' ? 'Explain at a high school level' : 'Explain at a college level';
+            prompt = `${levelText}: ${topic}`;
+
+        } else if (currentMode === 'outline') {
+            const topic = document.getElementById('outlineTopic').value.trim();
+            const points = document.getElementById('outlinePoints').value;
+
+            if (!topic) {
+                alert('Please enter a topic for the outline');
+                return;
+            }
+
+            prompt = `Create a detailed outline with ${points} main points for: ${topic}`;
+        }
+
+        // Show loading
+        document.querySelector('.input-section').style.display = 'none';
+        document.getElementById('loadingState').classList.add('show');
+        document.getElementById('outputSection').classList.remove('show');
+
+        try {
+            // Call Groq API (FREE & FAST!)
+            // Get your free API key at https://console.groq.com
+            const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer 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' // TODO: Add your Groq API key from console.groq.com
+                },
+                body: JSON.stringify({
+                    model: 'llama-3.3-70b-versatile',
+                    messages: [{
+                        role: 'user',
+                        content: prompt
+                    }],
+                    temperature: 0.7,
+                    max_tokens: 2000
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const generatedText = data.choices[0].message.content;
+
+            console.log('✅ Raw AI text generated');
+
+            // 🔥 HUMANIZE THE TEXT AUTOMATICALLY
+            const humanizedText = await humanizeText(generatedText);
+
+            // 📊 TRACK AI WRITING USAGE
+            try {
+                const { getFirestore, collection, addDoc, Timestamp } =
+                    await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+                const db = getFirestore();
+
+                await addDoc(collection(db, 'ai_writings'), {
+                    userId: currentUser.uid,
+                    mode: currentMode,
+                    createdAt: Timestamp.now(),
+                    wordCount: humanizedText.trim().split(/\s+/).length
+                });
+                console.log('📊 Usage tracked');
+            } catch (trackError) {
+                console.error('Failed to track usage:', trackError);
+            }
+
+            // Show output
+            document.getElementById('loadingState').classList.remove('show');
+            document.querySelector('.input-section').style.display = 'block';
+            document.getElementById('outputSection').classList.add('show');
+            document.getElementById('outputContent').textContent = humanizedText;
+
+            // Count words
+            const words = humanizedText.trim().split(/\s+/).length;
+            document.getElementById('outputWordCount').textContent = words;
+
+            console.log('✅ Content generated and humanized:', words, 'words');
+
+        } catch (error) {
+            console.error('❌ Error generating content:', error);
+            document.getElementById('loadingState').classList.remove('show');
+            document.querySelector('.input-section').style.display = 'block';
+
+            let errorMsg = 'Failed to generate content. ';
+            if (error.message.includes('401')) {
+                errorMsg += 'Please check your Groq API key.';
+            } else if (error.message.includes('429')) {
+                errorMsg += 'Rate limit reached. Try again in a minute.';
+            } else {
+                errorMsg += error.message;
+            }
+
+            alert(errorMsg);
+        }
+    });
+
+    // Copy to clipboard
+    document.getElementById('copyBtn').addEventListener('click', () => {
+        const text = document.getElementById('outputContent').textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.getElementById('copyBtn');
+            btn.textContent = '✓ Copied!';
+            setTimeout(() => {
+                btn.textContent = 'Copy to Clipboard';
+            }, 2000);
+        });
+    });
+
+    // 🔥 HUMANIZE TEXT FUNCTION
+    // Makes AI-generated text sound more natural and less detectable
+    async function humanizeText(aiText) {
+        try {
+            console.log('🎨 Humanizing text...');
+
+            const humanizePrompt = `You are a professional writer. Take this AI-generated text and rewrite it to sound completely natural and human-written. Make it:
+
+1. More conversational and natural
+2. Vary sentence structure and length
+3. Add occasional contractions (don't, can't, it's)
+4. Use more casual transitions
+5. Include subtle imperfections that humans make
+6. Remove overly formal or robotic phrasing
+7. Make it sound like a real student/person wrote it
+
+Keep the same meaning, facts, and length. Just make it sound genuinely human.
+
+Original text:
+${aiText}
+
+Rewrite it naturally:`;
+
+            const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer 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' // Same key as above
+                },
+                body: JSON.stringify({
+                    model: 'llama-3.3-70b-versatile',
+                    messages: [{
+                        role: 'user',
+                        content: humanizePrompt
+                    }],
+                    temperature: 0.9, // Higher temperature for more natural variation
+                    max_tokens: 2500
+                })
+            });
+
+            if (!response.ok) {
+                console.warn('⚠️ Humanization failed, using original text');
+                return aiText; // Return original if humanization fails
+            }
+
+            const data = await response.json();
+            const humanized = data.choices[0].message.content;
+
+            console.log('✅ Text humanized successfully');
+            return humanized;
+
+        } catch (error) {
+            console.error('❌ Humanization error:', error);
+            return aiText; // Return original if anything goes wrong
+        }
+    }
+</script>
+</body>
+</html>

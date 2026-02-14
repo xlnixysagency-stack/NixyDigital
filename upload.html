@@ -346,6 +346,35 @@
 
             <div class="form-group">
                 <label class="form-label">Study Notes</label>
+                <div style="margin-bottom: 16px;">
+                    <label for="fileUpload" style="
+                            display: inline-block;
+                            padding: 12px 24px;
+                            background: var(--forest);
+                            border: 2px dashed rgba(22, 219, 101, 0.3);
+                            border-radius: 8px;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            text-align: center;
+                        " onmouseover="this.style.borderColor='var(--malachite)'" onmouseout="this.style.borderColor='rgba(22, 219, 101, 0.3)'">
+                        <span style="font-size: 32px; display: block; margin-bottom: 8px;">📄</span>
+                        <span style="font-weight: 600;">Upload PDF or Image</span>
+                        <span style="display: block; font-size: 13px; color: var(--gray); margin-top: 4px;">Click to browse files</span>
+                    </label>
+                    <input
+                            type="file"
+                            id="fileUpload"
+                            accept=".pdf,.png,.jpg,.jpeg"
+                            style="display: none;"
+                    >
+                    <div id="fileName" style="margin-top: 12px; font-size: 14px; color: var(--malachite); display: none;">
+                        <span>📎</span> <span id="fileNameText"></span>
+                        <button onclick="clearFile()" style="margin-left: 8px; background: transparent; border: none; color: var(--gray); cursor: pointer;">✕</button>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-bottom: 16px; color: var(--gray); font-size: 14px;">
+                    - OR -
+                </div>
                 <textarea
                         class="form-textarea"
                         id="noteContent"
@@ -365,7 +394,6 @@ Key points:
 - Results in two diploid cells
 - Essential for growth and repair
 - DNA replication occurs before mitosis begins"
-                        required
                 ></textarea>
                 <div class="char-count">
                     <span id="charCount">0</span> characters
@@ -396,11 +424,14 @@ Key points:
     </div>
 </div>
 
+<!-- PDF.js Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
 <!-- Firebase SDK -->
 <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-    import { getFirestore, collection, addDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { getFirestore, collection, addDoc, Timestamp, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
     // Firebase configuration
     const firebaseConfig = {
@@ -419,6 +450,7 @@ Key points:
 
     let currentUser = null;
     let selectedSubject = null;
+    let uploadedFile = null;
 
     // Check authentication
     onAuthStateChanged(auth, (user) => {
@@ -430,6 +462,65 @@ Key points:
             window.location.href = 'auth.html';
         }
     });
+
+    // File upload handler
+    document.getElementById('fileUpload').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        uploadedFile = file;
+        document.getElementById('fileNameText').textContent = file.name;
+        document.getElementById('fileName').style.display = 'block';
+
+        // Clear text area when file is uploaded
+        document.getElementById('noteContent').value = '';
+        document.getElementById('noteContent').disabled = true;
+
+        // Process file based on type
+        if (file.type === 'application/pdf') {
+            await extractPDFText(file);
+        } else if (file.type.startsWith('image/')) {
+            await extractImageText(file);
+        }
+    });
+
+    // Clear file
+    window.clearFile = function() {
+        uploadedFile = null;
+        document.getElementById('fileUpload').value = '';
+        document.getElementById('fileName').style.display = 'none';
+        document.getElementById('noteContent').disabled = false;
+        document.getElementById('noteContent').value = '';
+    };
+
+    // Extract text from PDF
+    async function extractPDFText(file) {
+        try {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+            let fullText = '';
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const textContent = await page.getTextContent();
+                const pageText = textContent.items.map(item => item.str).join(' ');
+                fullText += pageText + '\n\n';
+            }
+
+            document.getElementById('noteContent').value = fullText;
+            document.getElementById('charCount').textContent = fullText.length;
+            console.log('✅ PDF text extracted:', fullText.length, 'characters');
+        } catch (error) {
+            console.error('❌ PDF extraction error:', error);
+            alert('Failed to extract text from PDF. Please try copying the text manually.');
+        }
+    }
+
+    // Extract text from image (using Tesseract.js would be ideal, but for now just show message)
+    async function extractImageText(file) {
+        alert('Image upload detected! For now, please use a PDF or paste the text manually. OCR feature coming soon!');
+        clearFile();
+    }
 
     // Character counter
     const noteContent = document.getElementById('noteContent');
@@ -472,6 +563,30 @@ Key points:
             errorMsg.classList.add('show');
             setTimeout(() => errorMsg.classList.remove('show'), 3000);
             return;
+        }
+
+        // 🔒 CHECK FREE PLAN LIMIT (3 materials max)
+        try {
+            const materialsRef = collection(db, 'study_materials');
+            const q = query(materialsRef, where('userId', '==', currentUser.uid));
+            const snapshot = await getDocs(q);
+
+            const FREE_LIMIT = 3;
+
+            if (snapshot.size >= FREE_LIMIT) {
+                errorMsg.innerHTML = `
+                    <strong>Free Plan Limit Reached!</strong><br>
+                    You've uploaded ${snapshot.size}/${FREE_LIMIT} study materials.<br>
+                    <a href="#" onclick="alert('Stripe payments coming soon!'); return false;"
+                       style="color: var(--malachite); text-decoration: underline;">
+                       Upgrade to Starter ($10/mo) for 20 materials
+                    </a>
+                `;
+                errorMsg.classList.add('show');
+                return;
+            }
+        } catch (limitError) {
+            console.error('Error checking limit:', limitError);
         }
 
         saveBtn.disabled = true;

@@ -1,0 +1,356 @@
+<!-- 🔒 UPGRADE MODAL - Shows when free plan limits are reached -->
+<style>
+    .upgrade-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(2, 2, 2, 0.9);
+        z-index: 999;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(8px);
+        animation: fadeIn 0.3s ease;
+    }
+
+    .upgrade-modal.show {
+        display: flex;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .upgrade-box {
+        background: linear-gradient(135deg, #0d2818 0%, #04471c 100%);
+        border: 2px solid rgba(22, 219, 101, 0.3);
+        border-radius: 24px;
+        padding: 48px 40px;
+        max-width: 500px;
+        width: 90%;
+        text-align: center;
+        animation: slideUp 0.4s ease;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(30px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .upgrade-icon {
+        font-size: 64px;
+        margin-bottom: 24px;
+        animation: bounce 0.6s ease;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+    .upgrade-title {
+        font-family: 'Syne', sans-serif;
+        font-size: 28px;
+        font-weight: 800;
+        margin-bottom: 12px;
+        color: #e8f5ee;
+    }
+
+    .upgrade-message {
+        font-size: 16px;
+        color: #6b9e80;
+        margin-bottom: 32px;
+        line-height: 1.6;
+    }
+
+    .upgrade-limit-info {
+        background: rgba(22, 219, 101, 0.1);
+        border: 1px solid rgba(22, 219, 101, 0.2);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 32px;
+    }
+
+    .limit-stat {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(22, 219, 101, 0.1);
+    }
+
+    .limit-stat:last-child {
+        border-bottom: none;
+    }
+
+    .limit-label {
+        font-weight: 600;
+        color: #e8f5ee;
+    }
+
+    .limit-value {
+        font-family: 'Syne', sans-serif;
+        font-weight: 800;
+        color: #16db65;
+    }
+
+    .limit-value.maxed {
+        color: #f4442e;
+    }
+
+    .upgrade-plans {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .plan-option {
+        background: rgba(4, 71, 28, 0.4);
+        border: 2px solid rgba(22, 219, 101, 0.2);
+        border-radius: 12px;
+        padding: 20px 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .plan-option:hover {
+        border-color: #16db65;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(22, 219, 101, 0.2);
+    }
+
+    .plan-badge {
+        position: absolute;
+        top: -10px;
+        right: 10px;
+        background: #16db65;
+        color: #020202;
+        font-size: 10px;
+        font-weight: 800;
+        padding: 4px 10px;
+        border-radius: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .plan-name {
+        font-family: 'Syne', sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #e8f5ee;
+    }
+
+    .plan-price {
+        font-family: 'Syne', sans-serif;
+        font-size: 32px;
+        font-weight: 800;
+        color: #16db65;
+        margin-bottom: 4px;
+    }
+
+    .plan-period {
+        font-size: 13px;
+        color: #6b9e80;
+        margin-bottom: 16px;
+    }
+
+    .plan-feature {
+        font-size: 13px;
+        color: #e8f5ee;
+        margin: 8px 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .plan-feature::before {
+        content: '✓';
+        color: #16db65;
+        font-weight: 800;
+    }
+
+    .upgrade-buttons {
+        display: flex;
+        gap: 12px;
+    }
+
+    .upgrade-btn {
+        flex: 1;
+        padding: 16px 24px;
+        border: none;
+        border-radius: 12px;
+        font-family: 'Syne', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .upgrade-btn-primary {
+        background: linear-gradient(135deg, #058c42, #16db65);
+        color: #020202;
+    }
+
+    .upgrade-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(22, 219, 101, 0.4);
+    }
+
+    .upgrade-btn-secondary {
+        background: transparent;
+        color: #e8f5ee;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .upgrade-btn-secondary:hover {
+        background: rgba(22, 219, 101, 0.1);
+        border-color: rgba(22, 219, 101, 0.3);
+    }
+
+    .coming-soon-badge {
+        display: inline-block;
+        background: rgba(188, 95, 4, 0.2);
+        color: #bc5f04;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 6px;
+        margin-top: 12px;
+        border: 1px solid rgba(188, 95, 4, 0.3);
+    }
+
+    @media (max-width: 600px) {
+        .upgrade-box {
+            padding: 32px 24px;
+        }
+
+        .upgrade-plans {
+            grid-template-columns: 1fr;
+        }
+
+        .upgrade-buttons {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="upgrade-modal" id="upgradeModal">
+    <div class="upgrade-box">
+        <div class="upgrade-icon">🔒</div>
+        <h2 class="upgrade-title" id="upgradeTitle">Free Plan Limit Reached</h2>
+        <p class="upgrade-message" id="upgradeMessage">
+            You've reached your free plan limit. Upgrade to continue using Study Buddy AI!
+        </p>
+
+        <div class="upgrade-limit-info" id="upgradeLimitInfo">
+            <!-- Dynamically populated with usage stats -->
+        </div>
+
+        <div class="upgrade-plans">
+            <div class="plan-option" onclick="alert('Stripe payments coming soon! For now, enjoy the free plan.')">
+                <div class="plan-badge">Popular</div>
+                <div class="plan-name">Starter</div>
+                <div class="plan-price">$10</div>
+                <div class="plan-period">per month</div>
+                <div class="plan-feature">20 study materials</div>
+                <div class="plan-feature">Unlimited quizzes</div>
+                <div class="plan-feature">10 AI writings/day</div>
+                <div class="coming-soon-badge">COMING SOON</div>
+            </div>
+
+            <div class="plan-option" onclick="alert('Stripe payments coming soon! For now, enjoy the free plan.')">
+                <div class="plan-badge">Best Value</div>
+                <div class="plan-name">Pro</div>
+                <div class="plan-price">$20</div>
+                <div class="plan-period">per month</div>
+                <div class="plan-feature">Unlimited everything</div>
+                <div class="plan-feature">Priority support</div>
+                <div class="plan-feature">Early features</div>
+                <div class="coming-soon-badge">COMING SOON</div>
+            </div>
+        </div>
+
+        <div class="upgrade-buttons">
+            <button class="upgrade-btn upgrade-btn-secondary" onclick="closeUpgradeModal()">
+                Maybe Later
+            </button>
+            <button class="upgrade-btn upgrade-btn-primary" onclick="alert('Stripe payments coming soon! We\'ll email you when it\'s ready.')">
+                Notify Me When Ready
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showUpgradeModal(reason, stats) {
+        const modal = document.getElementById('upgradeModal');
+        const message = document.getElementById('upgradeMessage');
+        const limitInfo = document.getElementById('upgradeLimitInfo');
+
+        // Set custom message
+        if (reason) {
+            message.textContent = reason;
+        }
+
+        // Show usage stats if provided
+        if (stats) {
+            let html = '';
+
+            if (stats.materials) {
+                html += `
+                    <div class="limit-stat">
+                        <span class="limit-label">Study Materials</span>
+                        <span class="limit-value ${stats.materials.used >= stats.materials.limit ? 'maxed' : ''}">
+                            ${stats.materials.used}/${stats.materials.limit}
+                        </span>
+                    </div>
+                `;
+            }
+
+            if (stats.quizzes) {
+                html += `
+                    <div class="limit-stat">
+                        <span class="limit-label">Quizzes This Month</span>
+                        <span class="limit-value ${stats.quizzes.used >= stats.quizzes.limit ? 'maxed' : ''}">
+                            ${stats.quizzes.used}/${stats.quizzes.limit}
+                        </span>
+                    </div>
+                `;
+            }
+
+            if (stats.writings) {
+                html += `
+                    <div class="limit-stat">
+                        <span class="limit-label">AI Writings Today</span>
+                        <span class="limit-value ${stats.writings.used >= stats.writings.limit ? 'maxed' : ''}">
+                            ${stats.writings.used}/${stats.writings.limit}
+                        </span>
+                    </div>
+                `;
+            }
+
+            limitInfo.innerHTML = html;
+        }
+
+        modal.classList.add('show');
+    }
+
+    function closeUpgradeModal() {
+        document.getElementById('upgradeModal').classList.remove('show');
+    }
+
+    // Make functions globally accessible
+    window.showUpgradeModal = showUpgradeModal;
+    window.closeUpgradeModal = closeUpgradeModal;
+
+    // Close on outside click
+    document.getElementById('upgradeModal')?.addEventListener('click', (e) => {
+        if (e.target.id === 'upgradeModal') {
+            closeUpgradeModal();
+        }
+    });
+</script>
