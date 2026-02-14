@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Study Buddy AI - Premium Study Tools by NixyDigital</title>
@@ -989,7 +988,7 @@
     <div class="nav-right">
         <a href="#features" class="nav-link">Features</a>
         <a href="#pricing" class="nav-link">Pricing</a>
-        <a href="auth.html" class="nav-cta">Get started</a>
+        <a href="#" class="nav-cta" id="openSignup">Join Waitlist</a>
     </div>
 </nav>
 
@@ -997,8 +996,22 @@
 <div class="signup-float" id="signupFloat">
     <button class="signup-close" id="closeSignup">×</button>
     <h3>Get Early Access</h3>
-    <p>FOR FREE</p>
-
+    <p>Join the waitlist and be among the first 100 to get 50% off for life.</p>
+    <form id="signupForm">
+        <input
+                type="email"
+                class="form-input"
+                placeholder="your@email.com"
+                required
+                id="emailInput"
+        >
+        <button type="submit" class="submit-btn" id="submitBtn">
+            JOIN WAITLIST
+        </button>
+        <div class="success-msg" id="successMsg">
+            ✓ You're on the list! We'll email you when we launch.
+        </div>
+    </form>
 </div>
 
 <!-- Hero Section -->
@@ -1013,10 +1026,10 @@
             and ace every test. Study Buddy AI makes learning actually enjoyable.
         </p>
         <div class="cta-group">
-            <a href="auth.html" class="cta-primary">Start Your Journey</a>
+            <a href="#" class="cta-primary" id="heroCta">Start Your Journey</a>
             <a href="#features" class="cta-secondary">See How It Works</a>
         </div>
-
+        <p class="trust-line">🔒 Join 500+ students on the waitlist. No credit card required.</p>
     </div>
 </section>
 
@@ -1024,7 +1037,7 @@
 <section class="stats">
     <div class="stats-grid">
         <div class="stat">
-            <div class="stat-value" id="waitlistCount">236</div>
+            <div class="stat-value" id="waitlistCount">0</div>
             <div class="stat-label">Students Waiting</div>
         </div>
         <div class="stat">
@@ -1242,10 +1255,9 @@
         Don't miss out on smarter studying.
     </p>
     <div class="cta-group" style="justify-content: center;">
-        <a href="auth.html" class="cta-primary">
-            Start Studying Now
+        <a href="#" class="cta-primary" onclick="document.getElementById('openSignup').click(); return false;">
+            Join the Waitlist Now
         </a>
-
     </div>
 </section>
 
@@ -1296,134 +1308,125 @@
     </div>
 </footer>
 
-<!-- Firebase SDKs (Modular v9+) -->
+<!-- Firebase SDK -->
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import {
-      getAuth,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      signOut,
-      onAuthStateChanged,
-      sendPasswordResetEmail,
-      updateProfile
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    // Import Firebase
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-    /* ==============================
-       Firebase Configuration
-    ============================== */
+    // Your Firebase configuration
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_MESSAGING_ID",
-      appId: "YOUR_APP_ID"
+        apiKey: "AIzaSyB3ZEv5TgFr8SM1jCLyHJow3N39xfHYZNk",
+        authDomain: "studybuddyai-5561d.firebaseapp.com",
+        projectId: "studybuddyai-5561d",
+        storageBucket: "studybuddyai-5561d.firebasestorage.app",
+        messagingSenderId: "559083222865",
+        appId: "1:559083222865:web:26b4351fd26330716b4570"
     };
 
-    /* ==============================
-       Initialize Firebase
-    ============================== */
+    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    /* ==============================
-       UI Elements (Update IDs as needed)
-    ============================== */
-    const registerForm = document.getElementById("registerForm");
-    const loginForm = document.getElementById("loginForm");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const resetForm = document.getElementById("resetForm");
+    // Get waitlist count from Firebase
+    async function getWaitlistCount() {
+        try {
+            const waitlistRef = collection(db, 'waitlist');
+            const snapshot = await getDocs(waitlistRef);
+            const count = snapshot.size;
+            document.getElementById('waitlistCount').textContent = count;
+        } catch (error) {
+            console.error('Error getting count:', error);
+            document.getElementById('waitlistCount').textContent = '500+';
+        }
+    }
 
-    const authStatus = document.getElementById("authStatus");
+    // Load count on page load
+    getWaitlistCount();
 
-    /* ==============================
-       Register
-    ============================== */
-    if (registerForm) {
-      registerForm.addEventListener("submit", async (e) => {
+    // Signup float toggle
+    const signupFloat = document.getElementById('signupFloat');
+    const openSignup = document.getElementById('openSignup');
+    const closeSignup = document.getElementById('closeSignup');
+    const heroCta = document.getElementById('heroCta');
+
+    [openSignup, heroCta].forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupFloat.classList.add('show');
+        });
+    });
+
+    closeSignup.addEventListener('click', () => {
+        signupFloat.classList.remove('show');
+    });
+
+    // Form submission with Firebase
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const name = registerForm.name.value;
-        const email = registerForm.email.value;
-        const password = registerForm.password.value;
+        const email = document.getElementById('emailInput').value;
+        const submitBtn = document.getElementById('submitBtn');
+        const successMsg = document.getElementById('successMsg');
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'JOINING...';
 
         try {
-          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-          await updateProfile(userCredential.user, { displayName: name });
+            // Check if email already exists
+            const waitlistRef = collection(db, 'waitlist');
+            const q = query(waitlistRef, where('email', '==', email));
+            const querySnapshot = await getDocs(q);
 
-          registerForm.reset();
+            if (!querySnapshot.empty) {
+                alert('You\'re already on the waitlist!');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'JOIN WAITLIST';
+                return;
+            }
+
+            // Add to waitlist
+            await addDoc(collection(db, 'waitlist'), {
+                email: email,
+                timestamp: serverTimestamp(),
+                source: 'landing_page'
+            });
+
+            // Update count
+            await getWaitlistCount();
+
+            // Show success
+            successMsg.classList.add('show');
+            document.getElementById('emailInput').value = '';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'JOIN WAITLIST';
+
+            setTimeout(() => {
+                successMsg.classList.remove('show');
+                signupFloat.classList.remove('show');
+            }, 3000);
+
         } catch (error) {
-          console.error(error.message);
+            console.error('Error adding to waitlist:', error);
+            alert('Oops! Something went wrong. Please try again.');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'JOIN WAITLIST';
         }
-      });
-    }
+    });
 
-    /* ==============================
-       Login
-    ============================== */
-    if (loginForm) {
-      loginForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const email = loginForm.email.value;
-        const password = loginForm.password.value;
-
-        try {
-          await signInWithEmailAndPassword(auth, email, password);
-          loginForm.reset();
-        } catch (error) {
-          console.error(error.message);
-        }
-      });
-    }
-
-    /* ==============================
-       Logout
-    ============================== */
-    if (logoutBtn) {
-      logoutBtn.addEventListener("click", async () => {
-        try {
-          await signOut(auth);
-        } catch (error) {
-          console.error(error.message);
-        }
-      });
-    }
-
-    /* ==============================
-       Password Reset
-    ============================== */
-    if (resetForm) {
-      resetForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        const email = resetForm.email.value;
-
-        try {
-          await sendPasswordResetEmail(auth, email);
-          resetForm.reset();
-        } catch (error) {
-          console.error(error.message);
-        }
-      });
-    }
-
-    /* ==============================
-       Auth State Listener
-    ============================== */
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        if (authStatus) {
-          authStatus.textContent = `Logged in as ${user.displayName || user.email}`;
-        }
-      } else {
-        if (authStatus) {
-          authStatus.textContent = "Not logged in";
-        }
-      }
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const href = this.getAttribute('href');
+            if (href.length > 1) {
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        });
     });
 </script>
-
 </body>
 </html>
