@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Buddy Chat — Study Buddy AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+          --black:     #020202;
+          --evergreen: #0d2818;
+          --forest:    #04471c;
+          --seagreen:  #058c42;
+          --malachite: #16db65;
+          --text:      #e8f5ee;
+          --muted:     #6b9e80;
+          --dimmed:    #3d6b50;
+          --card:      rgba(13,40,24,0.7);
+          --border:    rgba(22,219,101,0.12);
+          --border-hi: rgba(22,219,101,0.28);
+          --user-bg:   rgba(5,140,66,0.18);
+          --ai-bg:     rgba(13,40,24,0.8);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        html, body {
+          height: 100%;
+          background: var(--black);
+          color: var(--text);
+          font-family: 'DM Sans', sans-serif;
+          overflow: hidden;
+        }
+
+        /* ── Ambient ── */
+        body::before {
+          content:'';
+          position:fixed; top:-30%; left:-10%;
+          width:700px; height:700px;
+          background: radial-gradient(circle, rgba(5,140,66,0.04) 0%, transparent 65%);
+          pointer-events:none; z-index:0;
+        }
+        body::after {
+          content:'';
+          position:fixed; bottom:-20%; right:-10%;
+          width:500px; height:500px;
+          background: radial-gradient(circle, rgba(22,219,101,0.03) 0%, transparent 65%);
+          pointer-events:none; z-index:0;
+        }
+
+        /* ── Loading ── */
+        #ls {
+          position:fixed; inset:0; background:var(--black);
+          display:flex; flex-direction:column;
+          align-items:center; justify-content:center;
+          z-index:200; gap:18px;
+        }
+        .ring {
+          width:40px; height:40px;
+          border:2px solid var(--border);
+          border-top-color:var(--malachite);
+          border-radius:50%;
+          animation: spin .7s linear infinite;
+        }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        #ls span { color:var(--muted); font-size:13px; font-family:'JetBrains Mono',monospace; }
+
+        /* ── Shell ── */
+        .shell {
+          display: grid;
+          grid-template-columns: 300px 1fr;
+          height: 100vh;
+          position: relative; z-index:1;
+        }
+
+        /* ── Left panel: note picker ── */
+        .note-panel {
+          background: var(--evergreen);
+          border-right: 1px solid var(--border);
+          display: flex; flex-direction:column;
+          overflow: hidden;
+        }
+
+        .np-header {
+          padding: 20px 20px 16px;
+          border-bottom: 1px solid var(--border);
+        }
+        .np-logo {
+          font-family: 'Syne', sans-serif;
+          font-size: 15px; font-weight:800;
+          letter-spacing:.1em; margin-bottom:14px;
+        }
+        .np-logo em { color:var(--malachite); font-style:normal; }
+
+        .np-title {
+          font-family: 'Syne', sans-serif;
+          font-size:13px; font-weight:700;
+          color:var(--muted); letter-spacing:.06em;
+          text-transform:uppercase; margin-bottom:10px;
+        }
+        .np-search {
+          width:100%; background:rgba(4,71,28,.4);
+          border:1px solid var(--border); border-radius:8px;
+          padding:9px 12px; color:var(--text);
+          font-family:'DM Sans',sans-serif; font-size:13px;
+          outline:none; transition:border-color .2s;
+        }
+        .np-search:focus { border-color:var(--seagreen); }
+        .np-search::placeholder { color:var(--muted); }
+
+        .np-list {
+          flex:1; overflow-y:auto; padding:8px;
+        }
+        .np-list::-webkit-scrollbar { width:4px; }
+        .np-list::-webkit-scrollbar-track { background:transparent; }
+        .np-list::-webkit-scrollbar-thumb { background:var(--dimmed); border-radius:99px; }
+
+        .note-item {
+          padding:12px 14px; border-radius:10px;
+          cursor:pointer; transition:all .15s;
+          border:1px solid transparent;
+          margin-bottom:4px;
+        }
+        .note-item:hover { background:rgba(22,219,101,.05); border-color:var(--border); }
+        .note-item.active {
+          background:rgba(22,219,101,.1);
+          border-color:var(--border-hi);
+        }
+        .ni-subject {
+          font-size:10px; font-weight:700;
+          color:var(--malachite); letter-spacing:.1em;
+          text-transform:uppercase; margin-bottom:5px;
+        }
+        .ni-title {
+          font-family:'Syne',sans-serif;
+          font-size:13px; font-weight:700;
+          color:var(--text); margin-bottom:3px;
+          white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+        }
+        .ni-preview {
+          font-size:11px; color:var(--muted); line-height:1.4;
+          display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+          overflow:hidden;
+        }
+
+        .np-empty {
+          padding:40px 20px; text-align:center;
+        }
+        .np-empty .icon { font-size:32px; margin-bottom:10px; }
+        .np-empty p { font-size:13px; color:var(--muted); margin-bottom:16px; line-height:1.5; }
+        .np-empty a {
+          display:inline-block; padding:9px 18px;
+          background:linear-gradient(135deg,var(--forest),var(--seagreen));
+          color:#fff; border-radius:8px; text-decoration:none;
+          font-family:'Syne',sans-serif; font-size:12px; font-weight:700;
+        }
+
+        .np-footer {
+          padding:12px;
+          border-top:1px solid var(--border);
+        }
+        .back-btn {
+          width:100%; padding:10px;
+          background:none; border:1px solid var(--border);
+          border-radius:8px; color:var(--muted);
+          font-family:'DM Sans',sans-serif; font-size:13px;
+          cursor:pointer; transition:all .2s;
+        }
+        .back-btn:hover { border-color:var(--border-hi); color:var(--text); }
+
+        /* ── Chat area ── */
+        .chat-area {
+          display:flex; flex-direction:column;
+          height:100vh; overflow:hidden;
+        }
+
+        /* Chat header */
+        .chat-header {
+          padding:16px 28px;
+          border-bottom:1px solid var(--border);
+          display:flex; align-items:center; justify-content:space-between;
+          background:rgba(2,2,2,.3); backdrop-filter:blur(10px);
+          flex-shrink:0;
+        }
+        .ch-left { display:flex; align-items:center; gap:14px; }
+        .buddy-avatar {
+          width:38px; height:38px; border-radius:10px;
+          background:linear-gradient(135deg, var(--forest), var(--seagreen));
+          display:flex; align-items:center; justify-content:center;
+          font-size:18px; flex-shrink:0;
+          box-shadow:0 0 0 1px var(--border);
+        }
+        .buddy-name {
+          font-family:'Syne',sans-serif;
+          font-size:15px; font-weight:800;
+        }
+        .buddy-status {
+          font-size:11px; color:var(--muted);
+          display:flex; align-items:center; gap:5px; margin-top:2px;
+        }
+        .status-dot {
+          width:6px; height:6px; border-radius:50%;
+          background:var(--malachite);
+          animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+          0%,100% { opacity:1; }
+          50%      { opacity:.4; }
+        }
+
+        .active-note-chip {
+          display:flex; align-items:center; gap:8px;
+          background:rgba(22,219,101,.08);
+          border:1px solid var(--border);
+          border-radius:8px; padding:7px 12px;
+          font-size:12px; color:var(--muted);
+          max-width:280px;
+        }
+        .anc-label { font-size:10px; color:var(--malachite); font-weight:700; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; }
+        .anc-title { color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:500; }
+        .no-note-chip {
+          font-size:12px; color:var(--dimmed);
+          font-style:italic;
+        }
+
+        /* Messages */
+        .messages {
+          flex:1; overflow-y:auto;
+          padding:28px;
+          display:flex; flex-direction:column; gap:20px;
+          scroll-behavior:smooth;
+        }
+        .messages::-webkit-scrollbar { width:4px; }
+        .messages::-webkit-scrollbar-track { background:transparent; }
+        .messages::-webkit-scrollbar-thumb { background:var(--dimmed); border-radius:99px; }
+
+        /* Welcome state */
+        .welcome {
+          margin:auto;
+          text-align:center; max-width:500px;
+          animation: fadeUp .5s ease;
+        }
+        @keyframes fadeUp {
+          from { opacity:0; transform:translateY(16px); }
+          to   { opacity:1; transform:translateY(0); }
+        }
+        .welcome-icon {
+          font-size:52px; margin-bottom:20px;
+          display:block;
+          animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+          0%,100% { transform:translateY(0); }
+          50%      { transform:translateY(-8px); }
+        }
+        .welcome-title {
+          font-family:'Syne',sans-serif;
+          font-size:28px; font-weight:800;
+          margin-bottom:8px; line-height:1.2;
+        }
+        .welcome-title em { color:var(--malachite); font-style:normal; }
+        .welcome-sub {
+          font-size:14px; color:var(--muted);
+          line-height:1.7; margin-bottom:28px;
+        }
+        .welcome-chips {
+          display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
+        }
+        .w-chip {
+          padding:9px 16px;
+          background:var(--card); border:1px solid var(--border);
+          border-radius:99px; font-size:13px;
+          cursor:pointer; transition:all .2s;
+          color:var(--text);
+        }
+        .w-chip:hover {
+          border-color:var(--border-hi);
+          background:rgba(22,219,101,.08);
+          color:var(--malachite);
+        }
+
+        /* Message bubbles */
+        .msg {
+          display:flex; gap:12px; max-width:800px;
+          animation: msgIn .3s cubic-bezier(.2,0,.2,1);
+        }
+        @keyframes msgIn {
+          from { opacity:0; transform:translateY(8px); }
+          to   { opacity:1; transform:translateY(0); }
+        }
+        .msg.user { margin-left:auto; flex-direction:row-reverse; }
+
+        .msg-avatar {
+          width:34px; height:34px; border-radius:9px;
+          display:flex; align-items:center; justify-content:center;
+          font-size:15px; flex-shrink:0; align-self:flex-end;
+        }
+        .msg.ai   .msg-avatar { background:linear-gradient(135deg,var(--forest),var(--seagreen)); }
+        .msg.user .msg-avatar { background:rgba(22,219,101,.2); border:1px solid var(--border-hi); color:var(--malachite); font-family:'Syne',sans-serif; font-weight:800; font-size:13px; }
+
+        .msg-body { max-width:calc(100% - 50px); }
+
+        .msg-bubble {
+          padding:14px 18px;
+          border-radius:16px;
+          font-size:14px; line-height:1.75;
+          position:relative;
+        }
+        .msg.ai .msg-bubble {
+          background:var(--ai-bg);
+          border:1px solid var(--border);
+          border-radius:16px 16px 16px 4px;
+        }
+        .msg.user .msg-bubble {
+          background:var(--user-bg);
+          border:1px solid var(--border-hi);
+          border-radius:16px 16px 4px 16px;
+          color:var(--text);
+        }
+
+        /* Markdown-ish styling inside AI bubble */
+        .msg-bubble strong { color:var(--malachite); font-weight:700; }
+        .msg-bubble em { color:var(--text); font-style:italic; }
+        .msg-bubble code {
+          font-family:'JetBrains Mono',monospace;
+          font-size:12px; background:rgba(22,219,101,.08);
+          border:1px solid var(--border); border-radius:4px;
+          padding:1px 6px; color:var(--malachite);
+        }
+        .msg-bubble ul, .msg-bubble ol { padding-left:20px; margin:8px 0; }
+        .msg-bubble li { margin-bottom:4px; }
+        .msg-bubble h3 {
+          font-family:'Syne',sans-serif; font-size:15px; font-weight:700;
+          color:var(--malachite); margin:12px 0 6px;
+        }
+        .msg-bubble p + p { margin-top:8px; }
+        .msg-bubble .correct { color:var(--malachite); font-weight:700; }
+        .msg-bubble .incorrect { color:#f4442e; font-weight:700; }
+        .msg-bubble .hint { color:#bc5f04; font-style:italic; }
+
+        .msg-time {
+          font-size:10px; color:var(--dimmed);
+          margin-top:5px;
+          padding: 0 4px;
+        }
+        .msg.user .msg-time { text-align:right; }
+
+        /* Typing indicator */
+        .typing-bubble {
+          display:flex; align-items:center; gap:5px;
+          padding:14px 18px;
+          background:var(--ai-bg); border:1px solid var(--border);
+          border-radius:16px 16px 16px 4px;
+        }
+        .typing-dot {
+          width:7px; height:7px; border-radius:50%;
+          background:var(--malachite); opacity:.4;
+          animation:typingBounce 1.2s ease-in-out infinite;
+        }
+        .typing-dot:nth-child(1) { animation-delay:0s; }
+        .typing-dot:nth-child(2) { animation-delay:.2s; }
+        .typing-dot:nth-child(3) { animation-delay:.4s; }
+        @keyframes typingBounce {
+          0%,60%,100% { transform:translateY(0); opacity:.4; }
+          30%          { transform:translateY(-6px); opacity:1; }
+        }
+
+        /* Quick prompts */
+        .quick-bar {
+          padding:0 28px 12px;
+          display:flex; gap:8px; flex-wrap:wrap;
+          flex-shrink:0;
+        }
+        .qp-chip {
+          padding:7px 14px;
+          background:var(--card); border:1px solid var(--border);
+          border-radius:99px; font-size:12px; font-weight:500;
+          cursor:pointer; transition:all .2s; white-space:nowrap;
+          color:var(--muted);
+        }
+        .qp-chip:hover {
+          border-color:var(--border-hi); color:var(--malachite);
+          background:rgba(22,219,101,.06);
+        }
+
+        /* Input row */
+        .input-row {
+          padding:16px 28px 20px;
+          border-top:1px solid var(--border);
+          background:rgba(2,2,2,.2);
+          flex-shrink:0;
+        }
+        .input-wrap {
+          display:flex; align-items:flex-end; gap:12px;
+          background:rgba(4,71,28,.3);
+          border:1px solid var(--border);
+          border-radius:14px; padding:12px 14px;
+          transition:border-color .2s;
+          position:relative;
+        }
+        .input-wrap:focus-within { border-color:var(--seagreen); }
+        .chat-input {
+          flex:1; background:none; border:none; outline:none;
+          color:var(--text); font-family:'DM Sans',sans-serif;
+          font-size:14px; line-height:1.6; resize:none;
+          max-height:140px; min-height:24px;
+        }
+        .chat-input::placeholder { color:var(--muted); }
+        .send-btn {
+          width:36px; height:36px; border-radius:9px;
+          background:linear-gradient(135deg,var(--forest),var(--seagreen));
+          border:none; cursor:pointer;
+          display:flex; align-items:center; justify-content:center;
+          font-size:16px; transition:all .2s; flex-shrink:0;
+        }
+        .send-btn:hover:not(:disabled) {
+          transform:scale(1.08);
+          box-shadow:0 4px 14px rgba(5,140,66,.4);
+        }
+        .send-btn:disabled { opacity:.35; cursor:not-allowed; transform:none; }
+        .input-hint {
+          text-align:center; font-size:11px; color:var(--dimmed);
+          margin-top:8px;
+        }
+
+        /* No note warning */
+        .no-note-warn {
+          text-align:center; padding:16px 20px;
+          background:rgba(188,95,4,.06);
+          border:1px solid rgba(188,95,4,.2);
+          border-radius:12px; font-size:13px; color:#bc5f04;
+          margin:0 28px 12px;
+          display:none;
+        }
+
+        /* Mobile */
+        .mob-note-toggle {
+          display:none; padding:10px 16px;
+          background:var(--evergreen); border-bottom:1px solid var(--border);
+          font-size:13px; color:var(--muted); cursor:pointer;
+          align-items:center; gap:8px; flex-shrink:0;
+        }
+        .mob-note-toggle:hover { color:var(--text); }
+
+        @media (max-width:700px) {
+          .shell { grid-template-columns:1fr; }
+          .note-panel {
+            position:fixed; left:0; top:0; bottom:0;
+            z-index:90; width:280px;
+            transform:translateX(-100%);
+            transition:transform .3s ease;
+          }
+          .note-panel.open { transform:translateX(0); }
+          .mob-note-toggle { display:flex; }
+          .messages { padding:16px; }
+          .quick-bar { padding:0 16px 10px; }
+          .input-row { padding:12px 16px 16px; }
+          .chat-header { padding:12px 16px; }
+          .active-note-chip { display:none; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="ls">
+    <div class="ring"></div>
+    <span>loading study buddy...</span>
+</div>
+
+<div class="shell">
+    <!-- ── Note Panel ── -->
+    <aside class="note-panel" id="notePanel">
+        <div class="np-header">
+            <div class="np-logo">NIXY<em>DIGITAL</em></div>
+            <div class="np-title">Choose Your Notes</div>
+            <input type="text" class="np-search" id="noteSearch"
+                   placeholder="Search notes..." oninput="filterNotes()">
+        </div>
+        <div class="np-list" id="noteList">
+            <div style="color:var(--muted);font-size:13px;padding:20px;text-align:center">Loading...</div>
+        </div>
+        <div class="np-footer">
+            <button class="back-btn" onclick="location.href='dashboard.html'">← Dashboard</button>
+        </div>
+    </aside>
+
+    <!-- ── Chat Area ── -->
+    <div class="chat-area">
+        <!-- Mobile toggle -->
+        <div class="mob-note-toggle" onclick="toggleNotePanel()">
+            📚 <span id="mobNoteName">Choose notes to study</span>
+        </div>
+
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="ch-left">
+                <div class="buddy-avatar">🧠</div>
+                <div>
+                    <div class="buddy-name">Study Buddy</div>
+                    <div class="buddy-status">
+                        <div class="status-dot"></div>
+                        <span id="statusText">Select your notes to begin</span>
+                    </div>
+                </div>
+            </div>
+            <div class="active-note-chip" id="activeNoteChip" style="display:none">
+                <div>
+                    <div class="anc-label">Studying</div>
+                    <div class="anc-title" id="activeNoteTitle">—</div>
+                </div>
+            </div>
+            <div class="no-note-chip" id="noNoteChip">← pick a note to study</div>
+        </div>
+
+        <!-- No note warning -->
+        <div class="no-note-warn" id="noNoteWarn">
+            📚 Select a set of notes on the left before chatting — Study Buddy needs to read your material first!
+        </div>
+
+        <!-- Messages -->
+        <div class="messages" id="messages">
+            <div class="welcome" id="welcome">
+                <span class="welcome-icon">🧠</span>
+                <div class="welcome-title">Hey! I'm your <em>Study Buddy</em></div>
+                <div class="welcome-sub">
+                    Pick a set of notes from the left and I'll read them.<br>
+                    Then ask me anything — I'll quiz you, explain concepts,<br>
+                    give hints, or just chat through the material with you.
+                </div>
+                <div class="welcome-chips" id="welcomeChips">
+                    <div class="w-chip" onclick="sendQuick('Quiz me on the key concepts')">🎯 Quiz me</div>
+                    <div class="w-chip" onclick="sendQuick('Summarise the most important points')">📋 Summarise</div>
+                    <div class="w-chip" onclick="sendQuick('What are the hardest concepts to remember?')">🧩 Hard bits</div>
+                    <div class="w-chip" onclick="sendQuick('Give me 5 exam-style questions')">📝 Exam questions</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick prompts (shown after note selected) -->
+        <div class="quick-bar" id="quickBar" style="display:none">
+            <div class="qp-chip" onclick="sendQuick('Quiz me on the key concepts')">🎯 Quiz me</div>
+            <div class="qp-chip" onclick="sendQuick('Explain this in simple terms')">🔍 Simplify</div>
+            <div class="qp-chip" onclick="sendQuick('What are the most common exam questions on this?')">📝 Exam tips</div>
+            <div class="qp-chip" onclick="sendQuick('Give me a hint on what I should focus on most')">💡 What to focus on</div>
+            <div class="qp-chip" onclick="sendQuick('Test me with 3 quick questions')">⚡ Quick test</div>
+        </div>
+
+        <!-- Input -->
+        <div class="input-row">
+            <div class="input-wrap">
+        <textarea class="chat-input" id="chatInput" rows="1"
+                  placeholder="Ask me anything about your notes..."
+                  onkeydown="handleKey(event)"
+                  oninput="autoResize(this)"></textarea>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()" disabled>↑</button>
+            </div>
+            <div class="input-hint">Enter to send &nbsp;·&nbsp; Shift+Enter for new line</div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp }  from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getFirestore, collection, query, where, getDocs, doc, getDoc }
+      from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    const cfg = {
+      apiKey:"AIzaSyB3ZEv5TgFr8SM1jCLyHJow3N39xfHYZNk",
+      authDomain:"studybuddyai-5561d.firebaseapp.com",
+      projectId:"studybuddyai-5561d",
+      storageBucket:"studybuddyai-5561d.firebasestorage.app",
+      messagingSenderId:"559083222865",
+      appId:"1:559083222865:web:26b4351fd26330716b4570"
+    };
+
+    const app  = initializeApp(cfg);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    // ── State ──
+    let currentUser   = null;
+    let allNotes      = [];
+    let filteredNotes = [];
+    let activeNote    = null;       // { id, title, subject, content }
+    let history       = [];         // { role, content }[]
+    let isStreaming   = false;
+    let GROQ_KEY      = localStorage.getItem('groq_key') || '';
+    let userInitial   = '?';
+
+    // ── Expose globals ──
+    window.filterNotes    = filterNotes;
+    window.selectNote     = selectNote;
+    window.sendMessage    = sendMessage;
+    window.sendQuick      = sendQuick;
+    window.handleKey      = handleKey;
+    window.autoResize     = autoResize;
+    window.toggleNotePanel = toggleNotePanel;
+
+    // ── Auth ──
+    onAuthStateChanged(auth, async user => {
+      if (!user) { location.href = 'auth.html'; return; }
+      currentUser = user;
+      userInitial = (user.displayName?.[0] || user.email?.[0] || '?').toUpperCase();
+      await loadNotes();
+      document.getElementById('ls').style.display = 'none';
+
+      // Auto-select from URL param
+      const params = new URLSearchParams(location.search);
+      const id = params.get('id');
+      if (id) {
+        const note = allNotes.find(n => n.id === id);
+        if (note) selectNote(note.id);
+      }
+    });
+
+    async function loadNotes() {
+      try {
+        const q = query(collection(db, 'study_materials'), where('userId','==',currentUser.uid));
+        const snap = await getDocs(q);
+        allNotes = snap.docs.map(d => ({ id:d.id, ...d.data() }))
+          .sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+        filteredNotes = allNotes;
+        renderNoteList();
+      } catch(e) { console.error(e); }
+    }
+
+    function renderNoteList() {
+      const list = document.getElementById('noteList');
+      if (!filteredNotes.length) {
+        list.innerHTML = `<div class="np-empty">
+          <div class="icon">📂</div>
+          <p>${allNotes.length ? 'No notes match your search' : 'No notes yet — upload some first!'}</p>
+          ${!allNotes.length ? '<a href="upload.html">Upload Notes</a>' : ''}
+        </div>`;
+        return;
+      }
+      list.innerHTML = filteredNotes.map(n => `
+        <div class="note-item ${activeNote?.id === n.id ? 'active' : ''}" onclick="selectNote('${n.id}')">
+          <div class="ni-subject">${n.subject || 'General'}</div>
+          <div class="ni-title">${n.title || 'Untitled'}</div>
+          <div class="ni-preview">${(n.content||'').replace(/\s+/g,' ').substring(0,80)}</div>
+        </div>
+      `).join('');
+    }
+
+    function filterNotes() {
+      const q = document.getElementById('noteSearch').value.toLowerCase();
+      filteredNotes = allNotes.filter(n =>
+        !q || n.title?.toLowerCase().includes(q) || n.subject?.toLowerCase().includes(q)
+      );
+      renderNoteList();
+    }
+
+    function selectNote(id) {
+      const note = allNotes.find(n => n.id === id);
+      if (!note) return;
+      activeNote = note;
+      history = []; // reset conversation for new note
+
+      // Update UI
+      renderNoteList();
+      document.getElementById('activeNoteTitle').textContent = note.title || 'Untitled';
+      document.getElementById('activeNoteChip').style.display = 'flex';
+      document.getElementById('noNoteChip').style.display = 'none';
+      document.getElementById('noNoteWarn').style.display = 'none';
+      document.getElementById('statusText').textContent = `Reading "${note.title || 'your notes'}"...`;
+      document.getElementById('quickBar').style.display = 'flex';
+      document.getElementById('sendBtn').disabled = false;
+      document.getElementById('mobNoteName').textContent = note.title || 'Untitled';
+
+      // Close mobile panel
+      document.getElementById('notePanel').classList.remove('open');
+
+      // Clear messages and show greeting
+      const msgs = document.getElementById('messages');
+      msgs.innerHTML = '';
+
+      // Intro message from buddy
+      setTimeout(() => {
+        const wordCount = note.content?.split(/\s+/).length || 0;
+        addAIMessage(
+          `I've read your **${note.subject || 'study'}** notes on **${note.title || 'this topic'}** — ${wordCount} words loaded! 🧠\n\nI know everything in those notes now. You can:\n- Ask me to **quiz you** on anything\n- **Explain** a concept you're confused about\n- Get **hints** without me giving away the answer\n- Ask me **exam-style questions**\n\nWhat do you want to do?`
+        );
+        document.getElementById('statusText').textContent = `Studying "${note.title || 'your notes'}"`;
+      }, 400);
+    }
+
+    function toggleNotePanel() {
+      document.getElementById('notePanel').classList.toggle('open');
+    }
+
+    // ── Send message ──
+    async function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const text  = input.value.trim();
+      if (!text || isStreaming) return;
+
+      if (!activeNote) {
+        document.getElementById('noNoteWarn').style.display = 'block';
+        return;
+      }
+
+      input.value = ''; input.style.height = 'auto';
+      document.getElementById('sendBtn').disabled = true;
+      document.getElementById('welcome')?.remove();
+
+      addUserMessage(text);
+      history.push({ role:'user', content:text });
+
+      await streamAIResponse();
+    }
+
+    function sendQuick(prompt) {
+      if (!activeNote) {
+        document.getElementById('noNoteWarn').style.display = 'block';
+        return;
+      }
+      document.getElementById('chatInput').value = prompt;
+      sendMessage();
+    }
+
+    // ── Add messages to DOM ──
+    function addUserMessage(text) {
+      const msgs = document.getElementById('messages');
+      const div = document.createElement('div');
+      div.className = 'msg user';
+      div.innerHTML = `
+        <div class="msg-avatar">${userInitial}</div>
+        <div class="msg-body">
+          <div class="msg-bubble">${escHtml(text)}</div>
+          <div class="msg-time">${now()}</div>
+        </div>`;
+      msgs.appendChild(div);
+      scrollBottom();
+    }
+
+    function addAIMessage(text) {
+      const msgs  = document.getElementById('messages');
+      const div   = document.createElement('div');
+      div.className = 'msg ai';
+      div.innerHTML = `
+        <div class="msg-avatar">🧠</div>
+        <div class="msg-body">
+          <div class="msg-bubble" id="streaming-bubble">${renderMd(text)}</div>
+          <div class="msg-time">${now()}</div>
+        </div>`;
+      msgs.appendChild(div);
+      scrollBottom();
+      return div.querySelector('#streaming-bubble');
+    }
+
+    function showTyping() {
+      const msgs = document.getElementById('messages');
+      const div  = document.createElement('div');
+      div.className = 'msg ai'; div.id = 'typingMsg';
+      div.innerHTML = `
+        <div class="msg-avatar">🧠</div>
+        <div class="msg-body">
+          <div class="typing-bubble">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>`;
+      msgs.appendChild(div);
+      scrollBottom();
+    }
+
+    function removeTyping() {
+      document.getElementById('typingMsg')?.remove();
+    }
+
+    // ── AI streaming call ──
+    async function streamAIResponse() {
+      if (!GROQ_KEY) {
+        const k = prompt('Enter your Groq API key to chat (free at console.groq.com):');
+        if (!k) { document.getElementById('sendBtn').disabled = false; return; }
+        GROQ_KEY = k.trim(); localStorage.setItem('groq_key', GROQ_KEY);
+      }
+
+      isStreaming = true;
+      showTyping();
+
+      // Build system prompt with the student's actual notes
+      const systemPrompt = `You are Study Buddy, a smart, encouraging, and slightly fun AI tutor. You have read the student's notes and you know them deeply.
+
+    STUDENT'S NOTES (${activeNote.subject || 'General'} — "${activeNote.title}"):
+    ---
+    ${activeNote.content?.substring(0, 6000) || 'No content'}
+    ---
+
+    YOUR PERSONALITY:
+    - Encouraging and friendly — you genuinely want them to learn
+    - You give hints before full answers when they're being quizzed
+    - When they answer a question wrong, you explain WHY clearly
+    - When they get it right, celebrate briefly then push them further
+    - You reference SPECIFIC content from their notes (not generic facts)
+    - Keep responses focused and concise — no walls of text
+    - Use bold for key terms, bullet points when listing things
+    - Occasionally use light humour to keep it engaging
+
+    IMPORTANT:
+    - Only answer based on the student's notes above. If they ask about something not in the notes, say so and offer to explain it briefly.
+    - When quizzing, ask ONE question at a time and wait for their answer before revealing it
+    - If they seem confused, break it down differently using an analogy`;
+
+      const messages = [
+        { role: 'system', content: systemPrompt },
+        ...history.slice(-12) // keep last 12 turns for context
+      ];
+
+      try {
+        const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${GROQ_KEY}`
+          },
+          body: JSON.stringify({
+            model: 'llama-3.3-70b-versatile',
+            messages,
+            temperature: 0.7,
+            max_tokens: 600,
+            stream: true
+          })
+        });
+
+        if (!resp.ok) {
+          const e = await resp.json();
+          throw new Error(e.error?.message || 'API error');
+        }
+
+        removeTyping();
+        const bubble = addAIMessage('');
+        bubble.removeAttribute('id');
+
+        // Stream the response
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder();
+        let fullText = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value);
+          const lines = chunk.split('\n').filter(l => l.startsWith('data: '));
+
+          for (const line of lines) {
+            const data = line.slice(6).trim();
+            if (data === '[DONE]') break;
+            try {
+              const parsed = JSON.parse(data);
+              const delta = parsed.choices?.[0]?.delta?.content || '';
+              if (delta) {
+                fullText += delta;
+                bubble.innerHTML = renderMd(fullText) + '<span style="display:inline-block;width:2px;height:14px;background:var(--malachite);margin-left:2px;animation:pulse 1s infinite;vertical-align:middle"></span>';
+                scrollBottom();
+              }
+            } catch {}
+          }
+        }
+
+        // Final render without cursor
+        bubble.innerHTML = renderMd(fullText);
+        history.push({ role:'assistant', content:fullText });
+        scrollBottom();
+
+      } catch (e) {
+        removeTyping();
+        addAIMessage(`Hmm, something went wrong: ${e.message}. Check your API key and try again.`);
+        console.error(e);
+      }
+
+      isStreaming = false;
+      document.getElementById('sendBtn').disabled = false;
+      document.getElementById('chatInput').focus();
+    }
+
+    // ── Helpers ──
+    function handleKey(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    }
+
+    function autoResize(el) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 140) + 'px';
+      document.getElementById('sendBtn').disabled = !el.value.trim() || isStreaming;
+    }
+
+    function scrollBottom() {
+      const msgs = document.getElementById('messages');
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function now() {
+      return new Date().toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+    }
+
+    function escHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+    }
+
+    function renderMd(text) {
+      // Basic markdown rendering
+      return text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/`(.*?)`/g, '<code>$1</code>')
+        .replace(/^### (.*$)/gm, '<h3>$1</h3>')
+        .replace(/^- (.*$)/gm, '<li>$1</li>')
+        .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/\n/g, '<br>')
+        .replace(/^(?!<[hul]|<\/[hul]|<li|<br)(.+)$/gm, (m) => m.startsWith('<') ? m : m)
+        .replace(/✓\s*(.*)/g, '<span class="correct">✓ $1</span>')
+        .replace(/✗\s*(.*)/g, '<span class="incorrect">✗ $1</span>');
+    }
+</script>
+</body>
+</html>

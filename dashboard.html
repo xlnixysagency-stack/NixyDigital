@@ -469,6 +469,10 @@
         <a class="nav-item active" href="dashboard.html">
             <span class="nav-icon">⊞</span> Dashboard
         </a>
+        <a class="nav-item" href="chat.html" style="border:1px solid rgba(22,219,101,0.2);background:rgba(22,219,101,0.06)">
+            <span class="nav-icon">🧠</span> Study Buddy Chat
+            <span class="nav-badge">NEW</span>
+        </a>
         <a class="nav-item" href="upload.html">
             <span class="nav-icon">✏️</span> Upload Notes
         </a>
@@ -550,6 +554,12 @@
             <div class="section-title">Quick Actions</div>
         </div>
         <div class="quick-grid">
+            <a class="action-card" href="chat.html" style="border-color:rgba(22,219,101,0.25);background:linear-gradient(135deg,rgba(13,40,24,0.8),rgba(4,71,28,0.4))">
+                <span class="ac-icon">🧠</span>
+                <div class="ac-title">Study Buddy Chat <span style="font-size:10px;color:var(--malachite);background:rgba(22,219,101,0.12);border-radius:4px;padding:2px 6px;margin-left:4px;font-family:'DM Sans',sans-serif;font-weight:700;letter-spacing:0.06em">NEW</span></div>
+                <div class="ac-desc">Chat with AI that's read YOUR notes — get quizzed, explained, and tested conversationally</div>
+                <span class="ac-arrow">↗</span>
+            </a>
             <a class="action-card" href="upload.html">
                 <span class="ac-icon">✏️</span>
                 <div class="ac-title">Type / Paste Notes</div>
@@ -841,10 +851,14 @@
               overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
               margin-bottom:12px">${preview}</div>
             <div style="display:flex;gap:6px;flex-wrap:wrap">
-              <a href="generate-groq.html?id=${m.id}" onclick="event.stopPropagation()"
+              <a href="chat.html?id=${m.id}" onclick="event.stopPropagation()"
                 style="font-size:11px;font-weight:600;color:var(--malachite);
-                border:1px solid rgba(22,219,101,0.25);border-radius:6px;
-                padding:3px 9px;text-decoration:none;background:rgba(22,219,101,0.06)">Quiz</a>
+                border:1px solid rgba(22,219,101,0.3);border-radius:6px;
+                padding:3px 9px;text-decoration:none;background:rgba(22,219,101,0.1)">🧠 Chat</a>
+              <a href="generate-groq.html?id=${m.id}" onclick="event.stopPropagation()"
+                style="font-size:11px;font-weight:600;color:var(--muted);
+                border:1px solid rgba(22,219,101,0.15);border-radius:6px;
+                padding:3px 9px;text-decoration:none;background:none">Quiz</a>
               <a href="flashcards.html?id=${m.id}" onclick="event.stopPropagation()"
                 style="font-size:11px;font-weight:600;color:#bc5f04;
                 border:1px solid rgba(188,95,4,0.25);border-radius:6px;
