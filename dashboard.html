@@ -3,385 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NixyDigital Dashboard</title>
+    <title>NixyDigital – StudyBuddy AI (Beta)</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 
     <style>
-        :root{
-          --bg:#0b1120;
-          --panel:#111827;
-          --card:#1f2937;
-          --border:rgba(255,255,255,0.06);
-          --text:#f8fafc;
-          --muted:#94a3b8;
-          --grad:linear-gradient(90deg,#6366f1,#22d3ee);
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
 
-        *{
-          margin:0;
-          padding:0;
-          box-sizing:border-box;
-          font-family:Inter,sans-serif;
+        :root{
+        --black:#020202;
+        --evergreen:#0d2818;
+        --forest:#04471c;
+        --sea-green:#058c42;
+        --malachite:#16db65;
+        --white:#FAFAFA;
         }
 
         body{
-          background:radial-gradient(circle at 20% 20%,#1e293b, #0b1120 60%);
-          color:var(--text);
-          display:flex;
-          min-height:100vh;
+        font-family:'Space Grotesk',sans-serif;
+        background:var(--black);
+        color:var(--white);
+        min-height:100vh;
         }
 
-        /* SIDEBAR */
-
-        .sidebar{
-          width:270px;
-          background:rgba(15,23,42,0.9);
-          backdrop-filter:blur(20px);
-          border-right:1px solid var(--border);
-          padding:35px 22px;
-          display:flex;
-          flex-direction:column;
+        .topbar{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:30px 50px;
+        border-bottom:1px solid rgba(22,219,101,.15);
+        background:rgba(13,40,24,.6);
+        backdrop-filter:blur(10px);
         }
 
-        .brand{
-          font-size:24px;
-          font-weight:900;
-          margin-bottom:45px;
-          background:var(--grad);
-          -webkit-background-clip:text;
-          -webkit-text-fill-color:transparent;
-          letter-spacing:-0.5px;
+        .logo{
+        font-family:'Syne',sans-serif;
+        font-size:28px;
+        font-weight:800;
         }
 
-        .nav-btn{
-          padding:14px 18px;
-          margin-bottom:14px;
-          border-radius:12px;
-          background:transparent;
-          border:1px solid transparent;
-          color:var(--muted);
-          text-align:left;
-          font-weight:600;
-          cursor:pointer;
-          transition:0.25s ease;
+        .logo span{color:var(--malachite)}
+
+        .container{
+        padding:50px;
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:30px;
         }
 
-        .nav-btn:hover{
-          background:rgba(99,102,241,0.08);
-          color:#fff;
+        .panel{
+        background:var(--evergreen);
+        border:1px solid rgba(22,219,101,.2);
+        border-radius:14px;
+        padding:30px;
         }
 
-        .nav-btn.active{
-          background:var(--grad);
-          color:#fff;
-          box-shadow:0 0 20px rgba(99,102,241,0.4);
+        .panel-title{
+        font-weight:600;
+        margin-bottom:20px;
+        color:var(--malachite);
         }
 
-        /* MAIN */
-
-        .main{
-          flex:1;
-          display:flex;
-          flex-direction:column;
+        textarea{
+        width:100%;
+        min-height:200px;
+        background:var(--forest);
+        border:1px solid rgba(22,219,101,.3);
+        border-radius:8px;
+        padding:15px;
+        color:var(--white);
+        resize:vertical;
         }
 
-        /* HEADER */
-
-        .top-header{
-          padding:60px 70px 40px 70px;
-          border-bottom:1px solid var(--border);
+        select, input[type="email"]{
+        width:100%;
+        padding:12px;
+        margin-bottom:15px;
+        background:var(--forest);
+        border:1px solid rgba(22,219,101,.3);
+        border-radius:8px;
+        color:var(--white);
         }
 
-        .welcome{
-          font-size:60px;
-          font-weight:900;
-          letter-spacing:-2px;
-          line-height:1.1;
+        .generate-btn{
+        padding:14px;
+        width:100%;
+        background:var(--malachite);
+        border:none;
+        color:var(--black);
+        font-weight:700;
+        border-radius:6px;
+        cursor:pointer;
         }
 
-        .welcome span{
-          background:var(--grad);
-          -webkit-background-clip:text;
-          -webkit-text-fill-color:transparent;
+        .output{
+        margin-top:20px;
+        padding:20px;
+        background:var(--forest);
+        border-radius:8px;
+        min-height:120px;
+        white-space:pre-wrap;
+        line-height:1.6;
         }
 
-        .sub{
-          margin-top:16px;
-          font-size:14px;
-          letter-spacing:3px;
-          text-transform:uppercase;
-          color:var(--muted);
+        .usage{
+        margin-top:10px;
+        font-size:13px;
+        opacity:.7;
         }
 
-        /* CONTENT */
-
-        .content{
-          padding:50px 70px;
-          flex:1;
+        .waitlist{
+        margin-top:20px;
+        padding-top:20px;
+        border-top:1px solid rgba(22,219,101,.2);
         }
 
-        .section{
-          display:none;
-        }
-
-        .section.active{
-          display:block;
-        }
-
-        .grid{
-          display:grid;
-          grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-          gap:25px;
-          margin-bottom:40px;
-        }
-
-        .card{
-          background:var(--card);
-          border:1px solid var(--border);
-          padding:28px;
-          border-radius:18px;
-          transition:0.3s ease;
-          position:relative;
-          overflow:hidden;
-        }
-
-        .card:hover{
-          transform:translateY(-6px);
-          box-shadow:0 15px 40px rgba(0,0,0,0.4);
-        }
-
-        .card h3{
-          font-size:16px;
-          color:var(--muted);
-          margin-bottom:12px;
-          font-weight:600;
-          text-transform:uppercase;
-          letter-spacing:1px;
-        }
-
-        .metric{
-          font-size:36px;
-          font-weight:800;
-        }
-
-        /* FORM */
-
-        input, select{
-          width:100%;
-          padding:12px;
-          border-radius:10px;
-          border:1px solid var(--border);
-          background:#0f172a;
-          color:#fff;
-          margin-bottom:14px;
-        }
-
-        button.primary{
-          background:var(--grad);
-          border:none;
-          padding:12px 22px;
-          border-radius:12px;
-          font-weight:700;
-          color:#fff;
-          cursor:pointer;
-          transition:0.3s ease;
-        }
-
-        button.primary:hover{
-          opacity:0.85;
-        }
-
-        /* TABLE */
-
-        table{
-          width:100%;
-          border-collapse:collapse;
-          margin-top:15px;
-        }
-
-        th,td{
-          padding:14px;
-          border-bottom:1px solid var(--border);
-          text-align:left;
-          font-size:14px;
-        }
-
-        th{
-          color:var(--muted);
-          text-transform:uppercase;
-          letter-spacing:1px;
-          font-size:12px;
+        .footer{
+        padding:30px;
+        border-top:1px solid rgba(22,219,101,.15);
+        text-align:center;
+        font-size:13px;
+        opacity:.4;
         }
     </style>
 </head>
 
 <body>
 
-<div class="sidebar">
-    <div class="brand">NixyDigital</div>
-    <button class="nav-btn active" onclick="showTab(event,'dashboard')">Dashboard</button>
-    <button class="nav-btn" onclick="showTab(event,'leads')">Leads</button>
-    <button class="nav-btn" onclick="showTab(event,'assistant')">AI Assistant</button>
-    <button class="nav-btn" onclick="showTab(event,'settings')">Settings</button>
-</div>
+<script>
+    let session = JSON.parse(localStorage.getItem("nixySession"));
+    if(!session){window.location.href="auth.html";}
 
-<div class="main">
+    const PLAN_LIMITS={free:{requests:3}};
 
-    <div class="top-header">
-        <div class="welcome">
-            Welcome Back <span id="lastNameDisplay">Mr. Enzaldo</span>
-        </div>
-        <div class="sub">NixyDigital Executive Panel</div>
-    </div>
+    if(!session.plan){session.plan="free";}
+    if(typeof session.usage!=="number"){session.usage=0;}
+    localStorage.setItem("nixySession",JSON.stringify(session));
+</script>
 
-    <div class="content">
-
-        <!-- DASHBOARD -->
-        <div id="dashboard" class="section active">
-            <div class="grid">
-                <div class="card">
-                    <h3>Total Leads</h3>
-                    <div class="metric" id="leadCount">0</div>
-                </div>
-                <div class="card">
-                    <h3>Status</h3>
-                    <div class="metric">Operational</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- LEADS -->
-        <div id="leads" class="section">
-            <div class="card">
-                <h3>Add New Lead</h3>
-                <input type="text" id="leadName" placeholder="Full Name">
-                <input type="text" id="leadCompany" placeholder="Company">
-                <input type="text" id="leadPhone" placeholder="Phone">
-                <input type="email" id="leadEmail" placeholder="Email">
-                <select id="leadStatus">
-                    <option value="New">New</option>
-                    <option value="Contacted">Contacted</option>
-                    <option value="Closed">Closed</option>
-                </select>
-                <button class="primary" onclick="addLead()">Add Lead</button>
-            </div>
-
-            <div class="card">
-                <h3>Lead Database</h3>
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Company</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th>Status</th>
-                    </tr>
-                    </thead>
-                    <tbody id="leadTable"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- AI ASSISTANT -->
-        <div id="assistant" class="section">
-            <div class="card">
-                <h3>AI Assistant</h3>
-                <div class="metric">Integration Pending</div>
-            </div>
-        </div>
-
-        <!-- SETTINGS -->
-        <div id="settings" class="section">
-            <div class="card">
-                <h3>Profile Settings</h3>
-                <input type="text" id="lastNameInput" placeholder="Last Name">
-                <button class="primary" onclick="saveLastName()">Save</button>
-            </div>
-        </div>
-
+<div class="topbar">
+    <div class="logo">NIXY<span>DIGITAL</span></div>
+    <div>
+        <span id="welcomeUser"></span>
+        <span id="usageInfo" style="margin-left:15px;color:#16db65;"></span>
     </div>
 </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<div class="container">
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDzP5YsvL9PN4x7vTI9ofEWmDz6SyuFULU",
-      authDomain: "agencyos-ai.firebaseapp.com",
-      projectId: "agencyos-ai",
-      storageBucket: "agencyos-ai.firebasestorage.app",
-      messagingSenderId: "943979992113",
-      appId: "1:943979992113:web:0108f0471e3bbcb267f110"
-    };
+    <div class="panel">
+        <div class="panel-title">Study Material</div>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+        <select id="modeSelect">
+            <option value="notes">Generate Structured Notes</option>
+            <option value="quiz">Generate Quiz (5 Questions)</option>
+            <option value="flashcards">Generate Flashcards (10)</option>
+        </select>
 
-    onAuthStateChanged(auth,(user)=>{
-      if(user){
-        const lastName = localStorage.getItem("lastName") || "Enzaldo";
-        document.getElementById("lastNameDisplay").textContent="Mr. "+lastName;
-        loadLeads();
-      } else {
-        window.location.href="auth.html";
-      }
+        <textarea id="studyInput" placeholder="Enter topic or paste study material..."></textarea>
+
+        <button class="generate-btn" onclick="generateContent()">Generate</button>
+
+        <div class="usage" id="limitText"></div>
+
+        <div class="output" id="aiOutput">AI output will appear here.</div>
+
+        <div class="waitlist">
+            <div class="panel-title">Pro Version</div>
+            <input type="email" id="emailInput" placeholder="Enter email for Pro launch">
+            <button class="generate-btn" onclick="joinWaitlist()">Join Waitlist</button>
+            <div class="usage" id="waitlistMsg"></div>
+        </div>
+
+    </div>
+
+    <div class="panel">
+        <div class="panel-title">Uploaded File Preview</div>
+        <input type="file" id="fileInput">
+        <div class="output" id="fileOutput">No file uploaded.</div>
+    </div>
+
+</div>
+
+<div class="footer">
+    StudyBuddy AI • Beta v0.1 • Free Tier Active
+</div>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded",()=>{
+
+    let session = JSON.parse(localStorage.getItem("nixySession"));
+    const PLAN_LIMITS={free:{requests:5}};
+
+    const welcomeUser=document.getElementById("welcomeUser");
+    const usageInfo=document.getElementById("usageInfo");
+    const limitText=document.getElementById("limitText");
+
+    welcomeUser.textContent="Welcome, "+(session.name||session.email);
+
+    function updateUsage(){
+    usageInfo.textContent="FREE • "+session.usage+"/"+PLAN_LIMITS.free.requests;
+    limitText.textContent="Free limit: "+(PLAN_LIMITS.free.requests-session.usage)+" generations remaining.";
+    }
+
+    updateUsage();
+
+    document.getElementById("fileInput").addEventListener("change",function(){
+    const file=this.files[0];
+    if(!file)return;
+    const reader=new FileReader();
+    reader.onload=e=>{document.getElementById("fileOutput").textContent=e.target.result.slice(0,2000);};
+    reader.readAsText(file);
     });
 
-    window.showTab=function(e,tab){
-      document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-      document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
-      document.getElementById(tab).classList.add("active");
-      e.target.classList.add("active");
-    };
+    window.generateContent=async function(){
 
-    window.saveLastName=function(){
-      const ln=document.getElementById("lastNameInput").value.trim();
-      if(ln){
-        localStorage.setItem("lastName",ln);
-        document.getElementById("lastNameDisplay").textContent="Mr. "+ln;
-      }
-    };
+    const input=document.getElementById("studyInput").value.trim();
+    const mode=document.getElementById("modeSelect").value;
+    const output=document.getElementById("aiOutput");
 
-    window.addLead=async function(){
-      const name=leadName.value;
-      const company=leadCompany.value;
-      const phone=leadPhone.value;
-      const email=leadEmail.value;
-      const status=leadStatus.value;
-      if(!name||!phone) return;
+    if(!input){output.textContent="Enter study material.";return;}
 
-      await addDoc(collection(db,"leads"),{name,company,phone,email,status});
-      leadName.value="";
-      leadCompany.value="";
-      leadPhone.value="";
-      leadEmail.value="";
-      loadLeads();
-    };
-
-    async function loadLeads(){
-      const snapshot=await getDocs(collection(db,"leads"));
-      leadTable.innerHTML="";
-      let count=0;
-      snapshot.forEach(doc=>{
-        const d=doc.data();
-        count++;
-        leadTable.innerHTML+=`
-          <tr>
-            <td>${d.name||""}</td>
-            <td>${d.company||""}</td>
-            <td>${d.phone||""}</td>
-            <td>${d.email||""}</td>
-            <td>${d.status||""}</td>
-          </tr>
-        `;
-      });
-      document.getElementById("leadCount").textContent=count;
+    if(session.usage>=PLAN_LIMITS.free.requests){
+    output.innerHTML="<strong>Free Limit Reached</strong>\nPro version unlocks unlimited access.";
+    return;
     }
+
+    output.textContent="Generating...";
+
+    let prompt;
+
+    if(mode==="notes"){
+    prompt="Create structured study notes with headings and bullet points about:\n\n"+input;
+    }
+    if(mode==="quiz"){
+    prompt="Create 5 multiple choice questions with answers about:\n\n"+input;
+    }
+    if(mode==="flashcards"){
+    prompt="Create 10 Q&A flashcards about:\n\n"+input;
+    }
+
+    try{
+    const response=await fetch("http://localhost:3000/api/chat",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({message:prompt})
+    });
+
+    const data=await response.json();
+
+    if(data.error){output.textContent=data.error;return;}
+
+    session.usage++;
+    localStorage.setItem("nixySession",JSON.stringify(session));
+    updateUsage();
+
+    output.textContent=data.reply;
+
+    }catch{
+    output.textContent="AI server not running.";
+    }
+
+    };
+
+    window.joinWaitlist=function(){
+    const email=document.getElementById("emailInput").value.trim();
+    if(!email)return;
+    let list=JSON.parse(localStorage.getItem("waitlist"))||[];
+    list.push(email);
+    localStorage.setItem("waitlist",JSON.stringify(list));
+    document.getElementById("waitlistMsg").textContent="Added to waitlist.";
+    document.getElementById("emailInput").value="";
+    };
+
+    });
 </script>
 
 </body>
