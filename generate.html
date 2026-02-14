@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Questions - Study Buddy AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #020202;
+            --evergreen: #0d2818;
+            --forest: #04471c;
+            --sea-green: #058c42;
+            --malachite: #16db65;
+            --white: #FAFAFA;
+            --gray: #999;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            margin-bottom: 48px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--malachite);
+            text-decoration: none;
+            margin-bottom: 24px;
+            font-size: 14px;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+        }
+
+        .page-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--white) 0%, var(--malachite) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--gray);
+        }
+
+        .material-card {
+            background: var(--evergreen);
+            border: 1px solid rgba(22, 219, 101, 0.2);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .material-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+        }
+
+        .material-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .material-subject {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(22, 219, 101, 0.1);
+            border: 1px solid var(--malachite);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--malachite);
+        }
+
+        .material-content {
+            background: var(--forest);
+            padding: 20px;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 24px;
+            line-height: 1.6;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .generate-section {
+            text-align: center;
+            padding: 40px;
+            background: var(--forest);
+            border-radius: 12px;
+            margin-bottom: 32px;
+        }
+
+        .generate-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .generate-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .generate-desc {
+            color: var(--gray);
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            padding: 16px 40px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--malachite);
+            color: var(--black);
+        }
+
+        .btn-primary:hover {
+            background: var(--sea-green);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(22, 219, 101, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading-state {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .loading-state.show {
+            display: block;
+        }
+
+        .spinner {
+            width: 64px;
+            height: 64px;
+            border: 4px solid rgba(22, 219, 101, 0.1);
+            border-top-color: var(--malachite);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 18px;
+            color: var(--gray);
+            margin-bottom: 12px;
+        }
+
+        .loading-subtext {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .questions-preview {
+            display: none;
+        }
+
+        .questions-preview.show {
+            display: block;
+        }
+
+        .question-card {
+            background: var(--evergreen);
+            border: 1px solid rgba(22, 219, 101, 0.2);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .question-card:hover {
+            border-color: var(--malachite);
+            transform: translateX(4px);
+        }
+
+        .question-number {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            background: var(--malachite);
+            color: var(--black);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .question-answer {
+            background: var(--forest);
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 3px solid var(--malachite);
+        }
+
+        .answer-label {
+            font-size: 12px;
+            color: var(--malachite);
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .answer-text {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+
+        .actions-bar {
+            display: flex;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            background: transparent;
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: var(--forest);
+        }
+
+        .error-message {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid #ff4444;
+            color: #ff6b6b;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 36px;
+            }
+
+            .material-card {
+                padding: 24px;
+            }
+
+            .generate-section {
+                padding: 32px 20px;
+            }
+
+            .actions-bar {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+        <h1 class="page-title">Generate Questions</h1>
+        <p class="page-subtitle">AI will create practice questions from your notes</p>
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message" id="errorMessage"></div>
+
+    <!-- Material Card -->
+    <div class="material-card" id="materialCard" style="display: none;">
+        <div class="material-header">
+            <div>
+                <h2 class="material-title" id="materialTitle">Loading...</h2>
+                <span class="material-subject" id="materialSubject">...</span>
+            </div>
+        </div>
+        <div class="material-content" id="materialContent">
+            Loading content...
+        </div>
+    </div>
+
+    <!-- Generate Section -->
+    <div class="generate-section" id="generateSection">
+        <div class="generate-icon">✨</div>
+        <h3 class="generate-title">Ready to Generate Questions?</h3>
+        <p class="generate-desc">
+            Our AI (powered by Groq) will analyze your notes and create practice questions to help you study effectively.
+            This usually takes 5-10 seconds.
+        </p>
+        <button class="btn btn-primary" id="generateBtn">
+            Generate Practice Questions
+        </button>
+    </div>
+
+    <!-- Loading State -->
+    <div class="loading-state" id="loadingState">
+        <div class="spinner"></div>
+        <div class="loading-text">Generating your questions...</div>
+        <div class="loading-subtext">This may take 10-20 seconds. Please don't close this page.</div>
+    </div>
+
+    <!-- Questions Preview -->
+    <div class="questions-preview" id="questionsPreview">
+        <h3 class="section-title" style="font-size: 24px; font-weight: 700; margin-bottom: 24px;">
+            📝 Generated Questions (<span id="questionCount">0</span>)
+        </h3>
+        <div id="questionsList"></div>
+
+        <div class="actions-bar">
+            <button class="btn btn-secondary" onclick="window.location.href='dashboard.html'">
+                Back to Dashboard
+            </button>
+            <button class="btn btn-primary" id="startQuizBtn">
+                Start Quiz →
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getFirestore, doc, getDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyB3ZEv5TgFr8SM1jCLyHJow3N39xfHYZNk",
+        authDomain: "studybuddyai-5561d.firebaseapp.com",
+        projectId: "studybuddyai-5561d",
+        storageBucket: "studybuddyai-5561d.firebasestorage.app",
+        messagingSenderId: "559083222865",
+        appId: "1:559083222865:web:26b4351fd26330716b4570"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser = null;
+    let materialId = null;
+    let materialData = null;
+    let generatedQuestions = [];
+
+    // Get material ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    materialId = urlParams.get('id');
+
+    if (!materialId) {
+        document.getElementById('errorMessage').textContent = 'No study material selected. Redirecting...';
+        document.getElementById('errorMessage').classList.add('show');
+        setTimeout(() => window.location.href = 'dashboard.html', 2000);
+    }
+
+    // Check authentication
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            console.log('✅ User logged in:', user.email);
+            currentUser = user;
+            await loadMaterial();
+        } else {
+            console.log('❌ Not logged in, redirecting...');
+            window.location.href = 'auth.html';
+        }
+    });
+
+    // Load material from Firestore
+    async function loadMaterial() {
+        try {
+            const docRef = doc(db, 'study_materials', materialId);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                materialData = docSnap.data();
+                console.log('✅ Material loaded:', materialData);
+
+                // Update UI
+                document.getElementById('materialTitle').textContent = materialData.title;
+                document.getElementById('materialSubject').textContent = materialData.subject;
+                document.getElementById('materialContent').textContent = materialData.content;
+                document.getElementById('materialCard').style.display = 'block';
+
+                // Check if questions already generated
+                if (materialData.questions && materialData.questions.length > 0) {
+                    console.log('✅ Questions already exist');
+                    generatedQuestions = materialData.questions;
+                    displayQuestions();
+                }
+            } else {
+                throw new Error('Material not found');
+            }
+        } catch (error) {
+            console.error('❌ Error loading material:', error);
+            document.getElementById('errorMessage').textContent = 'Failed to load study material.';
+            document.getElementById('errorMessage').classList.add('show');
+        }
+    }
+
+    // Generate questions with Groq API (FREE & FAST!)
+    document.getElementById('generateBtn').addEventListener('click', async () => {
+        document.getElementById('generateSection').style.display = 'none';
+        document.getElementById('loadingState').classList.add('show');
+
+        try {
+            // Call Groq API (FREE - no credit card needed!)
+            const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer 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' // Get free at console.groq.com
+                },
+                body: JSON.stringify({
+                    model: 'llama-3.3-70b-versatile', // Fast and smart!
+                    messages: [{
+                        role: 'user',
+                        content: `You are a study assistant. Based on these study notes, generate exactly 5 practice questions with detailed answers.
+
+IMPORTANT: Return ONLY a valid JSON array, nothing else. Format:
+[
+{"question": "question text here", "answer": "detailed answer here"},
+{"question": "question text here", "answer": "detailed answer here"}
+]
+
+Study Notes:
+${materialData.content}
+
+Generate questions that test understanding, not just memorization. Make them clear, educational, and varied in difficulty.`
+                    }],
+                    temperature: 0.7,
+                    max_tokens: 2000
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('🤖 Groq response:', data);
+
+            // Parse questions from response
+            const text = data.choices[0].message.content;
+            console.log('📝 Raw response:', text);
+
+            // Try to find JSON array in the response
+            const jsonMatch = text.match(/\[[\s\S]*\]/);
+
+            if (jsonMatch) {
+                generatedQuestions = JSON.parse(jsonMatch[0]);
+                console.log('✅ Generated questions:', generatedQuestions);
+
+                // Validate we have questions
+                if (!generatedQuestions || generatedQuestions.length === 0) {
+                    throw new Error('No questions generated');
+                }
+
+                // Save questions to Firestore
+                await updateDoc(doc(db, 'study_materials', materialId), {
+                    questions: generatedQuestions,
+                    questionsGenerated: true,
+                    generatedAt: new Date()
+                });
+
+                displayQuestions();
+            } else {
+                throw new Error('Failed to parse questions from AI response');
+            }
+
+        } catch (error) {
+            console.error('❌ Error generating questions:', error);
+            document.getElementById('loadingState').classList.remove('show');
+
+            let errorMsg = 'Failed to generate questions. ';
+            if (error.message.includes('401')) {
+                errorMsg += 'Invalid API key. Please check your Groq API key.';
+            } else if (error.message.includes('429')) {
+                errorMsg += 'Rate limit reached. Please try again in a minute.';
+            } else {
+                errorMsg += error.message;
+            }
+
+            document.getElementById('errorMessage').textContent = errorMsg;
+            document.getElementById('errorMessage').classList.add('show');
+            document.getElementById('generateSection').style.display = 'block';
+        }
+    });
+
+    // Display generated questions
+    function displayQuestions() {
+        document.getElementById('loadingState').classList.remove('show');
+        document.getElementById('generateSection').style.display = 'none';
+
+        const questionsList = document.getElementById('questionsList');
+        questionsList.innerHTML = '';
+
+        generatedQuestions.forEach((q, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.innerHTML = `
+                <div class="question-number">${index + 1}</div>
+                <div class="question-text">${q.question}</div>
+                <div class="question-answer">
+                    <div class="answer-label">Answer</div>
+                    <div class="answer-text">${q.answer}</div>
+                </div>
+            `;
+            questionsList.appendChild(card);
+        });
+
+        document.getElementById('questionCount').textContent = generatedQuestions.length;
+        document.getElementById('questionsPreview').classList.add('show');
+    }
+
+    // Start quiz button
+    document.getElementById('startQuizBtn').addEventListener('click', () => {
+        window.location.href = `quiz.html?id=${materialId}`;
+    });
+</script>
+</body>
+</html>

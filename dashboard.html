@@ -3,282 +3,770 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NixyDigital – StudyBuddy AI (Beta)</title>
-
+    <title>Dashboard - Study Buddy AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
-
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-
-        :root{
-        --black:#020202;
-        --evergreen:#0d2818;
-        --forest:#04471c;
-        --sea-green:#058c42;
-        --malachite:#16db65;
-        --white:#FAFAFA;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        body{
-        font-family:'Space Grotesk',sans-serif;
-        background:var(--black);
-        color:var(--white);
-        min-height:100vh;
+        :root {
+            --black: #020202;
+            --evergreen: #0d2818;
+            --forest: #04471c;
+            --sea-green: #058c42;
+            --malachite: #16db65;
+            --white: #FAFAFA;
+            --gray: #999;
         }
 
-        .topbar{
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        padding:30px 50px;
-        border-bottom:1px solid rgba(22,219,101,.15);
-        background:rgba(13,40,24,.6);
-        backdrop-filter:blur(10px);
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
         }
 
-        .logo{
-        font-family:'Syne',sans-serif;
-        font-size:28px;
-        font-weight:800;
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--evergreen);
+            border-right: 1px solid rgba(22, 219, 101, 0.1);
+            padding: 32px 0;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            overflow-y: auto;
         }
 
-        .logo span{color:var(--malachite)}
-
-        .container{
-        padding:50px;
-        display:grid;
-        grid-template-columns:1fr 1fr;
-        gap:30px;
+        .logo {
+            padding: 0 24px;
+            margin-bottom: 48px;
         }
 
-        .panel{
-        background:var(--evergreen);
-        border:1px solid rgba(22,219,101,.2);
-        border-radius:14px;
-        padding:30px;
+        .logo h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--white);
+            word-break: break-word;
+            line-height: 1.2;
         }
 
-        .panel-title{
-        font-weight:600;
-        margin-bottom:20px;
-        color:var(--malachite);
+        .logo span {
+            color: var(--malachite);
+            display: inline-block;
         }
 
-        textarea{
-        width:100%;
-        min-height:200px;
-        background:var(--forest);
-        border:1px solid rgba(22,219,101,.3);
-        border-radius:8px;
-        padding:15px;
-        color:var(--white);
-        resize:vertical;
+        .nav-menu {
+            list-style: none;
+            padding: 0 16px;
         }
 
-        select, input[type="email"]{
-        width:100%;
-        padding:12px;
-        margin-bottom:15px;
-        background:var(--forest);
-        border:1px solid rgba(22,219,101,.3);
-        border-radius:8px;
-        color:var(--white);
+        .nav-item {
+            margin-bottom: 8px;
         }
 
-        .generate-btn{
-        padding:14px;
-        width:100%;
-        background:var(--malachite);
-        border:none;
-        color:var(--black);
-        font-weight:700;
-        border-radius:6px;
-        cursor:pointer;
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
         }
 
-        .output{
-        margin-top:20px;
-        padding:20px;
-        background:var(--forest);
-        border-radius:8px;
-        min-height:120px;
-        white-space:pre-wrap;
-        line-height:1.6;
+        .nav-link:hover {
+            background: var(--forest);
+            color: var(--white);
         }
 
-        .usage{
-        margin-top:10px;
-        font-size:13px;
-        opacity:.7;
+        .nav-link.active {
+            background: var(--malachite);
+            color: var(--black);
         }
 
-        .waitlist{
-        margin-top:20px;
-        padding-top:20px;
-        border-top:1px solid rgba(22,219,101,.2);
+        .nav-icon {
+            font-size: 20px;
         }
 
-        .footer{
-        padding:30px;
-        border-top:1px solid rgba(22,219,101,.15);
-        text-align:center;
-        font-size:13px;
-        opacity:.4;
+        .user-profile {
+            position: absolute;
+            bottom: 32px;
+            left: 16px;
+            right: 16px;
+            padding: 16px;
+            background: var(--forest);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-profile:hover {
+            background: var(--sea-green);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--malachite);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--black);
+            font-size: 16px;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .user-plan {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .dashboard-header {
+            margin-bottom: 48px;
+        }
+
+        .welcome-text {
+            font-size: 16px;
+            color: var(--gray);
+            margin-bottom: 8px;
+        }
+
+        .dashboard-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--white) 0%, var(--malachite) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .stat-card {
+            background: var(--evergreen);
+            padding: 28px;
+            border-radius: 12px;
+            border: 1px solid rgba(22, 219, 101, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: var(--malachite);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(22, 219, 101, 0.2);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(22, 219, 101, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .stat-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--malachite);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .action-card {
+            background: var(--evergreen);
+            padding: 32px;
+            border-radius: 12px;
+            border: 1px solid rgba(22, 219, 101, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .action-card:hover {
+            border-color: var(--malachite);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(22, 219, 101, 0.2);
+        }
+
+        .action-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .action-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .action-desc {
+            font-size: 14px;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* Recent Activity */
+        .recent-activity {
+            margin-bottom: 48px;
+        }
+
+        .activity-list {
+            background: var(--evergreen);
+            border-radius: 12px;
+            border: 1px solid rgba(22, 219, 101, 0.1);
+            overflow: hidden;
+        }
+
+        .activity-item {
+            padding: 24px;
+            border-bottom: 1px solid rgba(22, 219, 101, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-item:hover {
+            background: var(--forest);
+        }
+
+        .activity-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(22, 219, 101, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .activity-time {
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        .activity-score {
+            font-family: 'Syne', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--malachite);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .empty-icon {
+            font-size: 80px;
+            margin-bottom: 24px;
+            opacity: 0.3;
+        }
+
+        .empty-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .empty-desc {
+            font-size: 16px;
+            color: var(--gray);
+            margin-bottom: 32px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 16px 32px;
+            background: var(--malachite);
+            color: var(--black);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: var(--sea-green);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(22, 219, 101, 0.3);
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 48px;
+            height: 48px;
+            background: var(--evergreen);
+            border: 1px solid rgba(22, 219, 101, 0.2);
+            border-radius: 8px;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 80px 20px 40px;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-title {
+                font-size: 36px;
+            }
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(22, 219, 101, 0.1);
+            border-top-color: var(--malachite);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Logout Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--evergreen);
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid rgba(22, 219, 101, 0.2);
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .modal-text {
+            color: var(--gray);
+            margin-bottom: 32px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--malachite);
+            color: var(--black);
+        }
+
+        .btn-primary:hover {
+            background: var(--sea-green);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: var(--forest);
         }
     </style>
 </head>
-
 <body>
-
-<script>
-    let session = JSON.parse(localStorage.getItem("nixySession"));
-    if(!session){window.location.href="auth.html";}
-
-    const PLAN_LIMITS={free:{requests:3}};
-
-    if(!session.plan){session.plan="free";}
-    if(typeof session.usage!=="number"){session.usage=0;}
-    localStorage.setItem("nixySession",JSON.stringify(session));
-</script>
-
-<div class="topbar">
-    <div class="logo">NIXY<span>DIGITAL</span></div>
-    <div>
-        <span id="welcomeUser"></span>
-        <span id="usageInfo" style="margin-left:15px;color:#16db65;"></span>
-    </div>
+<!-- Mobile Menu Toggle -->
+<div class="mobile-menu-toggle" id="mobileMenuToggle">
+    ☰
 </div>
 
-<div class="container">
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+    <div class="logo">
+        <h1>NIXY<span>DIGITAL</span></h1>
+    </div>
 
-    <div class="panel">
-        <div class="panel-title">Study Material</div>
+    <ul class="nav-menu">
+        <li class="nav-item">
+            <a href="dashboard.html" class="nav-link active" data-page="dashboard">
+                <span class="nav-icon">🏠</span>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="study-materials.html" class="nav-link" data-page="study">
+                <span class="nav-icon">📚</span>
+                <span>Study Materials</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="my-quizzes.html" class="nav-link" data-page="quizzes">
+                <span class="nav-icon">✍️</span>
+                <span>My Quizzes</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="progress.html" class="nav-link" data-page="progress">
+                <span class="nav-icon">📊</span>
+                <span>Progress</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="settings.html" class="nav-link" data-page="settings">
+                <span class="nav-icon">⚙️</span>
+                <span>Settings</span>
+            </a>
+        </li>
+    </ul>
 
-        <select id="modeSelect">
-            <option value="notes">Generate Structured Notes</option>
-            <option value="quiz">Generate Quiz (5 Questions)</option>
-            <option value="flashcards">Generate Flashcards (10)</option>
-        </select>
+    <div class="user-profile" id="userProfile">
+        <div class="user-avatar" id="userAvatar">?</div>
+        <div class="user-info">
+            <div class="user-name" id="userName">Loading...</div>
+            <div class="user-plan">Free Plan</div>
+        </div>
+    </div>
+</aside>
 
-        <textarea id="studyInput" placeholder="Enter topic or paste study material..."></textarea>
+<!-- Main Content -->
+<main class="main-content" id="mainContent">
+    <!-- Loading State -->
+    <div class="loading" id="loadingState">
+        <div class="spinner"></div>
+        <p>Loading your dashboard...</p>
+    </div>
 
-        <button class="generate-btn" onclick="generateContent()">Generate</button>
-
-        <div class="usage" id="limitText"></div>
-
-        <div class="output" id="aiOutput">AI output will appear here.</div>
-
-        <div class="waitlist">
-            <div class="panel-title">Pro Version</div>
-            <input type="email" id="emailInput" placeholder="Enter email for Pro launch">
-            <button class="generate-btn" onclick="joinWaitlist()">Join Waitlist</button>
-            <div class="usage" id="waitlistMsg"></div>
+    <!-- Dashboard Content (Hidden Initially) -->
+    <div id="dashboardContent" style="display: none;">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="welcome-text">Welcome back,</div>
+            <h1 class="dashboard-title" id="dashboardTitle">Loading...</h1>
         </div>
 
-    </div>
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📝</div>
+                <div class="stat-value" id="statMaterials">0</div>
+                <div class="stat-label">Study Materials</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value" id="statQuizzes">0</div>
+                <div class="stat-label">Quizzes Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value" id="statAccuracy">0%</div>
+                <div class="stat-label">Average Score</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🔥</div>
+                <div class="stat-value" id="statStreak">0</div>
+                <div class="stat-label">Day Streak</div>
+            </div>
+        </div>
 
-    <div class="panel">
-        <div class="panel-title">Uploaded File Preview</div>
-        <input type="file" id="fileInput">
-        <div class="output" id="fileOutput">No file uploaded.</div>
-    </div>
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h2 class="section-title">Quick Actions</h2>
+            <div class="action-grid">
+                <div class="action-card" onclick="window.location.href='upload.html'">
+                    <div class="action-icon">📤</div>
+                    <h3 class="action-title">Upload Notes</h3>
+                    <p class="action-desc">Paste your study notes or upload files to get started</p>
+                </div>
+                <div class="action-card" onclick="window.location.href='upload.html'">
+                    <div class="action-icon">✨</div>
+                    <h3 class="action-title">Generate Questions</h3>
+                    <p class="action-desc">Turn your notes into practice questions instantly</p>
+                </div>
+                <div class="action-card" onclick="window.location.href='upload.html'">
+                    <div class="action-icon">🎓</div>
+                    <h3 class="action-title">Take a Quiz</h3>
+                    <p class="action-desc">Test your knowledge with adaptive quizzes</p>
+                </div>
+            </div>
+        </div>
 
+        <!-- Recent Activity -->
+        <div class="recent-activity">
+            <h2 class="section-title">Recent Activity</h2>
+            <div class="activity-list" id="activityList">
+                <!-- Empty State -->
+                <div class="empty-state">
+                    <div class="empty-icon">📚</div>
+                    <h3 class="empty-title">No Activity Yet</h3>
+                    <p class="empty-desc">Start by uploading your first study material!</p>
+                    <a href="upload.html" class="cta-button">Upload Notes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Logout Modal -->
+<div class="modal" id="logoutModal">
+    <div class="modal-content">
+        <h3 class="modal-title">Sign Out</h3>
+        <p class="modal-text">Are you sure you want to sign out?</p>
+        <div class="modal-buttons">
+            <button class="btn btn-secondary" onclick="closeLogoutModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="confirmLogout()">Sign Out</button>
+        </div>
+    </div>
 </div>
 
-<div class="footer">
-    StudyBuddy AI • Beta v0.1 • Free Tier Active
-</div>
+<!-- Firebase SDK -->
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getFirestore, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-<script>
-
-    document.addEventListener("DOMContentLoaded",()=>{
-
-    let session = JSON.parse(localStorage.getItem("nixySession"));
-    const PLAN_LIMITS={free:{requests:5}};
-
-    const welcomeUser=document.getElementById("welcomeUser");
-    const usageInfo=document.getElementById("usageInfo");
-    const limitText=document.getElementById("limitText");
-
-    welcomeUser.textContent="Welcome, "+(session.name||session.email);
-
-    function updateUsage(){
-    usageInfo.textContent="FREE • "+session.usage+"/"+PLAN_LIMITS.free.requests;
-    limitText.textContent="Free limit: "+(PLAN_LIMITS.free.requests-session.usage)+" generations remaining.";
-    }
-
-    updateUsage();
-
-    document.getElementById("fileInput").addEventListener("change",function(){
-    const file=this.files[0];
-    if(!file)return;
-    const reader=new FileReader();
-    reader.onload=e=>{document.getElementById("fileOutput").textContent=e.target.result.slice(0,2000);};
-    reader.readAsText(file);
-    });
-
-    window.generateContent=async function(){
-
-    const input=document.getElementById("studyInput").value.trim();
-    const mode=document.getElementById("modeSelect").value;
-    const output=document.getElementById("aiOutput");
-
-    if(!input){output.textContent="Enter study material.";return;}
-
-    if(session.usage>=PLAN_LIMITS.free.requests){
-    output.innerHTML="<strong>Free Limit Reached</strong>\nPro version unlocks unlimited access.";
-    return;
-    }
-
-    output.textContent="Generating...";
-
-    let prompt;
-
-    if(mode==="notes"){
-    prompt="Create structured study notes with headings and bullet points about:\n\n"+input;
-    }
-    if(mode==="quiz"){
-    prompt="Create 5 multiple choice questions with answers about:\n\n"+input;
-    }
-    if(mode==="flashcards"){
-    prompt="Create 10 Q&A flashcards about:\n\n"+input;
-    }
-
-    try{
-    const response=await fetch("http://localhost:3000/api/chat",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({message:prompt})
-    });
-
-    const data=await response.json();
-
-    if(data.error){output.textContent=data.error;return;}
-
-    session.usage++;
-    localStorage.setItem("nixySession",JSON.stringify(session));
-    updateUsage();
-
-    output.textContent=data.reply;
-
-    }catch{
-    output.textContent="AI server not running.";
-    }
-
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyB3ZEv5TgFr8SM1jCLyHJow3N39xfHYZNk",
+        authDomain: "studybuddyai-5561d.firebaseapp.com",
+        projectId: "studybuddyai-5561d",
+        storageBucket: "studybuddyai-5561d.firebasestorage.app",
+        messagingSenderId: "559083222865",
+        appId: "1:559083222865:web:26b4351fd26330716b4570"
     };
 
-    window.joinWaitlist=function(){
-    const email=document.getElementById("emailInput").value.trim();
-    if(!email)return;
-    let list=JSON.parse(localStorage.getItem("waitlist"))||[];
-    list.push(email);
-    localStorage.setItem("waitlist",JSON.stringify(list));
-    document.getElementById("waitlistMsg").textContent="Added to waitlist.";
-    document.getElementById("emailInput").value="";
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    console.log('✅ Firebase initialized');
+
+    // Check authentication
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            console.log('✅ User logged in:', user.email);
+
+            // Get first name from email
+            const firstName = user.email.split('@')[0];
+            const displayName = user.displayName || firstName;
+            const initial = displayName.charAt(0).toUpperCase();
+
+            // Update UI
+            document.getElementById('userName').textContent = displayName;
+            document.getElementById('userAvatar').textContent = initial;
+            document.getElementById('dashboardTitle').textContent = `${displayName}!`;
+
+            // Load user data
+            await loadUserData(user.uid);
+
+            // Show dashboard
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('dashboardContent').style.display = 'block';
+
+        } else {
+            console.log('❌ No user logged in, redirecting...');
+            window.location.href = 'auth.html';
+        }
+    });
+
+    // Load user data from Firestore
+    async function loadUserData(userId) {
+        try {
+            // TODO: Load actual data from Firestore
+            // For now, show placeholder stats
+            document.getElementById('statMaterials').textContent = '0';
+            document.getElementById('statQuizzes').textContent = '0';
+            document.getElementById('statAccuracy').textContent = '0%';
+            document.getElementById('statStreak').textContent = '0';
+
+            console.log('📊 User data loaded');
+        } catch (error) {
+            console.error('❌ Error loading user data:', error);
+        }
+    }
+
+    // User profile click - show logout modal
+    document.getElementById('userProfile').addEventListener('click', () => {
+        document.getElementById('logoutModal').classList.add('show');
+    });
+
+    // Close logout modal
+    window.closeLogoutModal = () => {
+        document.getElementById('logoutModal').classList.remove('show');
     };
 
+    // Confirm logout
+    window.confirmLogout = async () => {
+        try {
+            await signOut(auth);
+            console.log('✅ Logged out successfully');
+            window.location.href = 'auth.html';
+        } catch (error) {
+            console.error('❌ Logout error:', error);
+            alert('Failed to sign out. Please try again.');
+        }
+    };
+
+    // Mobile menu toggle
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const sidebar = document.getElementById('sidebar');
+
+    mobileMenuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 1024) {
+            if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                sidebar.classList.remove('open');
+            }
+        }
     });
 </script>
-
 </body>
 </html>

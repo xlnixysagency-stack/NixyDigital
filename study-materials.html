@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Materials - Study Buddy AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #020202;
+            --evergreen: #0d2818;
+            --forest: #04471c;
+            --sea-green: #058c42;
+            --malachite: #16db65;
+            --white: #FAFAFA;
+            --gray: #999;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            margin-bottom: 48px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--malachite);
+            text-decoration: none;
+            margin-bottom: 24px;
+            font-size: 14px;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+        }
+
+        .page-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--white) 0%, var(--malachite) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--gray);
+        }
+
+        .add-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--malachite);
+            color: var(--black);
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-bottom: 32px;
+        }
+
+        .add-button:hover {
+            background: var(--sea-green);
+            transform: translateY(-2px);
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .material-card {
+            background: var(--evergreen);
+            border: 1px solid rgba(22, 219, 101, 0.2);
+            border-radius: 12px;
+            padding: 28px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .material-card:hover {
+            border-color: var(--malachite);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(22, 219, 101, 0.2);
+        }
+
+        .material-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 16px;
+        }
+
+        .material-subject {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(22, 219, 101, 0.1);
+            border: 1px solid var(--malachite);
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--malachite);
+        }
+
+        .material-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .material-preview {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .material-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 13px;
+            color: var(--gray);
+        }
+
+        .material-date {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .material-questions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--malachite);
+        }
+
+        .material-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .btn-small {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-small {
+            background: var(--malachite);
+            color: var(--black);
+        }
+
+        .btn-primary-small:hover {
+            background: var(--sea-green);
+        }
+
+        .btn-secondary-small {
+            background: transparent;
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary-small:hover {
+            background: var(--forest);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            background: var(--evergreen);
+            border-radius: 12px;
+            border: 1px solid rgba(22, 219, 101, 0.1);
+        }
+
+        .empty-icon {
+            font-size: 80px;
+            margin-bottom: 24px;
+            opacity: 0.3;
+        }
+
+        .empty-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .empty-desc {
+            font-size: 16px;
+            color: var(--gray);
+            margin-bottom: 32px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(22, 219, 101, 0.1);
+            border-top-color: var(--malachite);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 36px;
+            }
+
+            .materials-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+        <h1 class="page-title">Study Materials</h1>
+        <p class="page-subtitle">All your uploaded notes and study materials</p>
+    </div>
+
+    <a href="upload.html" class="add-button">
+        <span>+</span>
+        <span>Add New Material</span>
+    </a>
+
+    <!-- Loading State -->
+    <div class="loading" id="loadingState">
+        <div class="spinner"></div>
+        <p>Loading your materials...</p>
+    </div>
+
+    <!-- Materials Grid -->
+    <div class="materials-grid" id="materialsGrid" style="display: none;"></div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState" style="display: none;">
+        <div class="empty-icon">📚</div>
+        <h3 class="empty-title">No Study Materials Yet</h3>
+        <p class="empty-desc">Upload your first notes to get started with AI-powered questions!</p>
+        <a href="upload.html" class="add-button">
+            Upload Notes
+        </a>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getFirestore, collection, query, where, getDocs, orderBy, deleteDoc, doc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyB3ZEv5TgFr8SM1jCLyHJow3N39xfHYZNk",
+        authDomain: "studybuddyai-5561d.firebaseapp.com",
+        projectId: "studybuddyai-5561d",
+        storageBucket: "studybuddyai-5561d.firebasestorage.app",
+        messagingSenderId: "559083222865",
+        appId: "1:559083222865:web:26b4351fd26330716b4570"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser = null;
+
+    // Check authentication
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            console.log('✅ User logged in:', user.email);
+            currentUser = user;
+            await loadMaterials();
+        } else {
+            console.log('❌ Not logged in, redirecting...');
+            window.location.href = 'auth.html';
+        }
+    });
+
+    // Load user's materials
+    async function loadMaterials() {
+        try {
+            const materialsRef = collection(db, 'study_materials');
+            const q = query(
+                materialsRef,
+                where('userId', '==', currentUser.uid),
+                orderBy('createdAt', 'desc')
+            );
+
+            const querySnapshot = await getDocs(q);
+
+            document.getElementById('loadingState').style.display = 'none';
+
+            if (querySnapshot.empty) {
+                document.getElementById('emptyState').style.display = 'block';
+                return;
+            }
+
+            const materialsGrid = document.getElementById('materialsGrid');
+            materialsGrid.style.display = 'grid';
+            materialsGrid.innerHTML = '';
+
+            querySnapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                const card = createMaterialCard(docSnap.id, data);
+                materialsGrid.appendChild(card);
+            });
+
+            console.log('✅ Loaded', querySnapshot.size, 'materials');
+
+        } catch (error) {
+            console.error('❌ Error loading materials:', error);
+            document.getElementById('loadingState').innerHTML = '<p>Error loading materials. Please refresh the page.</p>';
+        }
+    }
+
+    // Create material card
+    function createMaterialCard(id, data) {
+        const card = document.createElement('div');
+        card.className = 'material-card';
+
+        const date = data.createdAt?.toDate?.() || new Date();
+        const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+        const hasQuestions = data.questions && data.questions.length > 0;
+        const questionCount = hasQuestions ? data.questions.length : 0;
+
+        card.innerHTML = `
+            <div class="material-header">
+                <span class="material-subject">${data.subject || 'Other'}</span>
+            </div>
+            <h3 class="material-title">${data.title}</h3>
+            <div class="material-preview">${data.content.substring(0, 150)}...</div>
+            <div class="material-meta">
+                <div class="material-date">
+                    <span>📅</span>
+                    <span>${formattedDate}</span>
+                </div>
+                <div class="material-questions">
+                    <span>✨</span>
+                    <span>${questionCount} questions</span>
+                </div>
+            </div>
+            <div class="material-actions">
+                ${hasQuestions ?
+                    `<button class="btn-small btn-primary-small" onclick="window.location.href='quiz.html?id=${id}'">Take Quiz</button>` :
+                    `<button class="btn-small btn-primary-small" onclick="window.location.href='generate.html?id=${id}'">Generate Questions</button>`
+                }
+                <button class="btn-small btn-secondary-small" onclick="deleteMaterial('${id}')">Delete</button>
+            </div>
+        `;
+
+        return card;
+    }
+
+    // Delete material
+    window.deleteMaterial = async function(id) {
+        if (!confirm('Are you sure you want to delete this material? This cannot be undone.')) {
+            return;
+        }
+
+        try {
+            await deleteDoc(doc(db, 'study_materials', id));
+            console.log('✅ Material deleted');
+            loadMaterials(); // Reload list
+        } catch (error) {
+            console.error('❌ Error deleting:', error);
+            alert('Failed to delete material. Please try again.');
+        }
+    };
+</script>
+</body>
+</html>

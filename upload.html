@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Notes - Study Buddy AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #020202;
+            --evergreen: #0d2818;
+            --forest: #04471c;
+            --sea-green: #058c42;
+            --malachite: #16db65;
+            --white: #FAFAFA;
+            --gray: #999;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            margin-bottom: 48px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--malachite);
+            text-decoration: none;
+            margin-bottom: 24px;
+            font-size: 14px;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+        }
+
+        .page-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--white) 0%, var(--malachite) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: var(--gray);
+        }
+
+        .upload-card {
+            background: var(--evergreen);
+            border: 1px solid rgba(22, 219, 101, 0.2);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--forest);
+            border: 1px solid rgba(22, 219, 101, 0.2);
+            border-radius: 8px;
+            color: var(--white);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--malachite);
+            box-shadow: 0 0 0 3px rgba(22, 219, 101, 0.1);
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 16px;
+            background: var(--forest);
+            border: 1px solid rgba(22, 219, 101, 0.2);
+            border-radius: 8px;
+            color: var(--white);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 15px;
+            line-height: 1.6;
+            resize: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--malachite);
+            box-shadow: 0 0 0 3px rgba(22, 219, 101, 0.1);
+        }
+
+        .form-textarea::placeholder,
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 13px;
+            color: var(--gray);
+            margin-top: 8px;
+        }
+
+        .subject-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .tag {
+            padding: 8px 16px;
+            background: var(--forest);
+            border: 1px solid rgba(22, 219, 101, 0.2);
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tag:hover {
+            border-color: var(--malachite);
+            background: var(--sea-green);
+        }
+
+        .tag.active {
+            background: var(--malachite);
+            color: var(--black);
+            border-color: var(--malachite);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--malachite);
+            color: var(--black);
+        }
+
+        .btn-primary:hover {
+            background: var(--sea-green);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(22, 219, 101, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: var(--forest);
+        }
+
+        .success-message {
+            background: rgba(22, 219, 101, 0.1);
+            border: 1px solid var(--malachite);
+            color: var(--malachite);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .success-message.show {
+            display: flex;
+        }
+
+        .error-message {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid #ff4444;
+            color: #ff6b6b;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .tips-card {
+            background: var(--forest);
+            border: 1px solid rgba(22, 219, 101, 0.1);
+            border-radius: 12px;
+            padding: 32px;
+        }
+
+        .tips-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            padding: 12px 0;
+            padding-left: 28px;
+            position: relative;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        .tips-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--malachite);
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 36px;
+            }
+
+            .upload-card {
+                padding: 24px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .tips-card {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+        <h1 class="page-title">Upload Study Notes</h1>
+        <p class="page-subtitle">Paste your notes below to get started with AI-powered questions</p>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" id="successMessage">
+        <span>✓</span>
+        <span>Notes saved successfully! Redirecting to generate questions...</span>
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message" id="errorMessage"></div>
+
+    <!-- Upload Form -->
+    <div class="upload-card">
+        <form id="uploadForm">
+            <div class="form-group">
+                <label class="form-label">Title</label>
+                <input
+                        type="text"
+                        class="form-input"
+                        id="noteTitle"
+                        placeholder="e.g., Biology Chapter 5 - Cell Division"
+                        required
+                >
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Subject</label>
+                <div class="subject-tags">
+                    <div class="tag" data-subject="Biology">🧬 Biology</div>
+                    <div class="tag" data-subject="Chemistry">⚗️ Chemistry</div>
+                    <div class="tag" data-subject="Physics">⚛️ Physics</div>
+                    <div class="tag" data-subject="Math">📐 Math</div>
+                    <div class="tag" data-subject="History">📜 History</div>
+                    <div class="tag" data-subject="English">📖 English</div>
+                    <div class="tag" data-subject="Other">📚 Other</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Study Notes</label>
+                <textarea
+                        class="form-textarea"
+                        id="noteContent"
+                        placeholder="Paste your class notes, textbook pages, or study material here...
+
+Example:
+Cell Division - Mitosis
+
+Mitosis is the process by which a cell divides into two identical daughter cells. It consists of several phases:
+
+1. Prophase: Chromatin condenses into chromosomes
+2. Metaphase: Chromosomes align at the cell equator
+3. Anaphase: Sister chromatids separate
+4. Telophase: Nuclear envelopes reform
+
+Key points:
+- Results in two diploid cells
+- Essential for growth and repair
+- DNA replication occurs before mitosis begins"
+                        required
+                ></textarea>
+                <div class="char-count">
+                    <span id="charCount">0</span> characters
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn btn-secondary" onclick="window.location.href='dashboard.html'">
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-primary" id="saveBtn">
+                    Save & Generate Questions
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tips Card -->
+    <div class="tips-card">
+        <h3 class="tips-title">💡 Tips for Better Questions</h3>
+        <ul class="tips-list">
+            <li>Include key concepts, definitions, and important facts</li>
+            <li>Add examples and specific details</li>
+            <li>The more content you provide, the better questions we can generate</li>
+            <li>Include any diagrams or processes in text form</li>
+            <li>Notes should be at least 100 words for good results</li>
+        </ul>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getFirestore, collection, addDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyB3ZEv5TgFr8SM1jCLyHJow3N39xfHYZNk",
+        authDomain: "studybuddyai-5561d.firebaseapp.com",
+        projectId: "studybuddyai-5561d",
+        storageBucket: "studybuddyai-5561d.firebasestorage.app",
+        messagingSenderId: "559083222865",
+        appId: "1:559083222865:web:26b4351fd26330716b4570"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser = null;
+    let selectedSubject = null;
+
+    // Check authentication
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            console.log('✅ User logged in:', user.email);
+            currentUser = user;
+        } else {
+            console.log('❌ Not logged in, redirecting...');
+            window.location.href = 'auth.html';
+        }
+    });
+
+    // Character counter
+    const noteContent = document.getElementById('noteContent');
+    const charCount = document.getElementById('charCount');
+
+    noteContent.addEventListener('input', () => {
+        charCount.textContent = noteContent.value.length;
+    });
+
+    // Subject tag selection
+    document.querySelectorAll('.tag').forEach(tag => {
+        tag.addEventListener('click', () => {
+            document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+            tag.classList.add('active');
+            selectedSubject = tag.getAttribute('data-subject');
+            console.log('📚 Subject selected:', selectedSubject);
+        });
+    });
+
+    // Form submission
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const title = document.getElementById('noteTitle').value.trim();
+        const content = document.getElementById('noteContent').value.trim();
+        const saveBtn = document.getElementById('saveBtn');
+        const successMsg = document.getElementById('successMessage');
+        const errorMsg = document.getElementById('errorMessage');
+
+        // Validation
+        if (!selectedSubject) {
+            errorMsg.textContent = 'Please select a subject';
+            errorMsg.classList.add('show');
+            setTimeout(() => errorMsg.classList.remove('show'), 3000);
+            return;
+        }
+
+        if (content.length < 50) {
+            errorMsg.textContent = 'Please add more content (at least 50 characters)';
+            errorMsg.classList.add('show');
+            setTimeout(() => errorMsg.classList.remove('show'), 3000);
+            return;
+        }
+
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+
+        try {
+            // Save to Firestore
+            const docRef = await addDoc(collection(db, 'study_materials'), {
+                userId: currentUser.uid,
+                userEmail: currentUser.email,
+                title: title,
+                subject: selectedSubject,
+                content: content,
+                createdAt: Timestamp.now(),
+                questionsGenerated: false
+            });
+
+            console.log('✅ Notes saved:', docRef.id);
+
+            // Show success message
+            successMsg.classList.add('show');
+
+            // Redirect to generate page with the document ID
+            setTimeout(() => {
+                window.location.href = `generate.html?id=${docRef.id}`;
+            }, 1500);
+
+        } catch (error) {
+            console.error('❌ Error saving notes:', error);
+            errorMsg.textContent = 'Failed to save notes. Please try again.';
+            errorMsg.classList.add('show');
+            saveBtn.disabled = false;
+            saveBtn.textContent = 'Save & Generate Questions';
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - Study Buddy AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #020202;
+            --evergreen: #0d2818;
+            --forest: #04471c;
+            --sea-green: #058c42;
+            --malachite: #16db65;
+            --white: #FAFAFA;
+            --gray: #999;
+            --red: #ff4444;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            min-height: 100vh;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .quiz-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--white) 0%, var(--malachite) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .quiz-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--evergreen);
+            padding: 20px 28px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+        }
+
+        .progress-item {
+            text-align: center;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .progress-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--malachite);
+        }
+
+        .progress-bar-container {
+            height: 8px;
+            background: var(--forest);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 32px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--malachite), var(--sea-green));
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        .question-card {
+            background: var(--evergreen);
+            border: 1px solid rgba(22, 219, 101, 0.2);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 32px;
+        }
+
+        .question-number {
+            display: inline-block;
+            background: rgba(22, 219, 101, 0.1);
+            color: var(--malachite);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .question-text {
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 1.5;
+            margin-bottom: 32px;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 16px;
+            background: var(--forest);
+            border: 2px solid rgba(22, 219, 101, 0.2);
+            border-radius: 8px;
+            color: var(--white);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--malachite);
+            box-shadow: 0 0 0 3px rgba(22, 219, 101, 0.1);
+        }
+
+        .answer-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .feedback-box {
+            display: none;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+
+        .feedback-box.show {
+            display: block;
+        }
+
+        .feedback-box.correct {
+            background: rgba(22, 219, 101, 0.1);
+            border: 2px solid var(--malachite);
+        }
+
+        .feedback-box.incorrect {
+            background: rgba(255, 68, 68, 0.1);
+            border: 2px solid var(--red);
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 18px;
+        }
+
+        .feedback-box.correct .feedback-title {
+            color: var(--malachite);
+        }
+
+        .feedback-box.incorrect .feedback-title {
+            color: var(--red);
+        }
+
+        .feedback-text {
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .correct-answer {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .correct-answer-label {
+            font-size: 13px;
+            color: var(--malachite);
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--malachite);
+            color: var(--black);
+        }
+
+        .btn-primary:hover {
+            background: var(--sea-green);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: var(--forest);
+        }
+
+        /* Results Screen */
+        .results-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .results-screen.show {
+            display: block;
+        }
+
+        .results-icon {
+            font-size: 80px;
+            margin-bottom: 24px;
+        }
+
+        .results-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .results-score {
+            font-family: 'Syne', sans-serif;
+            font-size: 72px;
+            font-weight: 800;
+            color: var(--malachite);
+            margin-bottom: 32px;
+        }
+
+        .results-message {
+            font-size: 20px;
+            color: var(--gray);
+            margin-bottom: 48px;
+        }
+
+        .results-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .stat-box {
+            background: var(--evergreen);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid rgba(22, 219, 101, 0.1);
+        }
+
+        .stat-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--malachite);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        @media (max-width: 768px) {
+            .quiz-container {
+                padding: 24px 16px;
+            }
+
+            .quiz-title {
+                font-size: 28px;
+            }
+
+            .question-card {
+                padding: 28px 24px;
+            }
+
+            .question-text {
+                font-size: 20px;
+            }
+
+            .results-score {
+                font-size: 56px;
+            }
+
+            .results-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="quiz-container">
+    <!-- Quiz Interface -->
+    <div id="quizInterface">
+        <div class="quiz-header">
+            <h1 class="quiz-title" id="quizTitle">Loading...</h1>
+        </div>
+
+        <div class="quiz-progress">
+            <div class="progress-item">
+                <div class="progress-label">Question</div>
+                <div class="progress-value">
+                    <span id="currentQuestion">1</span>/<span id="totalQuestions">5</span>
+                </div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-label">Correct</div>
+                <div class="progress-value" id="correctCount">0</div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-label">Score</div>
+                <div class="progress-value" id="currentScore">0%</div>
+            </div>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+        </div>
+
+        <div class="question-card">
+            <div class="question-number" id="questionNumber">Question 1</div>
+            <div class="question-text" id="questionText">Loading question...</div>
+
+            <textarea
+                    class="answer-input"
+                    id="answerInput"
+                    placeholder="Type your answer here..."
+            ></textarea>
+
+            <div class="feedback-box" id="feedbackBox">
+                <div class="feedback-title" id="feedbackTitle"></div>
+                <div class="feedback-text" id="feedbackText"></div>
+                <div class="correct-answer" id="correctAnswerBox" style="display: none;">
+                    <div class="correct-answer-label">Correct Answer:</div>
+                    <div id="correctAnswerText"></div>
+                </div>
+            </div>
+
+            <div class="button-group" id="buttonGroup">
+                <button class="btn btn-secondary" onclick="window.location.href='dashboard.html'">
+                    Exit Quiz
+                </button>
+                <button class="btn btn-primary" id="checkAnswerBtn">
+                    Check Answer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div class="results-screen" id="resultsScreen">
+        <div class="results-icon">🎉</div>
+        <h2 class="results-title">Quiz Complete!</h2>
+        <div class="results-score" id="finalScore">0%</div>
+        <p class="results-message" id="resultsMessage">Great job!</p>
+
+        <div class="results-stats">
+            <div class="stat-box">
+                <div class="stat-value" id="totalQuestionsResult">0</div>
+                <div class="stat-label">Questions</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="correctAnswersResult">0</div>
+                <div class="stat-label">Correct</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="accuracyResult">0%</div>
+                <div class="stat-label">Accuracy</div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-secondary" onclick="window.location.reload()">
+                Retake Quiz
+            </button>
+            <button class="btn btn-primary" onclick="window.location.href='dashboard.html'">
+                Back to Dashboard
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getFirestore, doc, getDoc, collection, addDoc, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyB3ZEv5TgFr8SM1jCLyHJow3N39xfHYZNk",
+        authDomain: "studybuddyai-5561d.firebaseapp.com",
+        projectId: "studybuddyai-5561d",
+        storageBucket: "studybuddyai-5561d.firebasestorage.app",
+        messagingSenderId: "559083222865",
+        appId: "1:559083222865:web:26b4351fd26330716b4570"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentUser = null;
+    let materialId = null;
+    let questions = [];
+    let currentQuestionIndex = 0;
+    let correctCount = 0;
+    let answers = [];
+    let hasAnswered = false;
+
+    // Get material ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    materialId = urlParams.get('id');
+
+    // If no ID, we'll load it from the user's materials later
+    console.log('Material ID from URL:', materialId);
+
+    // Check authentication
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            console.log('✅ User logged in:', user.email);
+            currentUser = user;
+            await loadQuiz();
+        } else {
+            console.log('❌ Not logged in, redirecting...');
+            window.location.href = 'auth.html';
+        }
+    });
+
+    // Load quiz from Firestore
+    async function loadQuiz() {
+        try {
+            // If no material ID, redirect to upload page
+            if (!materialId) {
+                alert('No quiz selected. Please upload notes and generate questions first.');
+                window.location.href = 'upload.html';
+                return;
+            }
+
+            const docRef = doc(db, 'study_materials', materialId);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                questions = data.questions || [];
+
+                if (questions.length === 0) {
+                    alert('No questions available. Please generate questions first.');
+                    window.location.href = `generate.html?id=${materialId}`;
+                    return;
+                }
+
+                document.getElementById('quizTitle').textContent = data.title;
+                document.getElementById('totalQuestions').textContent = questions.length;
+
+                displayQuestion();
+                console.log('✅ Quiz loaded:', questions.length, 'questions');
+            } else {
+                throw new Error('Quiz not found');
+            }
+        } catch (error) {
+            console.error('❌ Error loading quiz:', error);
+            alert('Failed to load quiz. Please try uploading notes first.');
+            window.location.href = 'upload.html';
+        }
+    }
+
+    // Display current question
+    function displayQuestion() {
+        const question = questions[currentQuestionIndex];
+
+        document.getElementById('questionNumber').textContent = `Question ${currentQuestionIndex + 1}`;
+        document.getElementById('questionText').textContent = question.question;
+        document.getElementById('answerInput').value = '';
+        document.getElementById('feedbackBox').classList.remove('show', 'correct', 'incorrect');
+
+        // Update progress
+        document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+        const progress = ((currentQuestionIndex) / questions.length) * 100;
+        document.getElementById('progressBar').style.width = progress + '%';
+
+        // Reset button
+        const checkBtn = document.getElementById('checkAnswerBtn');
+        checkBtn.textContent = 'Check Answer';
+        checkBtn.onclick = checkAnswer;
+        hasAnswered = false;
+    }
+
+    // Check answer
+    function checkAnswer() {
+        const userAnswer = document.getElementById('answerInput').value.trim();
+
+        if (!userAnswer) {
+            alert('Please enter an answer');
+            return;
+        }
+
+        const question = questions[currentQuestionIndex];
+        const correctAnswer = question.answer;
+
+        // Simple check: if user answer contains key words from correct answer
+        const isCorrect = userAnswer.toLowerCase().includes(correctAnswer.toLowerCase().substring(0, 20));
+
+        if (isCorrect) {
+            correctCount++;
+            document.getElementById('feedbackBox').classList.add('correct');
+            document.getElementById('feedbackTitle').textContent = '✓ Correct!';
+            document.getElementById('feedbackText').textContent = 'Great job! Your answer is correct.';
+            document.getElementById('correctAnswerBox').style.display = 'none';
+        } else {
+            document.getElementById('feedbackBox').classList.add('incorrect');
+            document.getElementById('feedbackTitle').textContent = '✗ Not Quite';
+            document.getElementById('feedbackText').textContent = 'That\'s not the answer we were looking for.';
+            document.getElementById('correctAnswerBox').style.display = 'block';
+            document.getElementById('correctAnswerText').textContent = correctAnswer;
+        }
+
+        document.getElementById('feedbackBox').classList.add('show');
+
+        // Update stats
+        document.getElementById('correctCount').textContent = correctCount;
+        const score = Math.round((correctCount / (currentQuestionIndex + 1)) * 100);
+        document.getElementById('currentScore').textContent = score + '%';
+
+        // Save answer
+        answers.push({
+            question: question.question,
+            userAnswer: userAnswer,
+            correctAnswer: correctAnswer,
+            isCorrect: isCorrect
+        });
+
+        // Change button to Next
+        const checkBtn = document.getElementById('checkAnswerBtn');
+        checkBtn.textContent = currentQuestionIndex < questions.length - 1 ? 'Next Question →' : 'Finish Quiz';
+        checkBtn.onclick = nextQuestion;
+        hasAnswered = true;
+    }
+
+    // Next question
+    async function nextQuestion() {
+        if (!hasAnswered) {
+            checkAnswer();
+            return;
+        }
+
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < questions.length) {
+            displayQuestion();
+        } else {
+            await showResults();
+        }
+    }
+
+    // Show results
+    async function showResults() {
+        const accuracy = Math.round((correctCount / questions.length) * 100);
+
+        document.getElementById('quizInterface').style.display = 'none';
+        document.getElementById('resultsScreen').classList.add('show');
+
+        document.getElementById('finalScore').textContent = accuracy + '%';
+        document.getElementById('totalQuestionsResult').textContent = questions.length;
+        document.getElementById('correctAnswersResult').textContent = correctCount;
+        document.getElementById('accuracyResult').textContent = accuracy + '%';
+
+        // Message based on score
+        let message = '';
+        if (accuracy >= 90) {
+            message = 'Outstanding! You\'ve mastered this material! 🌟';
+        } else if (accuracy >= 70) {
+            message = 'Great work! You have a solid understanding! 💪';
+        } else if (accuracy >= 50) {
+            message = 'Good effort! Review the material and try again! 📚';
+        } else {
+            message = 'Keep studying! Practice makes perfect! 💡';
+        }
+        document.getElementById('resultsMessage').textContent = message;
+
+        // Save quiz result to Firestore
+        try {
+            await addDoc(collection(db, 'quiz_results'), {
+                userId: currentUser.uid,
+                userEmail: currentUser.email,
+                materialId: materialId,
+                totalQuestions: questions.length,
+                correctAnswers: correctCount,
+                accuracy: accuracy,
+                answers: answers,
+                completedAt: Timestamp.now()
+            });
+            console.log('✅ Quiz results saved');
+        } catch (error) {
+            console.error('❌ Error saving results:', error);
+        }
+    }
+
+    // Set up check answer button
+    document.getElementById('checkAnswerBtn').addEventListener('click', checkAnswer);
+
+    // Allow Enter key to submit answer
+    document.getElementById('answerInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && e.ctrlKey) {
+            if (!hasAnswered) {
+                checkAnswer();
+            } else {
+                nextQuestion();
+            }
+        }
+    });
+</script>
+</body>
+</html>

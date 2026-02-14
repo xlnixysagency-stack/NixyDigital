@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - Study Buddy AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --black: #020202;
+        --evergreen: #0d2818;
+        --forest: #04471c;
+        --sea-green: #058c42;
+        --malachite: #16db65;
+        --white: #FAFAFA;
+        --gray: #999;
+    }
+
+    body {
+        font-family: 'Space Grotesk', sans-serif;
+        background: var(--black);
+        color: var(--white);
+        min-height: 100vh;
+        padding: 40px 20px;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .header {
+        margin-bottom: 48px;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--malachite);
+        text-decoration: none;
+        margin-bottom: 24px;
+        font-size: 14px;
+        transition: opacity 0.3s ease;
+    }
+
+    .back-link:hover {
+        opacity: 0.8;
+    }
+
+    .page-title {
+        font-family: 'Syne', sans-serif;
+        font-size: 48px;
+        font-weight: 800;
+        margin-bottom: 12px;
+        background: linear-gradient(135deg, var(--white) 0%, var(--malachite) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .page-subtitle {
+        font-size: 18px;
+        color: var(--gray);
+    }
+
+    .settings-section {
+        background: var(--evergreen);
+        border: 1px solid rgba(22, 219, 101, 0.2);
+        border-radius: 12px;
+        padding: 32px;
+        margin-bottom: 24px;
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .settings-item {
+        padding: 20px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .settings-item:last-child {
+        border-bottom: none;
+    }
+
+    .item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .item-title {
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .item-desc {
+        font-size: 14px;
+        color: var(--gray);
+        line-height: 1.6;
+    }
+
+    .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background: var(--malachite);
+        color: var(--black);
+    }
+
+    .btn-primary:hover {
+        background: var(--sea-green);
+    }
+
+    .btn-danger {
+        background: #ff4444;
+        color: var(--white);
+    }
+
+    .btn-danger:hover {
+        background: #ff6b6b;
+    }
+
+    .btn-secondary {
+        background: transparent;
+        color: var(--white);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-secondary:hover {
+        background: var(--forest);
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding: 24px;
+        background: var(--forest);
+        border-radius: 8px;
+        margin-bottom: 24px;
+    }
+
+    .user-avatar-large {
+        width: 80px;
+        height: 80px;
+        background: var(--malachite);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+        font-weight: 700;
+        color: var(--black);
+    }
+
+    .user-details h3 {
+        font-size: 24px;
+        margin-bottom: 4px;
+    }
+
+    .user-email {
+        color: var(--gray);
+        font-size: 14px;
+    }
+
+    .success-message {
+        background: rgba(22, 219, 101, 0.1);
+        border: 1px solid var(--malachite);
+        color: var(--malachite);
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 24px;
+        display: none;
+    }
+
+    .success-message.show {
+        display: block;
+    }
+
+    @media (max-width: 768px) {
+        .page-title {
+            font-size: 36px;
+        }
+
+        .settings-section {
+            padding: 24px;
+        }
+
+        .user-info {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+    <h1 class="page-title">Settings</h1>
+    <p class="page-subtitle">Manage your account and preferences</p>
+  </div>
+
+  <!-- Success Message -->
+  <div class="success-message" id="successMessage">Changes saved successfully!</div>
+
+  <!-- Account Section -->
+  <div class="settings-section">
+    <h2 class="section-title">👤 Account</h2>
+
+    <div class="user-info">
+      <div class="user-avatar-large" id="userAvatar">?</div>
+      <div class="user-details">
+        <h3 id="userName">Loading...</h3>
+        <div class="user-email" id="userEmail">Loading...</div>
+      </div>
+    </div>
+
+    <div class="settings-item">
+      <div class="item-header">
+        <div>
+          <div class="item-title">Change Password</div>
+          <div class="item-desc">Update your account password</div>
+        </div>
+        <button class="btn btn-secondary" onclick="alert('Password change coming soon!')">Change</button>
+      </div>
+    </div>
+
+    <div class="settings-item">
+      <div class="item-header">
+        <div>
+          <div class="item-title">Sign Out</div>
+          <div class="item-desc">Sign out of your account</div>
+        </div>
+        <button class="btn btn-secondary" id="signOutBtn">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Section -->
+  <div class="settings-section">
+    <h2 class="section-title">💾 Data</h2>
+
+    <div class="settings-item">
+      <div class="item-header">
+        <div>
+          <div class="item-title">Export Data</div>
+          <div class="item-desc">Download all your study materials and quiz results</div>
+        </div>
+        <button class="btn btn-secondary" onclick="alert('Export feature coming soon!')">Export</button>
+      </div>
+    </div>
+
+    <div class="settings-item">
+      <div class="item-header">
+        <div>
+          <div class="item-title">Delete All Data</div>
+          <div class="item-desc">Permanently delete all your materials and results</div>
+        </div>
+        <button class="btn btn-danger" id="deleteDataBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- About Section -->
+  <div class="settings-section">
+    <h2 class="section-title">ℹ️ About</h2>
+
+    <div class="settings-item">
+      <div class="item-header">
+        <div>
+          <div class="item-title">Version</div>
+          <div class="item-desc">Study Buddy AI v1.0.0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-item">
+      <div class="item-header">
+        <div>
+          <div class="item-title">Made by NixyDigital</div>
+          <div class="item-desc">© 2026 NixyDigital. All rights reserved.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+  import { getFirestore, collection, query, where, getDocs, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+  // Firebase configuration
+  const firebaseConfig = {
+      apiKey: "AIzaSyB3ZEv5TgFr8SM1jCLyHJow3N39xfHYZNk",
+      authDomain: "studybuddyai-5561d.firebaseapp.com",
+      projectId: "studybuddyai-5561d",
+      storageBucket: "studybuddyai-5561d.firebasestorage.app",
+      messagingSenderId: "559083222865",
+      appId: "1:559083222865:web:26b4351fd26330716b4570"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let currentUser = null;
+
+  // Check authentication
+  onAuthStateChanged(auth, (user) => {
+      if (user) {
+          console.log('✅ User logged in:', user.email);
+          currentUser = user;
+
+          // Update UI
+          const displayName = user.displayName || user.email.split('@')[0];
+          const initial = displayName.charAt(0).toUpperCase();
+
+          document.getElementById('userName').textContent = displayName;
+          document.getElementById('userEmail').textContent = user.email;
+          document.getElementById('userAvatar').textContent = initial;
+      } else {
+          console.log('❌ Not logged in, redirecting...');
+          window.location.href = 'auth.html';
+      }
+  });
+
+  // Sign out
+  document.getElementById('signOutBtn').addEventListener('click', async () => {
+      if (confirm('Are you sure you want to sign out?')) {
+          try {
+              await signOut(auth);
+              window.location.href = 'auth.html';
+          } catch (error) {
+              console.error('❌ Sign out error:', error);
+              alert('Failed to sign out. Please try again.');
+          }
+      }
+  });
+
+  // Delete all data
+  document.getElementById('deleteDataBtn').addEventListener('click', async () => {
+      const confirmText = 'DELETE';
+      const userInput = prompt(`This will permanently delete ALL your study materials and quiz results. This cannot be undone!\n\nType "${confirmText}" to confirm:`);
+
+      if (userInput === confirmText) {
+          try {
+              // Delete study materials
+              const materialsRef = collection(db, 'study_materials');
+              const materialsQuery = query(materialsRef, where('userId', '==', currentUser.uid));
+              const materialsSnapshot = await getDocs(materialsQuery);
+
+              const deletePromises = [];
+              materialsSnapshot.forEach(doc => {
+                  deletePromises.push(deleteDoc(doc.ref));
+              });
+
+              // Delete quiz results
+              const resultsRef = collection(db, 'quiz_results');
+              const resultsQuery = query(resultsRef, where('userId', '==', currentUser.uid));
+              const resultsSnapshot = await getDocs(resultsQuery);
+
+              resultsSnapshot.forEach(doc => {
+                  deletePromises.push(deleteDoc(doc.ref));
+              });
+
+              await Promise.all(deletePromises);
+
+              alert('All data deleted successfully.');
+              window.location.href = 'dashboard.html';
+          } catch (error) {
+              console.error('❌ Delete error:', error);
+              alert('Failed to delete data. Please try again.');
+          }
+      } else if (userInput !== null) {
+          alert('Deletion cancelled. Text did not match.');
+      }
+  });
+</script>
+</body>
+</html>
