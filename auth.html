@@ -3,205 +3,309 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NixyDigital | Access</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>NixyDigital – Authentication</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif;}
+        *{margin:0;padding:0;box-sizing:border-box}
+
+        :root{
+        --black:#020202;
+        --evergreen:#0d2818;
+        --forest:#04471c;
+        --sea-green:#058c42;
+        --malachite:#16db65;
+        --white:#FAFAFA;
+        --off-white:#F5F5F5;
+        }
 
         body{
-        height:100vh;
+        font-family:'Space Grotesk',sans-serif;
+        background:var(--black);
+        color:var(--white);
+        min-height:100vh;
         display:flex;
         align-items:center;
         justify-content:center;
-        background:radial-gradient(circle at top,#0f172a,#020617);
+        overflow-x:hidden;
         }
 
-        .container{
-        width:420px;
-        background:#0b1220;
-        padding:45px;
-        border-radius:18px;
-        border:1px solid rgba(255,255,255,0.06);
-        box-shadow:0 25px 70px rgba(0,0,0,0.6);
+        .gradient-bg{
+        position:fixed;
+        inset:0;
+        z-index:-1;
+        background:
+        radial-gradient(ellipse at 20% 30%,rgba(22,219,101,.15),transparent 50%),
+        radial-gradient(ellipse at 80% 70%,rgba(5,140,66,.1),transparent 50%),
+        radial-gradient(ellipse at 50% 50%,rgba(4,71,28,.2),transparent 70%);
+        animation:drift 15s ease-in-out infinite;
         }
 
-        .brand{
-        font-size:22px;
-        font-weight:700;
-        color:#fff;
-        margin-bottom:8px;
+        @keyframes drift{
+        0%,100%{transform:scale(1) translate(0,0)}
+        50%{transform:scale(1.1) translate(20px,-20px)}
         }
 
-        .brand span{color:#3b82f6;}
-
-        h2{
-        color:#fff;
-        margin-bottom:20px;
-        }
-
-        input{
+        .auth-wrapper{
         width:100%;
-        padding:14px;
-        margin-bottom:15px;
-        border-radius:12px;
-        border:1px solid rgba(255,255,255,0.08);
-        background:#111827;
-        color:#fff;
-        outline:none;
+        max-width:480px;
+        padding:60px 40px;
+        background:var(--evergreen);
+        border:1px solid rgba(22,219,101,.2);
+        border-radius:16px;
+        box-shadow:0 40px 120px rgba(0,0,0,.6);
+        position:relative;
         }
 
-        input:focus{border-color:#3b82f6;}
-
-        button{
+        .auth-wrapper::before{
+        content:'';
+        position:absolute;
+        top:0;
+        left:0;
+        height:4px;
         width:100%;
-        padding:14px;
-        border-radius:12px;
+        background:linear-gradient(90deg,var(--malachite),var(--sea-green));
+        border-top-left-radius:16px;
+        border-top-right-radius:16px;
+        }
+
+        .logo{
+        font-family:'Syne',sans-serif;
+        font-size:32px;
+        font-weight:800;
+        letter-spacing:-1px;
+        text-align:center;
+        margin-bottom:40px;
+        }
+
+        .logo span{color:var(--malachite)}
+
+        .auth-tabs{
+        display:flex;
+        margin-bottom:40px;
+        border:1px solid rgba(22,219,101,.2);
+        border-radius:8px;
+        overflow:hidden;
+        }
+
+        .auth-tab{
+        flex:1;
+        padding:14px 0;
+        background:var(--forest);
+        color:rgba(255,255,255,.6);
         border:none;
-        background:linear-gradient(90deg,#2563eb,#3b82f6);
-        color:#fff;
+        cursor:pointer;
+        font-weight:600;
+        transition:.3s ease;
+        }
+
+        .auth-tab.active{
+        background:var(--malachite);
+        color:var(--black);
+        }
+
+        .auth-form{display:none}
+        .auth-form.active{display:block}
+
+        .form-group{margin-bottom:18px}
+
+        .form-input{
+        width:100%;
+        padding:16px;
+        background:var(--forest);
+        border:1px solid rgba(22,219,101,.3);
+        color:var(--white);
+        font-size:15px;
+        border-radius:6px;
+        transition:.3s ease;
+        }
+
+        .form-input:focus{
+        outline:none;
+        border-color:var(--malachite);
+        background:var(--sea-green);
+        box-shadow:0 0 0 3px rgba(22,219,101,.1);
+        }
+
+        .form-input::placeholder{color:rgba(255,255,255,.4)}
+
+        .auth-btn{
+        width:100%;
+        padding:16px;
+        background:var(--malachite);
+        color:var(--black);
+        border:none;
+        font-weight:700;
+        font-size:15px;
+        border-radius:6px;
+        cursor:pointer;
+        transition:.3s ease;
+        }
+
+        .auth-btn:hover{
+        background:var(--sea-green);
+        transform:translateY(-2px);
+        box-shadow:0 20px 50px rgba(22,219,101,.4);
+        }
+
+        .auth-footer{
+        margin-top:20px;
+        text-align:center;
+        font-size:14px;
+        color:rgba(255,255,255,.6);
+        }
+
+        .auth-footer a{
+        color:var(--malachite);
+        text-decoration:none;
         font-weight:600;
         cursor:pointer;
         }
 
-        .switch{
-        margin-top:18px;
-        font-size:13px;
-        color:#94a3b8;
-        cursor:pointer;
+        .status{
+        margin-top:20px;
+        padding:12px;
+        background:var(--forest);
+        border:1px solid rgba(22,219,101,.2);
+        border-radius:6px;
+        font-size:14px;
         text-align:center;
-        }
-
-        .switch span{color:#3b82f6;font-weight:600;}
-
-        #error{
-        margin-top:10px;
-        color:#ef4444;
-        font-size:13px;
+        color:rgba(255,255,255,.8);
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="brand">Nixy<span>Digital</span></div>
-    <h2 id="formTitle">Create Account</h2>
+<div class="gradient-bg"></div>
 
-    <form id="authForm">
-        <div id="nameFields">
-            <input type="text" id="firstName" placeholder="First Name">
-            <input type="text" id="lastName" placeholder="Last Name">
+<div class="auth-wrapper">
+    <div class="logo">NIXY<span>DIGITAL</span></div>
+
+    <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Login</button>
+        <button class="auth-tab" data-tab="register">Register</button>
+    </div>
+
+    <form id="loginForm" class="auth-form active">
+        <div class="form-group">
+            <input type="email" name="email" class="form-input" placeholder="Email address" required>
         </div>
-
-        <input type="email" id="email" placeholder="Email Address" required>
-        <input type="password" id="password" placeholder="Password" required>
-
-        <button type="submit">Continue</button>
-        <div id="error"></div>
+        <div class="form-group">
+            <input type="password" name="password" class="form-input" placeholder="Password" required>
+        </div>
+        <button type="submit" class="auth-btn">SIGN IN</button>
+        <div class="auth-footer">
+            <a id="forgotLink">Forgot password?</a>
+        </div>
     </form>
 
-    <div class="switch" id="toggleMode">
-        Already have an account? <span>Sign In</span>
-    </div>
+    <form id="registerForm" class="auth-form">
+        <div class="form-group">
+            <input type="text" name="name" class="form-input" placeholder="Full name" required>
+        </div>
+        <div class="form-group">
+            <input type="email" name="email" class="form-input" placeholder="Email address" required>
+        </div>
+        <div class="form-group">
+            <input type="password" name="password" class="form-input" placeholder="Password" required minlength="6">
+        </div>
+        <button type="submit" class="auth-btn">CREATE ACCOUNT</button>
+    </form>
+
+    <form id="resetForm" class="auth-form">
+        <div class="form-group">
+            <input type="email" name="email" class="form-input" placeholder="Email address" required>
+        </div>
+        <button type="submit" class="auth-btn">SEND RESET LINK</button>
+        <div class="auth-footer">
+            <a id="backToLogin">Back to login</a>
+        </div>
+    </form>
+
+    <div class="status" id="authStatus">Not logged in</div>
 </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    setPersistence,
-    browserLocalPersistence
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import {
-    getFirestore,
-    doc,
-    setDoc,
-    serverTimestamp
-    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<script>
+    const statusBox=document.getElementById("authStatus")
 
-    const firebaseConfig = {
-    apiKey:"AIzaSyDzP5YsvL9PN4x7vTI9ofEWmDz6SyuFULU",
-    authDomain:"agencyos-ai.firebaseapp.com",
-    projectId:"agencyos-ai",
-    storageBucket:"agencyos-ai.firebasestorage.app",
-    messagingSenderId:"943979992113",
-    appId:"1:943979992113:web:0108f0471e3bbcb267f110"
-    };
+    function showTab(tab){
+    document.querySelectorAll(".auth-form").forEach(f=>f.classList.remove("active"))
+    document.querySelectorAll(".auth-tab").forEach(t=>t.classList.remove("active"))
+    if(tab==="login"){
+    document.getElementById("loginForm").classList.add("active")
+    document.querySelector('[data-tab="login"]').classList.add("active")
+    }
+    if(tab==="register"){
+    document.getElementById("registerForm").classList.add("active")
+    document.querySelector('[data-tab="register"]').classList.add("active")
+    }
+    if(tab==="reset"){
+    document.getElementById("resetForm").classList.add("active")
+    }
+    }
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+    document.querySelectorAll(".auth-tab").forEach(btn=>{
+    btn.addEventListener("click",()=>showTab(btn.dataset.tab))
+    })
 
-    await setPersistence(auth, browserLocalPersistence);
+    document.getElementById("forgotLink").onclick=()=>showTab("reset")
+    document.getElementById("backToLogin").onclick=()=>showTab("login")
 
-    let isLogin = false;
+    function getUsers(){
+    return JSON.parse(localStorage.getItem("nixyUsers"))||[]
+    }
 
-    const toggle = document.getElementById("toggleMode");
-    const title = document.getElementById("formTitle");
-    const nameFields = document.getElementById("nameFields");
-    const errorDiv = document.getElementById("error");
+    function saveUsers(users){
+    localStorage.setItem("nixyUsers",JSON.stringify(users))
+    }
 
-    toggle.addEventListener("click",()=>{
-    isLogin=!isLogin;
-    errorDiv.textContent="";
+    function setSession(user){
+    localStorage.setItem("nixySession",JSON.stringify(user))
+    window.location.href="dashboard.html"
+    }
 
-    if(isLogin){
-    title.textContent="Sign In";
-    nameFields.style.display="none";
-    toggle.innerHTML=`Don't have an account? <span>Create Account</span>`;
+    document.getElementById("registerForm").addEventListener("submit",e=>{
+    e.preventDefault()
+    const form=new FormData(e.target)
+    const name=form.get("name")
+    const email=form.get("email")
+    const password=form.get("password")
+
+    let users=getUsers()
+
+    if(users.find(u=>u.email===email)){
+    statusBox.textContent="Account already exists"
+    return
+    }
+
+    const newUser={name,email,password}
+    users.push(newUser)
+    saveUsers(users)
+    setSession(newUser)
+    })
+
+    document.getElementById("loginForm").addEventListener("submit",e=>{
+    e.preventDefault()
+    const form=new FormData(e.target)
+    const email=form.get("email")
+    const password=form.get("password")
+
+    const users=getUsers()
+    const user=users.find(u=>u.email===email && u.password===password)
+
+    if(user){
+    setSession(user)
     }else{
-    title.textContent="Create Account";
-    nameFields.style.display="block";
-    toggle.innerHTML=`Already have an account? <span>Sign In</span>`;
+    statusBox.textContent="Invalid credentials"
     }
-    });
+    })
 
-    document.getElementById("authForm").addEventListener("submit",async(e)=>{
-    e.preventDefault();
-    errorDiv.textContent="";
-
-    const email=document.getElementById("email").value.trim();
-    const password=document.getElementById("password").value.trim();
-    const firstName=document.getElementById("firstName").value.trim();
-    const lastName=document.getElementById("lastName").value.trim();
-
-    try{
-
-    if(isLogin){
-
-    await signInWithEmailAndPassword(auth,email,password);
-
-    }else{
-
-    if(!firstName||!lastName){
-    errorDiv.textContent="First and last name required.";
-    return;
-    }
-
-    const userCred=await createUserWithEmailAndPassword(auth,email,password);
-
-    await setDoc(
-    doc(db,"users",userCred.user.uid),
-    {
-    firstName:firstName,
-    lastName:lastName,
-    email:email,
-    createdAt:serverTimestamp()
-    }
-    );
-
-    }
-
-    window.location.replace("dashboard.html");
-
-    }catch(err){
-    errorDiv.textContent=err.message;
-    console.error(err);
-    }
-
-    });
+    document.getElementById("resetForm").addEventListener("submit",e=>{
+    e.preventDefault()
+    statusBox.textContent="Password reset simulated"
+    showTab("login")
+    })
 </script>
 
 </body>
