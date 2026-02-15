@@ -696,10 +696,6 @@
             </a>
 
             <div class="nav-section-label" style="margin-top: 32px;">Account</div>
-            <a href="#" class="nav-item" onclick="showUpgradeModal(); return false;">
-                <span>⬆️</span>
-                <span>Upgrade Plan</span>
-            </a>
             <a href="settings.html" class="nav-item">
                 <span>⚙️</span>
                 <span>Settings</span>
@@ -718,7 +714,7 @@
             <div class="greeting">
                 <h1>Welcome back, <span id="userName">Student</span>!</h1>
                 <p>Here's your study overview</p>
-                <span class="plan-badge" id="planBadge" onclick="showUpgradeModal()">FREE PLAN - Click to Upgrade</span>
+                <span class="plan-badge" id="planBadge">BETA - Free Access</span>
             </div>
         </div>
 
@@ -727,17 +723,17 @@
             <div class="stat-card">
                 <div class="stat-label">Study Materials</div>
                 <div class="stat-value" id="materialsUsed">0</div>
-                <div class="stat-limit" id="materialsLimit">of 3 (Free Plan)</div>
+                <div class="stat-limit" id="materialsLimit">Total uploaded</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Quizzes This Month</div>
+                <div class="stat-label">Quizzes Taken</div>
                 <div class="stat-value" id="quizzesUsed">0</div>
-                <div class="stat-limit" id="quizzesLimit">of 5 (Free Plan)</div>
+                <div class="stat-limit" id="quizzesLimit">Total completed</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">AI Writings Today</div>
+                <div class="stat-label">AI Writings</div>
                 <div class="stat-value" id="writingsUsed">0</div>
-                <div class="stat-limit" id="writingsLimit">of 1 (Free Plan)</div>
+                <div class="stat-limit" id="writingsLimit">Generated</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Average Score</div>
@@ -785,64 +781,6 @@
             </div>
         </section>
     </main>
-</div>
-
-<!-- Upgrade Modal -->
-<div class="upgrade-modal" id="upgradeModal">
-    <div class="upgrade-box">
-        <button class="close-modal" onclick="closeUpgradeModal()">×</button>
-
-        <div class="upgrade-icon">🚀</div>
-        <h2 class="upgrade-title">Upgrade to Premium</h2>
-        <p class="upgrade-subtitle">
-            Unlock unlimited study materials, quizzes, and AI features with a one-time payment
-        </p>
-
-        <div class="pricing-options">
-            <!-- Starter Plan -->
-            <div class="price-option">
-                <div class="plan-name">Starter</div>
-                <div class="plan-price">$10</div>
-                <div class="plan-period">One-time payment</div>
-
-                <div class="plan-features">
-                    <div class="feature">20 study materials</div>
-                    <div class="feature">Unlimited quizzes</div>
-                    <div class="feature">10 AI writings/day</div>
-                    <div class="feature">AI Tutor Chat</div>
-                </div>
-
-                <a href="https://paypal.me/xlnixy01/10?note=StudyBuddy-Starter" class="paypal-btn" target="_blank" onclick="trackPayment('starter')">
-                    Pay with PayPal
-                </a>
-            </div>
-
-            <!-- Pro Plan -->
-            <div class="price-option">
-                <div class="popular-badge">Best Value</div>
-                <div class="plan-name">Pro</div>
-                <div class="plan-price">$20</div>
-                <div class="plan-period">One-time payment</div>
-
-                <div class="plan-features">
-                    <div class="feature">Unlimited everything</div>
-                    <div class="feature">AI Tutor Chat</div>
-                    <div class="feature">Priority support</div>
-                    <div class="feature">Early features</div>
-                </div>
-
-                <a href="https://paypal.me/xlnixy01/20?note=StudyBuddy-Pro" class="paypal-btn" target="_blank" onclick="trackPayment('pro')">
-                    Pay with PayPal
-                </a>
-            </div>
-        </div>
-
-        <button class="maybe-later" onclick="closeUpgradeModal()">Maybe Later</button>
-
-        <p class="payment-note">
-            💡 <strong>Important:</strong> After paying, return to this page and your account will automatically upgrade within 30 seconds!
-        </p>
-    </div>
 </div>
 
 <!-- Firebase SDK -->
@@ -904,30 +842,12 @@
         }
     }
 
-    // Update plan UI
+    // Update plan UI (simplified - everything is free beta)
     function updatePlanUI(plan) {
+        // Everyone gets beta access for now
         const planBadge = document.getElementById('planBadge');
-        const materialsLimit = document.getElementById('materialsLimit');
-        const quizzesLimit = document.getElementById('quizzesLimit');
-        const writingsLimit = document.getElementById('writingsLimit');
-
-        if (plan === 'starter') {
-            planBadge.textContent = 'STARTER PLAN';
-            planBadge.style.borderColor = '#16db65';
-            materialsLimit.textContent = 'of 20 (Starter Plan)';
-            quizzesLimit.textContent = 'Unlimited';
-            writingsLimit.textContent = 'of 10 (Starter Plan)';
-        } else if (plan === 'pro') {
-            planBadge.textContent = 'PRO PLAN';
-            planBadge.style.borderColor = '#16db65';
-            planBadge.style.background = 'linear-gradient(135deg, #16db65 0%, #058c42 100%)';
-            planBadge.style.color = '#020202';
-            materialsLimit.textContent = 'Unlimited';
-            quizzesLimit.textContent = 'Unlimited';
-            writingsLimit.textContent = 'Unlimited';
-        } else {
-            planBadge.textContent = 'FREE PLAN - Click to Upgrade';
-        }
+        planBadge.textContent = 'BETA - Free Access';
+        planBadge.style.cursor = 'default';
     }
 
     // Load stats
@@ -977,72 +897,11 @@
         }
     });
 
-    // Track payment (saves to localStorage so we can check when they return)
-    window.trackPayment = function(planType) {
-        localStorage.setItem('pendingUpgrade', planType);
-        localStorage.setItem('upgradeTime', Date.now());
-        console.log('Payment tracked:', planType);
-    };
-
-    // Check for pending upgrade (when user returns from PayPal)
-    async function checkPendingUpgrade() {
-        const pendingPlan = localStorage.getItem('pendingUpgrade');
-        const upgradeTime = localStorage.getItem('upgradeTime');
-
-        if (pendingPlan && upgradeTime) {
-            const timeSince = Date.now() - parseInt(upgradeTime);
-
-            // If less than 5 minutes ago, auto-upgrade
-            if (timeSince < 300000) { // 5 minutes
-                console.log('Auto-upgrading to:', pendingPlan);
-
-                try {
-                    await setDoc(doc(db, 'users', currentUser.uid), {
-                        plan: pendingPlan,
-                        upgradedAt: serverTimestamp(),
-                        paymentMethod: 'paypal'
-                    }, { merge: true });
-
-                    // Clear pending upgrade
-                    localStorage.removeItem('pendingUpgrade');
-                    localStorage.removeItem('upgradeTime');
-
-                    // Reload page to show new plan
-                    alert('🎉 Your account has been upgraded to ' + pendingPlan.toUpperCase() + '!');
-                    location.reload();
-
-                } catch (error) {
-                    console.error('Error upgrading:', error);
-                }
-            }
-        }
-    }
-
-    // Check for pending upgrade when page loads
-    if (currentUser) {
-        setTimeout(checkPendingUpgrade, 1000);
-    }
-
     // Make functions global
-    window.showUpgradeModal = function() {
-        document.getElementById('upgradeModal').classList.add('show');
-    };
-
-    window.closeUpgradeModal = function() {
-        document.getElementById('upgradeModal').classList.remove('show');
-    };
-
     window.toggleMobileMenu = function() {
         document.querySelector('.sidebar').classList.toggle('open');
         document.querySelector('.menu-overlay').classList.toggle('show');
     };
-
-    // Close modal on ESC
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            closeUpgradeModal();
-        }
-    });
 </script>
 </body>
 </html>

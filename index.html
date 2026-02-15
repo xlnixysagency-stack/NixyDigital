@@ -811,58 +811,30 @@
 <section class="pricing" id="pricing">
     <div class="pricing-container">
         <div class="section-header">
-            <h2>Choose Your Plan</h2>
-            <p>Start free and upgrade when you're ready for unlimited power.</p>
+            <h2>Currently Free Beta</h2>
+            <p>All features are free while we're in beta. Enjoy unlimited access!</p>
         </div>
-        <div class="pricing-cards">
+        <div class="pricing-cards" style="max-width: 400px; margin: 0 auto;">
             <!-- Free Plan -->
-            <div class="price-card">
+            <div class="price-card featured">
+                <div class="price-badge">BETA ACCESS</div>
                 <div class="price-name">Free</div>
                 <div class="price-amount">$0</div>
-                <div class="price-period">forever</div>
+                <div class="price-period">forever (beta)</div>
                 <ul class="price-features">
-                    <li>3 study materials</li>
-                    <li>5 quizzes per month</li>
-                    <li>1 AI writing per day</li>
-                    <li>5 questions per material</li>
-                    <li>Basic progress tracking</li>
-                </ul>
-                <a href="auth.html" class="price-cta">Start Free</a>
-            </div>
-
-            <!-- Starter Plan -->
-            <div class="price-card">
-                <div class="price-name">Starter</div>
-                <div class="price-amount">$10</div>
-                <div class="price-period">one-time</div>
-                <ul class="price-features">
-                    <li>20 study materials</li>
+                    <li>Unlimited study materials</li>
                     <li>Unlimited quizzes</li>
-                    <li>10 AI writings per day</li>
-                    <li>Unlimited questions</li>
+                    <li>Unlimited AI writing</li>
                     <li>AI Tutor Chat</li>
                     <li>Full progress tracking</li>
+                    <li>All features unlocked</li>
                 </ul>
-                <a href="pricing.html" class="price-cta">Get Starter</a>
-            </div>
-
-            <!-- Pro Plan -->
-            <div class="price-card featured">
-                <div class="price-badge">MOST POPULAR</div>
-                <div class="price-name">Pro</div>
-                <div class="price-amount">$20</div>
-                <div class="price-period">one-time</div>
-                <ul class="price-features">
-                    <li>Unlimited everything</li>
-                    <li>AI Tutor Chat</li>
-                    <li>Priority support</li>
-                    <li>Early feature access</li>
-                    <li>Advanced analytics</li>
-                    <li>Exclusive study resources</li>
-                </ul>
-                <a href="pricing.html" class="price-cta">Get Pro</a>
+                <a href="auth.html" class="price-cta">Get Started Free</a>
             </div>
         </div>
+        <p style="text-align: center; margin-top: 40px; color: rgba(255, 255, 255, 0.5); font-size: 14px;">
+            💡 Paid plans coming soon. Early users get lifetime discount!
+        </p>
     </div>
 </section>
 
@@ -902,7 +874,7 @@
             <ul>
                 <li><a href="#">About</a></li>
                 <li><a href="#">Blog</a></li>
-                <li><a href="mailto:hello@nixydigital.com">Contact</a></li>
+                <li><a href="/cdn-cgi/l/email-protection#3058555c5c5f705e5948495459575944515c1e535f5d">Contact</a></li>
             </ul>
         </div>
         <div class="footer-links">
@@ -925,7 +897,7 @@
 </footer>
 
 <!-- Smooth scroll -->
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
@@ -933,11 +905,3 @@
                 e.preventDefault();
                 const target = document.querySelector(href);
                 if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            }
-        });
-    });
-</script>
-</body>
-</html>
