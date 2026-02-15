@@ -619,7 +619,7 @@
         }
     }
 
-    // Generate Writing (Placeholder - Replace with actual AI API)
+    // Generate Writing with Groq API
     async function generateWriting() {
         const topic = document.getElementById('topic').value;
         const instructions = document.getElementById('instructions').value;
@@ -637,24 +637,45 @@
         output.innerHTML = '<div class="loading"><div class="spinner"></div>Generating your writing...</div>';
 
         try {
-            // TODO: Replace with actual AI API call (OpenAI, Anthropic, etc.)
-            // Simulating API call for now
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            // Call Groq API
+            const GROQ_API_KEY = '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';
 
-            const generatedText = `[This is a placeholder for AI-generated content about: "${topic}"]
+            const prompt = `Write a detailed, well-structured essay about: ${topic}
 
-In a world increasingly dominated by digital communication and technology, the topic of ${topic} has become more relevant than ever. As we navigate through this complex landscape, it's crucial to understand the multifaceted implications of this subject.
+${instructions ? `Additional requirements: ${instructions}` : ''}
 
-${instructions ? `\nAdditional considerations based on your requirements:\n${instructions}` : ''}
+Please write a comprehensive, engaging essay that:
+- Has a clear introduction, body, and conclusion
+- Uses proper paragraphs and transitions
+- Includes specific examples and evidence
+- Maintains an academic but accessible tone
+- Is approximately 500-800 words`;
 
-This generated text would typically come from an AI API like OpenAI's GPT or Anthropic's Claude API. You'll need to integrate the actual API to generate real content.
+            const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${GROQ_API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: 'llama-3.3-70b-versatile',
+                    messages: [
+                        {
+                            role: 'user',
+                            content: prompt
+                        }
+                    ],
+                    temperature: 0.7,
+                    max_tokens: 2000
+                })
+            });
 
-To implement this:
-1. Get an API key from OpenAI, Anthropic, or another provider
-2. Add the API call in the generateWriting() function
-3. Process and display the results
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
 
-The text would be much longer and more detailed based on the topic and instructions provided.`;
+            const data = await response.json();
+            const generatedText = data.choices[0].message.content;
 
             output.innerHTML = `
                 <div class="output-text">${generatedText}</div>
@@ -665,7 +686,7 @@ The text would be much longer and more detailed based on the topic and instructi
             `;
 
         } catch (error) {
-            output.innerHTML = `<div class="output-placeholder" style="color: #ff6b6b;">Error generating text. Please try again.</div>`;
+            output.innerHTML = `<div class="output-placeholder" style="color: #ff6b6b;">Error generating text: ${error.message}<br>Please try again.</div>`;
             console.error('Generation error:', error);
         } finally {
             btn.disabled = false;
@@ -673,7 +694,7 @@ The text would be much longer and more detailed based on the topic and instructi
         }
     }
 
-    // Humanize Text (Placeholder - Replace with actual AI API)
+    // Humanize Text with Groq API
     async function humanizeText() {
         const aiText = document.getElementById('aiText').value;
         const output = document.getElementById('humanizeOutput');
@@ -690,27 +711,50 @@ The text would be much longer and more detailed based on the topic and instructi
         output.innerHTML = '<div class="loading"><div class="spinner"></div>Humanizing your text...</div>';
 
         try {
-            // TODO: Replace with actual AI API call
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            // Call Groq API
+            const GROQ_API_KEY = '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';
 
-            const humanizedText = `[Humanized version of your text]
+            const prompt = `Please rewrite the following text to make it sound more natural, human, and conversational while maintaining the core message and information.
 
+Make it:
+- More conversational and less robotic
+- Use contractions where natural
+- Vary sentence structure and length
+- Add personality and natural flow
+- Include slight imperfections that humans make
+- Remove overly formal or AI-like patterns
+- Keep the same meaning and key points
+
+Text to humanize:
 ${aiText}
 
----
+Please provide only the humanized version without any explanations or comments.`;
 
-NOTE: This is a placeholder. To actually humanize AI text, you need to:
-1. Integrate an AI API (OpenAI, Anthropic, etc.)
-2. Send the text with a prompt to make it more human-like
-3. Process and return the humanized version
+            const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${GROQ_API_KEY}`
+                },
+                body: JSON.stringify({
+                    model: 'llama-3.3-70b-versatile',
+                    messages: [
+                        {
+                            role: 'user',
+                            content: prompt
+                        }
+                    ],
+                    temperature: 0.8,
+                    max_tokens: 2000
+                })
+            });
 
-The humanizer would:
-- Add natural imperfections
-- Vary sentence structure
-- Use more conversational tone
-- Include contractions
-- Add personality and voice
-- Remove robotic patterns`;
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            const humanizedText = data.choices[0].message.content;
 
             output.innerHTML = `
                 <div class="output-text">${humanizedText}</div>
@@ -721,7 +765,7 @@ The humanizer would:
             `;
 
         } catch (error) {
-            output.innerHTML = `<div class="output-placeholder" style="color: #ff6b6b;">Error humanizing text. Please try again.</div>`;
+            output.innerHTML = `<div class="output-placeholder" style="color: #ff6b6b;">Error humanizing text: ${error.message}<br>Please try again.</div>`;
             console.error('Humanize error:', error);
         } finally {
             btn.disabled = false;
