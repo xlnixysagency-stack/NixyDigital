@@ -2,621 +2,1047 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Study Buddy AI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Dashboard — Study Buddy AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
     <style>
-        :root {
-          --black:     #020202;
-          --evergreen: #0d2818;
-          --forest:    #04471c;
-          --seagreen:  #058c42;
-          --malachite: #16db65;
-          --text:      #e8f5ee;
-          --muted:     #6b9e80;
-          --card:      rgba(13,40,24,0.65);
-          --border:    rgba(22,219,101,0.12);
-          --border-hi: rgba(22,219,101,0.3);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --black: #020202;
+            --evergreen: #0d2818;
+            --forest: #04471c;
+            --sea-green: #058c42;
+            --malachite: #16db65;
+            --white: #ffffff;
+        }
 
         body {
-          background: var(--black);
-          color: var(--text);
-          font-family: 'DM Sans', sans-serif;
-          min-height: 100vh;
-          overflow-x: hidden;
+            font-family: 'DM Sans', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+            font-size: 16px;
         }
 
-        body::after {
-          content: '';
-          position: fixed; top: -200px; right: -200px;
-          width: 700px; height: 700px;
-          background: radial-gradient(circle, rgba(5,140,66,0.055) 0%, transparent 65%);
-          pointer-events: none; z-index: 0;
+        /* Ambient Background */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
         }
 
-        #loadingScreen {
-          position: fixed; inset: 0; background: var(--black);
-          display: flex; flex-direction: column;
-          align-items: center; justify-content: center;
-          z-index: 200; gap: 18px;
-        }
-        .ring {
-          width: 44px; height: 44px;
-          border: 3px solid var(--border);
-          border-top-color: var(--malachite);
-          border-radius: 50%;
-          animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        #loadingScreen span { color: var(--muted); font-size: 13px; }
-
-        .shell {
-          display: grid;
-          grid-template-columns: 224px 1fr;
-          min-height: 100vh;
-          position: relative; z-index: 1;
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
         }
 
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--sea-green);
+            top: -100px;
+            right: -100px;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--malachite);
+            bottom: -50px;
+            left: -50px;
+        }
+
+        /* Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Sidebar */
         .sidebar {
-          background: var(--evergreen);
-          border-right: 1px solid var(--border);
-          display: flex; flex-direction: column;
-          position: sticky; top: 0; height: 100vh;
-          overflow-y: auto; overflow-x: hidden;
-          padding: 0 0 24px;
+            width: 280px;
+            background: rgba(13, 40, 24, 0.5);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(22, 219, 101, 0.1);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            transition: left 0.3s ease;
+            z-index: 100;
         }
 
-        .logo-wrap {
-          padding: 26px 22px 22px;
-          border-bottom: 1px solid var(--border);
-          margin-bottom: 8px;
-        }
         .logo {
-          font-family: 'Syne', sans-serif;
-          font-size: 18px; font-weight: 800;
-          letter-spacing: 0.1em; line-height: 1;
+            padding: 24px;
+            border-bottom: 1px solid rgba(22, 219, 101, 0.1);
+            font-family: 'Syne', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
         }
-        .logo em { color: var(--malachite); font-style: normal; }
-        .logo-sub { font-size: 11px; color: var(--muted); margin-top: 5px; letter-spacing: 0.06em; }
 
-        .nav-section {
-          padding: 16px 14px 6px;
-          font-size: 10px; font-weight: 700;
-          color: var(--muted); letter-spacing: 0.14em;
-          text-transform: uppercase;
+        .logo-accent {
+            color: var(--malachite);
+        }
+
+        .nav {
+            flex: 1;
+            padding: 24px 0;
+        }
+
+        .nav-section-label {
+            padding: 0 24px 12px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
         }
 
         .nav-item {
-          display: flex; align-items: center; gap: 11px;
-          padding: 10px 14px;
-          border-radius: 10px;
-          margin: 2px 8px;
-          cursor: pointer;
-          font-size: 13.5px; font-weight: 500;
-          color: var(--muted);
-          transition: all 0.18s;
-          text-decoration: none;
-          border: 1px solid transparent;
-          position: relative;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.2s;
+            position: relative;
+            cursor: pointer;
+            font-size: 15px;
         }
+
         .nav-item:hover {
-          background: rgba(22,219,101,0.06);
-          color: var(--text);
+            background: rgba(22, 219, 101, 0.05);
+            color: var(--malachite);
         }
+
         .nav-item.active {
-          background: rgba(22,219,101,0.1);
-          color: var(--malachite);
-          border-color: var(--border);
+            color: var(--malachite);
+            background: rgba(22, 219, 101, 0.1);
         }
+
         .nav-item.active::before {
-          content: '';
-          position: absolute; left: -8px; top: 50%; transform: translateY(-50%);
-          width: 3px; height: 20px;
-          background: var(--malachite);
-          border-radius: 0 3px 3px 0;
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--malachite);
         }
-        .nav-icon { font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; }
+
         .nav-badge {
-          margin-left: auto;
-          background: var(--forest);
-          color: var(--malachite);
-          font-size: 10px; font-weight: 700;
-          padding: 2px 7px; border-radius: 99px;
-          border: 1px solid var(--border);
+            margin-left: auto;
+            background: rgba(22, 219, 101, 0.2);
+            color: var(--malachite);
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 700;
         }
 
-        .sidebar-footer {
-          margin-top: auto;
-          padding: 16px 14px 0;
-          border-top: 1px solid var(--border);
-        }
-        .user-chip {
-          display: flex; align-items: center; gap: 10px;
-          padding: 10px 12px; border-radius: 10px;
-          background: rgba(4,71,28,0.4);
-          border: 1px solid var(--border);
-          cursor: pointer; transition: all 0.2s;
-        }
-        .user-chip:hover { border-color: var(--border-hi); }
-        .avatar {
-          width: 32px; height: 32px; border-radius: 50%;
-          background: linear-gradient(135deg, var(--forest), var(--seagreen));
-          display: flex; align-items: center; justify-content: center;
-          font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 800;
-          color: #fff; flex-shrink: 0;
-        }
-        .user-info { flex: 1; min-width: 0; }
-        .user-email { font-size: 12px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .user-plan  { font-size: 10px; color: var(--muted); }
-        .signout-btn {
-          background: none; border: none; color: var(--muted);
-          font-size: 16px; cursor: pointer; padding: 2px;
-          transition: color 0.2s;
-        }
-        .signout-btn:hover { color: #f4442e; }
-
-        .main {
-          display: flex; flex-direction: column;
-          padding: 36px 40px;
-          overflow-y: auto; min-height: 100vh;
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 40px;
         }
 
-        .main-topbar {
-          display: flex; align-items: center; justify-content: space-between;
-          margin-bottom: 36px; gap: 16px; flex-wrap: wrap;
-        }
-        .greeting {
-          font-family: 'Syne', sans-serif;
-          font-size: 26px; font-weight: 800;
-          line-height: 1.2; margin-bottom: 4px;
-        }
-        .greeting em { color: var(--malachite); font-style: normal; }
-        .greeting-sub { font-size: 13px; color: var(--muted); }
-
-        .date-chip {
-          font-size: 12px; color: var(--muted);
-          background: var(--card); border: 1px solid var(--border);
-          border-radius: 8px; padding: 8px 14px;
-          white-space: nowrap;
+        /* Header */
+        .dashboard-header {
+            margin-bottom: 40px;
         }
 
-        .stats-strip {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 14px; margin-bottom: 36px;
+        .greeting h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 8px;
         }
+
+        .greeting p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 16px;
+        }
+
+        .plan-badge {
+            display: inline-block;
+            background: rgba(22, 219, 101, 0.1);
+            border: 1px solid var(--malachite);
+            color: var(--malachite);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .plan-badge:hover {
+            background: rgba(22, 219, 101, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
         .stat-card {
-          background: var(--card); border: 1px solid var(--border);
-          border-radius: 16px; padding: 20px;
-          position: relative; overflow: hidden;
-          transition: border-color 0.2s;
-          animation: fadeUp 0.4s ease both;
+            background: rgba(4, 71, 28, 0.3);
+            border: 1px solid rgba(22, 219, 101, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
         }
-        .stat-card:hover { border-color: var(--border-hi); }
-        @keyframes fadeUp {
-          from { opacity: 0; transform: translateY(12px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .stat-card:nth-child(1) { animation-delay: 0.05s; }
-        .stat-card:nth-child(2) { animation-delay: 0.1s; }
-        .stat-card:nth-child(3) { animation-delay: 0.15s; }
-        .stat-card:nth-child(4) { animation-delay: 0.2s; }
-        .stat-card::after {
-          content: '';
-          position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
-          background: linear-gradient(90deg, var(--seagreen), transparent);
-          opacity: 0; transition: opacity 0.2s;
-        }
-        .stat-card:hover::after { opacity: 1; }
-        .stat-icon { font-size: 22px; margin-bottom: 14px; }
-        .stat-val {
-          font-family: 'Syne', sans-serif;
-          font-size: 32px; font-weight: 800;
-          color: var(--malachite); line-height: 1;
-          margin-bottom: 4px;
-        }
-        .stat-label { font-size: 12px; color: var(--muted); }
 
-        .section-hdr {
-          display: flex; align-items: center; justify-content: space-between;
-          margin-bottom: 16px;
+        .stat-card:hover {
+            border-color: var(--malachite);
+            transform: translateY(-2px);
         }
+
+        .stat-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--malachite);
+        }
+
+        .stat-limit {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 4px;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
         .section-title {
-          font-family: 'Syne', sans-serif;
-          font-size: 16px; font-weight: 700;
+            font-family: 'Syne', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
         }
 
-        .quick-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 14px; margin-bottom: 36px;
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
         }
+
         .action-card {
-          background: var(--card); border: 1px solid var(--border);
-          border-radius: 16px; padding: 22px 20px;
-          cursor: pointer; text-decoration: none;
-          transition: all 0.22s; display: block;
-          position: relative; overflow: hidden;
-          animation: fadeUp 0.4s ease both;
+            background: rgba(4, 71, 28, 0.3);
+            border: 1px solid rgba(22, 219, 101, 0.2);
+            border-radius: 12px;
+            padding: 24px;
+            text-decoration: none;
+            color: var(--white);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
         }
-        .action-card:nth-child(1) { animation-delay: 0.1s; }
-        .action-card:nth-child(2) { animation-delay: 0.15s; }
-        .action-card:nth-child(3) { animation-delay: 0.2s; }
-        .action-card::before {
-          content: '';
-          position: absolute; top: 0; left: 0; right: 0; height: 2px;
-          background: linear-gradient(90deg, var(--seagreen), var(--malachite));
-          transform: scaleX(0); transform-origin: left;
-          transition: transform 0.3s ease;
-        }
+
         .action-card:hover {
-          border-color: var(--border-hi);
-          transform: translateY(-3px);
-          box-shadow: 0 12px 32px rgba(0,0,0,0.35);
-        }
-        .action-card:hover::before { transform: scaleX(1); }
-        .ac-icon {
-          font-size: 28px; margin-bottom: 14px;
-          display: block;
-          transition: transform 0.2s;
-        }
-        .action-card:hover .ac-icon { transform: scale(1.1); }
-        .ac-title {
-          font-family: 'Syne', sans-serif;
-          font-size: 14px; font-weight: 700;
-          margin-bottom: 5px;
-        }
-        .ac-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
-        .ac-arrow {
-          position: absolute; bottom: 18px; right: 18px;
-          font-size: 16px; color: var(--border-hi);
-          transition: all 0.2s;
-        }
-        .action-card:hover .ac-arrow {
-          color: var(--malachite);
-          transform: translate(2px, -2px);
+            border-color: var(--malachite);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(22, 219, 101, 0.2);
         }
 
-        .signout-modal {
-          display: none; position: fixed; inset: 0;
-          background: rgba(2,2,2,0.8); z-index: 300;
-          align-items: center; justify-content: center;
-          backdrop-filter: blur(4px);
+        .action-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+            display: block;
         }
-        .signout-modal.open { display: flex; }
-        .modal-box {
-          background: var(--evergreen); border: 1px solid var(--border);
-          border-radius: 18px; padding: 32px; max-width: 360px; width: 90%;
-          text-align: center;
-        }
-        .modal-box h3 {
-          font-family: 'Syne', sans-serif;
-          font-size: 18px; font-weight: 700; margin-bottom: 8px;
-        }
-        .modal-box p  { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
-        .modal-btns   { display: flex; gap: 10px; }
-        .modal-cancel {
-          flex: 1; padding: 12px; background: none;
-          border: 1px solid var(--border); border-radius: 10px;
-          color: var(--text); font-family: 'DM Sans', sans-serif;
-          font-size: 14px; cursor: pointer; transition: all 0.2s;
-        }
-        .modal-cancel:hover { border-color: var(--border-hi); }
-        .modal-confirm {
-          flex: 1; padding: 12px;
-          background: #f4442e; border: none; border-radius: 10px;
-          color: #fff; font-family: 'Syne', sans-serif;
-          font-size: 14px; font-weight: 700; cursor: pointer;
-          transition: all 0.2s;
-        }
-        .modal-confirm:hover { background: #d63a26; }
 
-        .mobile-bar {
-          display: none; align-items: center; justify-content: space-between;
-          padding: 16px 20px; background: var(--evergreen);
-          border-bottom: 1px solid var(--border);
-          position: sticky; top: 0; z-index: 50;
+        .action-title {
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 6px;
         }
-        .ham-btn {
-          background: none; border: none; color: var(--text);
-          font-size: 20px; cursor: pointer;
-        }
-        .mobile-logo {
-          font-family: 'Syne', sans-serif;
-          font-size: 16px; font-weight: 800;
-        }
-        .mobile-logo em { color: var(--malachite); font-style: normal; }
-        .mobile-overlay {
-          display: none; position: fixed; inset: 0;
-          background: rgba(2,2,2,0.7); z-index: 80;
-        }
-        .mobile-overlay.open { display: block; }
-        .sidebar.open { transform: translateX(0) !important; }
 
-        @media (max-width: 900px) {
-          .stats-strip { grid-template-columns: repeat(2, 1fr); }
-          .quick-grid  { grid-template-columns: repeat(2, 1fr); }
+        .action-desc {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
         }
-        @media (max-width: 700px) {
-          .shell { grid-template-columns: 1fr; }
-          .sidebar {
-            position: fixed; left: 0; top: 0; bottom: 0;
-            z-index: 90; transform: translateX(-100%);
-            transition: transform 0.3s ease;
-            width: 260px;
-          }
-          .mobile-bar { display: flex; }
-          .main { padding: 24px 16px; }
-          .quick-grid  { grid-template-columns: 1fr; }
-          .stats-strip { grid-template-columns: repeat(2, 1fr); }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 1001;
+            background: var(--malachite);
+            color: var(--black);
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            font-size: 24px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(22, 219, 101, 0.4);
+        }
+
+        .menu-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+            backdrop-filter: blur(4px);
+        }
+
+        .menu-overlay.show {
+            display: block;
+        }
+
+        /* Upgrade Modal */
+        .upgrade-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 2, 2, 0.95);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease;
+            padding: 20px;
+        }
+
+        .upgrade-modal.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .upgrade-box {
+            background: linear-gradient(135deg, #0d2818 0%, #04471c 100%);
+            border: 2px solid rgba(22, 219, 101, 0.4);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            animation: slideUp 0.4s ease;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 28px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .upgrade-icon {
+            font-size: 72px;
+            margin-bottom: 24px;
+        }
+
+        .upgrade-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: #ffffff;
+            background: linear-gradient(135deg, #ffffff 0%, #16db65 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .upgrade-subtitle {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .pricing-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .price-option {
+            background: rgba(4, 71, 28, 0.5);
+            border: 2px solid rgba(22, 219, 101, 0.3);
+            border-radius: 16px;
+            padding: 28px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .price-option:hover {
+            border-color: #16db65;
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(22, 219, 101, 0.3);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: #16db65;
+            color: #020202;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+
+        .plan-name {
+            font-family: 'Syne', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #ffffff;
+        }
+
+        .plan-price {
+            font-family: 'Syne', sans-serif;
+            font-size: 42px;
+            font-weight: 800;
+            color: #16db65;
+            margin-bottom: 8px;
+        }
+
+        .plan-period {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 20px;
+        }
+
+        .plan-features {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .feature {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .feature::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #16db65;
+            font-weight: 800;
+        }
+
+        .paypal-btn {
+            width: 100%;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #0070ba, #003087);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Syne', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .paypal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 112, 186, 0.4);
+        }
+
+        .paypal-btn::before {
+            content: '💳';
+            font-size: 18px;
+        }
+
+        .maybe-later {
+            margin-top: 16px;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .maybe-later:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .payment-note {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 24px;
+            line-height: 1.6;
+            background: rgba(22, 219, 101, 0.05);
+            padding: 16px;
+            border-radius: 8px;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -100%;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 80px 16px 24px;
+            }
+
+            .dashboard-header {
+                margin-bottom: 24px;
+            }
+
+            .greeting h1 {
+                font-size: 28px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                margin-bottom: 32px;
+            }
+
+            .stat-card {
+                padding: 16px;
+            }
+
+            .stat-value {
+                font-size: 24px;
+            }
+
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .action-card {
+                padding: 20px 12px;
+            }
+
+            .action-icon {
+                font-size: 32px;
+            }
+
+            .action-title {
+                font-size: 14px;
+            }
+
+            .action-desc {
+                font-size: 12px;
+            }
+
+            .section-title {
+                font-size: 20px;
+            }
+
+            .upgrade-box {
+                padding: 32px 20px;
+            }
+
+            .upgrade-title {
+                font-size: 28px;
+            }
+
+            .upgrade-icon {
+                font-size: 56px;
+            }
+
+            .pricing-options {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .plan-price {
+                font-size: 36px;
+            }
         }
     </style>
 </head>
 <body>
-
-<div id="loadingScreen">
-    <div class="ring"></div>
-    <span>Loading your dashboard...</span>
+<div class="ambient-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
 </div>
 
-<div class="mobile-bar">
-    <div class="mobile-logo">NIXY<em>DIGITAL</em></div>
-    <button class="ham-btn" onclick="toggleMobile()">☰</button>
-</div>
-<div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobile()"></div>
+<!-- Mobile Menu Toggle -->
+<button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+<div class="menu-overlay" onclick="toggleMobileMenu()"></div>
 
-<div class="signout-modal" id="signoutModal">
-    <div class="modal-box">
-        <h3>Sign out?</h3>
-        <p>You'll need to sign back in to access your study materials.</p>
-        <div class="modal-btns">
-            <button class="modal-cancel" onclick="closeSignout()">Cancel</button>
-            <button class="modal-confirm" onclick="confirmSignout()">Sign Out</button>
-        </div>
-    </div>
-</div>
-
-<div class="shell">
-    <aside class="sidebar" id="sidebar">
-        <div class="logo-wrap">
-            <div class="logo">NIXY<em>DIGITAL</em></div>
-            <div class="logo-sub">STUDY BUDDY AI</div>
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <span class="logo-text">Study</span><span class="logo-accent">Buddy</span>
         </div>
 
-        <div class="nav-section">Study</div>
-        <a class="nav-item active" href="dashboard.html">
-            <span class="nav-icon">⊞</span> Dashboard
-        </a>
-        <a class="nav-item" href="upload.html">
-            <span class="nav-icon">✏️</span> Upload Notes
-        </a>
-        <a class="nav-item" href="writing.html">
-            <span class="nav-icon">✨</span> AI Writing
-        </a>
+        <nav class="nav">
+            <div class="nav-section-label">Menu</div>
+            <a href="dashboard.html" class="nav-item active">
+                <span>📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="study-materials.html" class="nav-item">
+                <span>📚</span>
+                <span>Study Materials</span>
+                <span class="nav-badge" id="materialsCount">0</span>
+            </a>
+            <a href="my-quizzes.html" class="nav-item">
+                <span>✍️</span>
+                <span>My Quizzes</span>
+                <span class="nav-badge" id="quizzesCount">0</span>
+            </a>
+            <a href="writing.html" class="nav-item">
+                <span>✨</span>
+                <span>AI Writing</span>
+            </a>
+            <a href="chat.html" class="nav-item">
+                <span>💬</span>
+                <span>AI Tutor Chat</span>
+            </a>
+            <a href="progress.html" class="nav-item">
+                <span>📈</span>
+                <span>Progress</span>
+            </a>
 
-        <div class="nav-section">Library</div>
-        <a class="nav-item" href="study-materials.html">
-            <span class="nav-icon">📂</span> Study Materials
-            <span class="nav-badge" id="sideNotesBadge">0</span>
-        </a>
-        <a class="nav-item" href="my-quizzes.html">
-            <span class="nav-icon">✍️</span> My Quizzes
-            <span class="nav-badge" id="sideQuizBadge">0</span>
-        </a>
-
-        <div class="nav-section">Account</div>
-        <a class="nav-item" href="progress.html">
-            <span class="nav-icon">📊</span> Progress
-        </a>
-        <a class="nav-item" href="settings.html">
-            <span class="nav-icon">⚙️</span> Settings
-        </a>
-
-        <div class="sidebar-footer">
-            <div class="user-chip" onclick="openSignout()">
-                <div class="avatar" id="avatarLetter">?</div>
-                <div class="user-info">
-                    <div class="user-email" id="userEmail">Loading...</div>
-                    <div class="user-plan">Free plan</div>
-                </div>
-                <button class="signout-btn" title="Sign out">↪</button>
-            </div>
-        </div>
+            <div class="nav-section-label" style="margin-top: 32px;">Account</div>
+            <a href="#" class="nav-item" onclick="showUpgradeModal(); return false;">
+                <span>⬆️</span>
+                <span>Upgrade Plan</span>
+            </a>
+            <a href="settings.html" class="nav-item">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </a>
+            <a href="#" class="nav-item" id="signOutBtn">
+                <span>🚪</span>
+                <span>Sign Out</span>
+            </a>
+        </nav>
     </aside>
 
-    <main class="main">
-        <div class="main-topbar">
-            <div class="greeting-block">
-                <div class="greeting">
-                    Good <em id="timeGreet">day</em>, student 👋
-                    <span style="display:inline-block;background:rgba(22,219,101,0.1);color:#16db65;font-size:12px;padding:4px 12px;border-radius:20px;border:1px solid rgba(22,219,101,0.2);margin-left:12px;font-family:'DM Sans',sans-serif;font-weight:600">FREE PLAN</span>
-                </div>
-                <div class="greeting-sub">
-                    Here's your study overview ·
-                    <a href="#" onclick="alert('Stripe payments coming soon! Upgrade to Starter ($10/mo) or Pro ($20/mo) for unlimited features.'); return false;"
-                       style="color:#16db65;text-decoration:underline;font-weight:600">
-                        Upgrade for unlimited ↗
-                    </a>
-                </div>
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="greeting">
+                <h1>Welcome back, <span id="userName">Student</span>!</h1>
+                <p>Here's your study overview</p>
+                <span class="plan-badge" id="planBadge" onclick="showUpgradeModal()">FREE PLAN - Click to Upgrade</span>
             </div>
-            <div class="date-chip" id="dateBadge">—</div>
         </div>
 
-        <div class="stats-strip">
+        <!-- Stats -->
+        <div class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon">📚</div>
-                <div class="stat-val" id="statMaterials">0<span style="font-size:18px;color:#6b9e80">/3</span></div>
                 <div class="stat-label">Study Materials</div>
+                <div class="stat-value" id="materialsUsed">0</div>
+                <div class="stat-limit" id="materialsLimit">of 3 (Free Plan)</div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon">✍️</div>
-                <div class="stat-val" id="statQuizzes">0<span style="font-size:18px;color:#6b9e80">/5</span></div>
                 <div class="stat-label">Quizzes This Month</div>
+                <div class="stat-value" id="quizzesUsed">0</div>
+                <div class="stat-limit" id="quizzesLimit">of 5 (Free Plan)</div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon">✨</div>
-                <div class="stat-val" id="statWritings">0<span style="font-size:18px;color:#6b9e80">/1</span></div>
                 <div class="stat-label">AI Writings Today</div>
+                <div class="stat-value" id="writingsUsed">0</div>
+                <div class="stat-limit" id="writingsLimit">of 1 (Free Plan)</div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon">🎯</div>
-                <div class="stat-val" id="statAccuracy">—%</div>
-                <div class="stat-label">Avg Accuracy</div>
+                <div class="stat-label">Average Score</div>
+                <div class="stat-value" id="avgScore">-</div>
+                <div class="stat-limit">All quizzes</div>
             </div>
         </div>
 
-        <div class="section-hdr">
-            <div class="section-title">Quick Actions</div>
-        </div>
-        <div class="quick-grid">
-            <a class="action-card" href="upload.html">
-                <span class="ac-icon">📤</span>
-                <div class="ac-title">Upload Notes</div>
-                <div class="ac-desc">Paste your study notes or upload PDF files</div>
-                <span class="ac-arrow">↗</span>
-            </a>
-            <a class="action-card" href="writing.html">
-                <span class="ac-icon">✍️</span>
-                <div class="ac-title">AI Writing</div>
-                <div class="ac-desc">Generate essays, summaries, and explanations</div>
-                <span class="ac-arrow">↗</span>
-            </a>
-            <a class="action-card" href="study-materials.html">
-                <span class="ac-icon">📚</span>
-                <div class="ac-title">My Materials</div>
-                <div class="ac-desc">View and manage all your study notes</div>
-                <span class="ac-arrow">↗</span>
-            </a>
-            <a class="action-card" href="my-quizzes.html">
-                <span class="ac-icon">📝</span>
-                <div class="ac-title">Quiz History</div>
-                <div class="ac-desc">Review past quizzes and track progress</div>
-                <span class="ac-arrow">↗</span>
-            </a>
-            <a class="action-card" href="progress.html">
-                <span class="ac-icon">📊</span>
-                <div class="ac-title">My Progress</div>
-                <div class="ac-desc">See your learning stats and improvements</div>
-                <span class="ac-arrow">↗</span>
-            </a>
-            <a class="action-card" href="settings.html">
-                <span class="ac-icon">⚙️</span>
-                <div class="ac-title">Settings</div>
-                <div class="ac-desc">Manage your account and preferences</div>
-                <span class="ac-arrow">↗</span>
-            </a>
-        </div>
+        <!-- Quick Actions -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">Quick Actions</h2>
+            </div>
+            <div class="quick-actions">
+                <a href="upload.html" class="action-card">
+                    <span class="action-icon">📤</span>
+                    <div class="action-title">Upload Notes</div>
+                    <div class="action-desc">Add new study material</div>
+                </a>
+                <a href="writing.html" class="action-card">
+                    <span class="action-icon">✨</span>
+                    <div class="action-title">AI Writing</div>
+                    <div class="action-desc">Generate & humanize text</div>
+                </a>
+                <a href="chat.html" class="action-card">
+                    <span class="action-icon">💬</span>
+                    <div class="action-title">AI Tutor Chat</div>
+                    <div class="action-desc">Ask anything</div>
+                </a>
+                <a href="study-materials.html" class="action-card">
+                    <span class="action-icon">📚</span>
+                    <div class="action-title">Study Materials</div>
+                    <div class="action-desc">View all materials</div>
+                </a>
+                <a href="my-quizzes.html" class="action-card">
+                    <span class="action-icon">📝</span>
+                    <div class="action-title">My Quizzes</div>
+                    <div class="action-desc">Practice & review</div>
+                </a>
+                <a href="progress.html" class="action-card">
+                    <span class="action-icon">📊</span>
+                    <div class="action-title">View Progress</div>
+                    <div class="action-desc">Track improvement</div>
+                </a>
+            </div>
+        </section>
     </main>
 </div>
 
+<!-- Upgrade Modal -->
+<div class="upgrade-modal" id="upgradeModal">
+    <div class="upgrade-box">
+        <button class="close-modal" onclick="closeUpgradeModal()">×</button>
+
+        <div class="upgrade-icon">🚀</div>
+        <h2 class="upgrade-title">Upgrade to Premium</h2>
+        <p class="upgrade-subtitle">
+            Unlock unlimited study materials, quizzes, and AI features with a one-time payment
+        </p>
+
+        <div class="pricing-options">
+            <!-- Starter Plan -->
+            <div class="price-option">
+                <div class="plan-name">Starter</div>
+                <div class="plan-price">$10</div>
+                <div class="plan-period">One-time payment</div>
+
+                <div class="plan-features">
+                    <div class="feature">20 study materials</div>
+                    <div class="feature">Unlimited quizzes</div>
+                    <div class="feature">10 AI writings/day</div>
+                    <div class="feature">AI Tutor Chat</div>
+                </div>
+
+                <a href="https://paypal.me/xlnixy01/10?note=StudyBuddy-Starter" class="paypal-btn" target="_blank" onclick="trackPayment('starter')">
+                    Pay with PayPal
+                </a>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="price-option">
+                <div class="popular-badge">Best Value</div>
+                <div class="plan-name">Pro</div>
+                <div class="plan-price">$20</div>
+                <div class="plan-period">One-time payment</div>
+
+                <div class="plan-features">
+                    <div class="feature">Unlimited everything</div>
+                    <div class="feature">AI Tutor Chat</div>
+                    <div class="feature">Priority support</div>
+                    <div class="feature">Early features</div>
+                </div>
+
+                <a href="https://paypal.me/xlnixy01/20?note=StudyBuddy-Pro" class="paypal-btn" target="_blank" onclick="trackPayment('pro')">
+                    Pay with PayPal
+                </a>
+            </div>
+        </div>
+
+        <button class="maybe-later" onclick="closeUpgradeModal()">Maybe Later</button>
+
+        <p class="payment-note">
+            💡 <strong>Important:</strong> After paying, return to this page and your account will automatically upgrade within 30 seconds!
+        </p>
+    </div>
+</div>
+
+<!-- Firebase SDK -->
 <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-    import { getFirestore, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
     const firebaseConfig = {
-      apiKey: "AIzaSyB3ZEv5TgFr8SM1jCLyHJow3N39xfHYZNk",
-      authDomain: "studybuddyai-5561d.firebaseapp.com",
-      projectId: "studybuddyai-5561d",
-      storageBucket: "studybuddyai-5561d.firebasestorage.app",
-      messagingSenderId: "559083222865",
-      appId: "1:559083222865:web:26b4351fd26330716b4570"
+        apiKey: "AIzaSyB3ZEv5TgFr8SM1jCLyHJow3N39xfHYZNk",
+        authDomain: "studybuddyai-5561d.firebaseapp.com",
+        projectId: "studybuddyai-5561d",
+        storageBucket: "studybuddyai-5561d.firebasestorage.app",
+        messagingSenderId: "559083222865",
+        appId: "1:559083222865:web:26b4351fd26330716b4570"
     };
 
-    const app  = initializeApp(firebaseConfig);
+    const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-    const db   = getFirestore(app);
+    const db = getFirestore(app);
 
-    const hr = new Date().getHours();
-    document.getElementById('timeGreet').textContent =
-      hr < 12 ? 'morning' : hr < 17 ? 'afternoon' : 'evening';
-    document.getElementById('dateBadge').textContent =
-      new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+    let currentUser = null;
+    let userPlan = 'free';
 
-    window.toggleMobile  = () => {
-      document.getElementById('sidebar').classList.toggle('open');
-      document.getElementById('mobileOverlay').classList.toggle('open');
-    };
-    window.openSignout   = () => document.getElementById('signoutModal').classList.add('open');
-    window.closeSignout  = () => document.getElementById('signoutModal').classList.remove('open');
-    window.confirmSignout = () => signOut(auth).then(() => window.location.href = 'auth.html');
+    // Check authentication
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            currentUser = user;
+            const displayName = user.displayName || user.email.split('@')[0];
+            document.getElementById('userName').textContent = displayName;
 
-    onAuthStateChanged(auth, async user => {
-      if (!user) { window.location.href = 'auth.html'; return; }
-
-      const email  = user.email || '';
-      const letter = (user.displayName?.[0] || email[0] || '?').toUpperCase();
-      document.getElementById('avatarLetter').textContent = letter;
-      document.getElementById('userEmail').textContent = email;
-
-      document.getElementById('loadingScreen').style.display = 'none';
-
-      await loadDashboardData(user.uid);
+            // Load user data
+            await loadUserData();
+            await loadStats();
+        } else {
+            window.location.href = 'auth.html';
+        }
     });
 
-    async function loadDashboardData(uid) {
-      try {
-        const { collection, query, where, getDocs, Timestamp } =
-            await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js');
+    // Load user data and check plan
+    async function loadUserData() {
+        try {
+            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
 
-        const mSnap = await getDocs(query(collection(db, 'study_materials'), where('userId','==',uid)));
-        const materials = mSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-
-        // Get quizzes this month only
-        const now = new Date();
-        const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-        const monthStartTimestamp = Timestamp.fromDate(monthStart);
-
-        const qSnap = await getDocs(query(
-            collection(db, 'quiz_results'),
-            where('userId','==',uid),
-            where('completedAt', '>=', monthStartTimestamp)
-        ));
-        const quizzesThisMonth = qSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-
-        // Get AI writings today only
-        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        const todayStartTimestamp = Timestamp.fromDate(todayStart);
-
-        const wSnap = await getDocs(query(
-            collection(db, 'ai_writings'),
-            where('userId','==',uid),
-            where('createdAt', '>=', todayStartTimestamp)
-        ));
-        const writingsToday = wSnap.size;
-
-        // Get ALL quizzes for accuracy
-        const allQuizzesSnap = await getDocs(query(
-            collection(db, 'quiz_results'),
-            where('userId','==',uid)
-        ));
-        const allQuizzes = allQuizzesSnap.docs.map(d => d.data());
-
-        // Update stats with limits shown
-        document.getElementById('statMaterials').innerHTML =
-            `${materials.length}<span style="font-size:18px;color:#6b9e80">/3</span>`;
-
-        document.getElementById('statQuizzes').innerHTML =
-            `${quizzesThisMonth.length}<span style="font-size:18px;color:#6b9e80">/5</span>`;
-
-        document.getElementById('statWritings').innerHTML =
-            `${writingsToday}<span style="font-size:18px;color:#6b9e80">/1</span>`;
-
-        const avgAcc = allQuizzes.length
-          ? Math.round(allQuizzes.reduce((s, q) => s + (q.accuracy || 0), 0) / allQuizzes.length)
-          : null;
-        document.getElementById('statAccuracy').textContent = avgAcc !== null ? `${avgAcc}%` : '—%';
-
-        document.getElementById('sideNotesBadge').textContent = materials.length;
-        document.getElementById('sideQuizBadge').textContent = allQuizzes.length;
-
-      } catch (e) {
-        console.error('Dashboard load error:', e);
-      }
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                userPlan = userData.plan || 'free';
+                updatePlanUI(userPlan);
+            } else {
+                // Create user document
+                await setDoc(doc(db, 'users', currentUser.uid), {
+                    email: currentUser.email,
+                    plan: 'free',
+                    createdAt: serverTimestamp()
+                });
+            }
+        } catch (error) {
+            console.error('Error loading user data:', error);
+        }
     }
+
+    // Update plan UI
+    function updatePlanUI(plan) {
+        const planBadge = document.getElementById('planBadge');
+        const materialsLimit = document.getElementById('materialsLimit');
+        const quizzesLimit = document.getElementById('quizzesLimit');
+        const writingsLimit = document.getElementById('writingsLimit');
+
+        if (plan === 'starter') {
+            planBadge.textContent = 'STARTER PLAN';
+            planBadge.style.borderColor = '#16db65';
+            materialsLimit.textContent = 'of 20 (Starter Plan)';
+            quizzesLimit.textContent = 'Unlimited';
+            writingsLimit.textContent = 'of 10 (Starter Plan)';
+        } else if (plan === 'pro') {
+            planBadge.textContent = 'PRO PLAN';
+            planBadge.style.borderColor = '#16db65';
+            planBadge.style.background = 'linear-gradient(135deg, #16db65 0%, #058c42 100%)';
+            planBadge.style.color = '#020202';
+            materialsLimit.textContent = 'Unlimited';
+            quizzesLimit.textContent = 'Unlimited';
+            writingsLimit.textContent = 'Unlimited';
+        } else {
+            planBadge.textContent = 'FREE PLAN - Click to Upgrade';
+        }
+    }
+
+    // Load stats
+    async function loadStats() {
+        try {
+            // Count materials
+            const materialsRef = collection(db, 'study_materials');
+            const materialsQuery = query(materialsRef, where('userId', '==', currentUser.uid));
+            const materialsSnap = await getDocs(materialsQuery);
+
+            document.getElementById('materialsUsed').textContent = materialsSnap.size;
+            document.getElementById('materialsCount').textContent = materialsSnap.size;
+
+            // Count quizzes
+            const quizzesRef = collection(db, 'quiz_results');
+            const quizzesQuery = query(quizzesRef, where('userId', '==', currentUser.uid));
+            const quizzesSnap = await getDocs(quizzesQuery);
+
+            document.getElementById('quizzesUsed').textContent = quizzesSnap.size;
+            document.getElementById('quizzesCount').textContent = quizzesSnap.size;
+
+            // Calculate average score
+            if (quizzesSnap.size > 0) {
+                let totalScore = 0;
+                quizzesSnap.forEach(doc => {
+                    totalScore += doc.data().score || 0;
+                });
+                const avgScore = Math.round(totalScore / quizzesSnap.size);
+                document.getElementById('avgScore').textContent = avgScore + '%';
+            }
+
+        } catch (error) {
+            console.error('Error loading stats:', error);
+        }
+    }
+
+    // Sign out
+    document.getElementById('signOutBtn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        if (confirm('Are you sure you want to sign out?')) {
+            try {
+                await signOut(auth);
+                window.location.href = 'auth.html';
+            } catch (error) {
+                console.error('Sign out error:', error);
+            }
+        }
+    });
+
+    // Track payment (saves to localStorage so we can check when they return)
+    window.trackPayment = function(planType) {
+        localStorage.setItem('pendingUpgrade', planType);
+        localStorage.setItem('upgradeTime', Date.now());
+        console.log('Payment tracked:', planType);
+    };
+
+    // Check for pending upgrade (when user returns from PayPal)
+    async function checkPendingUpgrade() {
+        const pendingPlan = localStorage.getItem('pendingUpgrade');
+        const upgradeTime = localStorage.getItem('upgradeTime');
+
+        if (pendingPlan && upgradeTime) {
+            const timeSince = Date.now() - parseInt(upgradeTime);
+
+            // If less than 5 minutes ago, auto-upgrade
+            if (timeSince < 300000) { // 5 minutes
+                console.log('Auto-upgrading to:', pendingPlan);
+
+                try {
+                    await setDoc(doc(db, 'users', currentUser.uid), {
+                        plan: pendingPlan,
+                        upgradedAt: serverTimestamp(),
+                        paymentMethod: 'paypal'
+                    }, { merge: true });
+
+                    // Clear pending upgrade
+                    localStorage.removeItem('pendingUpgrade');
+                    localStorage.removeItem('upgradeTime');
+
+                    // Reload page to show new plan
+                    alert('🎉 Your account has been upgraded to ' + pendingPlan.toUpperCase() + '!');
+                    location.reload();
+
+                } catch (error) {
+                    console.error('Error upgrading:', error);
+                }
+            }
+        }
+    }
+
+    // Check for pending upgrade when page loads
+    if (currentUser) {
+        setTimeout(checkPendingUpgrade, 1000);
+    }
+
+    // Make functions global
+    window.showUpgradeModal = function() {
+        document.getElementById('upgradeModal').classList.add('show');
+    };
+
+    window.closeUpgradeModal = function() {
+        document.getElementById('upgradeModal').classList.remove('show');
+    };
+
+    window.toggleMobileMenu = function() {
+        document.querySelector('.sidebar').classList.toggle('open');
+        document.querySelector('.menu-overlay').classList.toggle('show');
+    };
+
+    // Close modal on ESC
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeUpgradeModal();
+        }
+    });
 </script>
 </body>
 </html>

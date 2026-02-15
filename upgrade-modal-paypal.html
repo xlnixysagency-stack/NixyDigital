@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upgrade Modal</title>
+  <style>
+    /* Upgrade Modal Styles */
+    .upgrade-modal {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(2, 2, 2, 0.95);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(10px);
+        animation: fadeIn 0.3s ease;
+        padding: 20px;
+    }
+
+    .upgrade-modal.show {
+        display: flex;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .upgrade-box {
+        background: linear-gradient(135deg, #0d2818 0%, #04471c 100%);
+        border: 2px solid rgba(22, 219, 101, 0.4);
+        border-radius: 24px;
+        padding: 40px;
+        max-width: 600px;
+        width: 100%;
+        text-align: center;
+        animation: slideUp 0.4s ease;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+        position: relative;
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+
+    .close-modal {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 28px;
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        transition: all 0.2s;
+    }
+
+    .close-modal:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+    }
+
+    .upgrade-icon {
+        font-size: 72px;
+        margin-bottom: 24px;
+        animation: bounce 0.6s ease infinite alternate;
+    }
+
+    @keyframes bounce {
+        from { transform: translateY(0); }
+        to { transform: translateY(-10px); }
+    }
+
+    .upgrade-title {
+        font-family: 'Syne', sans-serif;
+        font-size: 36px;
+        font-weight: 800;
+        margin-bottom: 12px;
+        color: #ffffff;
+        background: linear-gradient(135deg, #ffffff 0%, #16db65 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .upgrade-subtitle {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 40px;
+        line-height: 1.6;
+    }
+
+    .pricing-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 32px;
+    }
+
+    .price-option {
+        background: rgba(4, 71, 28, 0.5);
+        border: 2px solid rgba(22, 219, 101, 0.3);
+        border-radius: 16px;
+        padding: 28px 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .price-option::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #16db65, #058c42);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .price-option:hover {
+        border-color: #16db65;
+        transform: translateY(-4px);
+        box-shadow: 0 15px 40px rgba(22, 219, 101, 0.3);
+    }
+
+    .price-option:hover::before {
+        transform: scaleX(1);
+    }
+
+    .popular-badge {
+        position: absolute;
+        top: -12px;
+        right: 20px;
+        background: #16db65;
+        color: #020202;
+        font-size: 11px;
+        font-weight: 800;
+        padding: 4px 12px;
+        border-radius: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .plan-name {
+        font-family: 'Syne', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #ffffff;
+    }
+
+    .plan-price {
+        font-family: 'Syne', sans-serif;
+        font-size: 42px;
+        font-weight: 800;
+        color: #16db65;
+        margin-bottom: 8px;
+    }
+
+    .plan-period {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.5);
+        margin-bottom: 20px;
+    }
+
+    .plan-features {
+        text-align: left;
+        margin-bottom: 20px;
+    }
+
+    .feature {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.8);
+        margin: 8px 0;
+        padding-left: 20px;
+        position: relative;
+    }
+
+    .feature::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #16db65;
+        font-weight: 800;
+    }
+
+    .paypal-btn {
+        width: 100%;
+        padding: 16px 32px;
+        background: linear-gradient(135deg, #0070ba, #003087);
+        color: #ffffff;
+        border: none;
+        border-radius: 12px;
+        font-family: 'Syne', sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .paypal-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0, 112, 186, 0.4);
+    }
+
+    .paypal-btn::before {
+        content: '💳';
+        font-size: 20px;
+    }
+
+    .maybe-later {
+        margin-top: 16px;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .maybe-later:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .payment-note {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.4);
+        margin-top: 20px;
+        line-height: 1.5;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .upgrade-box {
+            padding: 32px 20px;
+        }
+
+        .upgrade-title {
+            font-size: 28px;
+        }
+
+        .upgrade-icon {
+            font-size: 56px;
+        }
+
+        .pricing-options {
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .plan-price {
+            font-size: 36px;
+        }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Upgrade Modal -->
+<div class="upgrade-modal" id="upgradeModal">
+  <div class="upgrade-box">
+    <button class="close-modal" onclick="closeUpgradeModal()">×</button>
+
+    <div class="upgrade-icon">🚀</div>
+    <h2 class="upgrade-title">Upgrade to Premium</h2>
+    <p class="upgrade-subtitle">
+      Unlock unlimited study materials, quizzes, and AI features with a one-time payment
+    </p>
+
+    <div class="pricing-options">
+      <!-- Starter Plan -->
+      <div class="price-option">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">$10</div>
+        <div class="plan-period">One-time payment</div>
+
+        <div class="plan-features">
+          <div class="feature">20 study materials</div>
+          <div class="feature">Unlimited quizzes</div>
+          <div class="feature">10 AI writings/day</div>
+          <div class="feature">AI Tutor Chat</div>
+        </div>
+
+        <a href="https://paypal.me/YOURPAYPAL/10" class="paypal-btn" target="_blank">
+          Pay with PayPal
+        </a>
+      </div>
+
+      <!-- Pro Plan -->
+      <div class="price-option">
+        <div class="popular-badge">Best Value</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">$20</div>
+        <div class="plan-period">One-time payment</div>
+
+        <div class="plan-features">
+          <div class="feature">Unlimited everything</div>
+          <div class="feature">AI Tutor Chat</div>
+          <div class="feature">Priority support</div>
+          <div class="feature">Early features</div>
+        </div>
+
+        <a href="https://paypal.me/YOURPAYPAL/20" class="paypal-btn" target="_blank">
+          Pay with PayPal
+        </a>
+      </div>
+    </div>
+
+    <button class="maybe-later" onclick="closeUpgradeModal()">Maybe Later</button>
+
+    <p class="payment-note">
+      💡 After payment, email your PayPal receipt to support@yoursite.com to activate your account
+    </p>
+  </div>
+</div>
+
+<script>
+  // Show upgrade modal
+  function showUpgradeModal() {
+      document.getElementById('upgradeModal').classList.add('show');
+  }
+
+  // Close upgrade modal
+  function closeUpgradeModal() {
+      document.getElementById('upgradeModal').classList.remove('show');
+  }
+
+  // Make functions globally accessible
+  window.showUpgradeModal = showUpgradeModal;
+  window.closeUpgradeModal = closeUpgradeModal;
+
+  // Close on ESC key
+  document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+          closeUpgradeModal();
+      }
+  });
+
+  // Example: Show modal when user hits free limit
+  // Call this from your dashboard when they try to create 4th material, etc.
+  function checkFreeLimits(materialsCount) {
+      if (materialsCount >= 3) {
+          showUpgradeModal();
+      }
+  }
+</script>
+
+</body>
+</html>
