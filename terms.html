@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - Study Buddy AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #020202;
+            --evergreen: #0d2818;
+            --forest: #04471c;
+            --sea-green: #058c42;
+            --malachite: #16db65;
+            --white: #FAFAFA;
+            --off-white: #F5F5F5;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated gradient background */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(ellipse at 20% 30%, rgba(22, 219, 101, 0.15), transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(5, 140, 66, 0.1), transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(4, 71, 28, 0.2), transparent 70%);
+            animation: drift 15s ease-in-out infinite;
+        }
+
+        @keyframes drift {
+            0%, 100% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.1) translate(20px, -20px); }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 28px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(2, 2, 2, 0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(22, 219, 101, 0.15);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--malachite);
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--malachite);
+        }
+
+        .nav-cta {
+            background: var(--malachite);
+            color: var(--black);
+            padding: 12px 28px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 15px;
+            border-radius: 4px;
+        }
+
+        .nav-cta:hover {
+            background: var(--sea-green);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(22, 219, 101, 0.3);
+        }
+
+        /* Content Container */
+        .content-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 180px 60px 100px;
+        }
+
+        .page-header {
+            margin-bottom: 60px;
+        }
+
+        .page-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(40px, 6vw, 64px);
+            line-height: 1.1;
+            margin-bottom: 20px;
+            font-weight: 800;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, var(--white) 0%, var(--malachite) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .last-updated {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 15px;
+        }
+
+        .highlight-box {
+            background: var(--evergreen);
+            border: 1px solid rgba(22, 219, 101, 0.3);
+            border-left: 4px solid var(--malachite);
+            padding: 32px;
+            border-radius: 8px;
+            margin: 40px 0;
+        }
+
+        .highlight-box p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        .highlight-box strong {
+            color: var(--malachite);
+        }
+
+        h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin: 60px 0 24px;
+            color: var(--malachite);
+            letter-spacing: -1px;
+        }
+
+        h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            margin: 40px 0 16px;
+            color: var(--white);
+        }
+
+        p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            margin: 20px 0 20px 24px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        li {
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+
+        li strong {
+            color: var(--white);
+        }
+
+        a {
+            color: var(--malachite);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--sea-green);
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--evergreen);
+            padding: 80px 60px 40px;
+            border-top: 1px solid rgba(22, 219, 101, 0.1);
+            margin-top: 100px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .footer-brand h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 32px;
+            margin-bottom: 16px;
+            font-weight: 800;
+        }
+
+        .footer-brand h3 span {
+            color: var(--malachite);
+        }
+
+        .footer-brand p {
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.7;
+            max-width: 350px;
+        }
+
+        .footer-links h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .footer-links ul {
+            list-style: none;
+            margin: 0;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 15px;
+            display: block;
+            margin-bottom: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--malachite);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 14px;
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 20px;
+            margin-top: 8px;
+        }
+
+        .footer-legal a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-legal a:hover {
+            color: var(--malachite);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-links a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--malachite);
+        }
+
+        /* Mobile */
+        @media (max-width: 1024px) {
+            nav {
+                padding: 20px 30px;
+            }
+
+            .content-wrapper {
+                padding: 140px 30px 80px;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-right {
+                gap: 16px;
+            }
+
+            .nav-link {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="gradient-bg"></div>
+
+<!-- Navigation -->
+<nav>
+    <a href="index.html" class="logo">NIXY<span>DIGITAL</span></a>
+    <div class="nav-right">
+        <a href="index.html#features" class="nav-link">Features</a>
+        <a href="index.html#pricing" class="nav-link">Pricing</a>
+        <a href="auth.html" class="nav-cta">Sign In</a>
+    </div>
+</nav>
+
+<!-- Content -->
+<div class="content-wrapper">
+    <div class="page-header">
+        <h1 class="page-title">Terms of Service</h1>
+        <p class="last-updated">Last Updated: February 15, 2026</p>
+    </div>
+
+    <div class="highlight-box">
+        <p><strong>Quick Summary:</strong> Be cool. Use Study Buddy AI for learning. Don't abuse it. We're not responsible if AI gives you a weird answer. You must be 13+ to use this. We can terminate accounts that violate these terms.</p>
+    </div>
+
+    <h2>1. Agreement to Terms</h2>
+    <p>By accessing or using Study Buddy AI ("Service," "we," "us," or "our"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use our Service.</p>
+    <p>These Terms constitute a legally binding agreement between you and Study Buddy AI, operated by NixyDigital.</p>
+
+    <h2>2. Eligibility</h2>
+    <p>You must be at least 13 years old to use Study Buddy AI. By using our Service, you represent and warrant that:</p>
+    <ul>
+        <li>You are at least 13 years of age</li>
+        <li>You have the legal capacity to enter into these Terms</li>
+        <li>You will comply with all applicable laws and regulations</li>
+        <li>All information you provide is accurate and truthful</li>
+    </ul>
+
+    <h2>3. Description of Service</h2>
+    <p>Study Buddy AI is an AI-powered study assistance platform that provides:</p>
+    <ul>
+        <li>Essay writing assistance and feedback</li>
+        <li>Note-taking and study organization tools</li>
+        <li>AI-generated study guides and summaries</li>
+        <li>Homework help and tutoring support</li>
+        <li>Progress tracking and study analytics</li>
+    </ul>
+    <p>We reserve the right to modify, suspend, or discontinue any aspect of the Service at any time without notice.</p>
+
+    <h2>4. User Accounts</h2>
+
+    <h3>4.1 Account Creation</h3>
+    <p>To access certain features, you must create an account. You agree to:</p>
+    <ul>
+        <li>Provide accurate and complete information</li>
+        <li>Maintain the security of your account credentials</li>
+        <li>Notify us immediately of any unauthorized access</li>
+        <li>Accept responsibility for all activities under your account</li>
+    </ul>
+
+    <h3>4.2 Account Termination</h3>
+    <p>We reserve the right to suspend or terminate your account if you:</p>
+    <ul>
+        <li>Violate these Terms of Service</li>
+        <li>Engage in fraudulent or illegal activity</li>
+        <li>Abuse or misuse our Service</li>
+        <li>Attempt to compromise our security or systems</li>
+    </ul>
+
+    <h2>5. Acceptable Use</h2>
+
+    <h3>5.1 You May:</h3>
+    <ul>
+        <li>Use Study Buddy AI for personal educational purposes</li>
+        <li>Generate study materials and practice content</li>
+        <li>Seek explanations and clarifications on academic topics</li>
+        <li>Organize and track your study progress</li>
+    </ul>
+
+    <h3>5.2 You May Not:</h3>
+    <ul>
+        <li><strong>Academic Dishonesty:</strong> Submit AI-generated content as your own original work without proper attribution or in violation of your institution's academic integrity policies</li>
+        <li><strong>Abuse:</strong> Use the Service to harass, threaten, or harm others</li>
+        <li><strong>Illegal Activity:</strong> Use the Service for any unlawful purpose</li>
+        <li><strong>System Interference:</strong> Attempt to hack, reverse engineer, or disrupt our systems</li>
+        <li><strong>Spam:</strong> Send unsolicited messages or use the Service for commercial spam</li>
+        <li><strong>Data Mining:</strong> Scrape, copy, or extract data from our Service without permission</li>
+        <li><strong>Impersonation:</strong> Impersonate others or misrepresent your identity</li>
+        <li><strong>Reselling:</strong> Resell or redistribute our Service without authorization</li>
+    </ul>
+
+    <h2>6. Academic Integrity</h2>
+    <div class="highlight-box">
+        <p><strong>Important Notice:</strong> Study Buddy AI is designed as a learning aid, not a cheating tool. You are responsible for understanding and complying with your educational institution's academic integrity policies.</p>
+    </div>
+    <p>We encourage responsible use of AI assistance:</p>
+    <ul>
+        <li>Use AI to understand concepts, not to complete assignments for you</li>
+        <li>Always cite AI assistance when required by your institution</li>
+        <li>Use generated content as a starting point, not a final submission</li>
+        <li>Verify information provided by AI before relying on it</li>
+    </ul>
+
+    <h2>7. Intellectual Property</h2>
+
+    <h3>7.1 Our Content</h3>
+    <p>Study Buddy AI, including its name, logo, design, code, and original content, is protected by copyright, trademark, and other intellectual property laws. You may not copy, modify, distribute, or create derivative works without our written permission.</p>
+
+    <h3>7.2 Your Content</h3>
+    <p>You retain ownership of any content you submit to Study Buddy AI ("User Content"). By submitting User Content, you grant us a worldwide, non-exclusive, royalty-free license to use, store, and process your content solely to provide and improve our Service.</p>
+
+    <h3>7.3 AI-Generated Content</h3>
+    <p>Content generated by our AI tools is provided "as-is" for your use. However:</p>
+    <ul>
+        <li>AI-generated content may not be factually accurate</li>
+        <li>AI-generated content may inadvertently resemble existing copyrighted works</li>
+        <li>You are responsible for verifying and properly attributing AI-generated content</li>
+        <li>We make no representations about the originality or ownership of AI-generated content</li>
+    </ul>
+
+    <h2>8. Disclaimer of Warranties</h2>
+    <p>STUDY BUDDY AI IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO:</p>
+    <ul>
+        <li>Accuracy, reliability, or completeness of AI-generated content</li>
+        <li>Uninterrupted or error-free operation</li>
+        <li>Security or freedom from viruses</li>
+        <li>Fitness for a particular purpose</li>
+        <li>Meeting your academic requirements or expectations</li>
+    </ul>
+    <p><strong>Educational Disclaimer:</strong> Study Buddy AI is not a substitute for professional tutoring, academic advisors, or educational institutions. Always verify important information with authoritative sources.</p>
+
+    <h2>9. Limitation of Liability</h2>
+    <p>TO THE MAXIMUM EXTENT PERMITTED BY LAW, STUDY BUDDY AI AND ITS OPERATORS SHALL NOT BE LIABLE FOR:</p>
+    <ul>
+        <li>Academic consequences resulting from use of our Service</li>
+        <li>Inaccurate or incomplete AI-generated content</li>
+        <li>Lost grades, academic penalties, or disciplinary actions</li>
+        <li>Data loss or corruption</li>
+        <li>Indirect, incidental, consequential, or punitive damages</li>
+        <li>Any damages exceeding the amount you paid us in the past 12 months (currently $0 during free beta)</li>
+    </ul>
+
+    <h2>10. Indemnification</h2>
+    <p>You agree to indemnify and hold harmless Study Buddy AI, its operators, and affiliates from any claims, damages, losses, or expenses (including legal fees) arising from:</p>
+    <ul>
+        <li>Your violation of these Terms</li>
+        <li>Your misuse of the Service</li>
+        <li>Your violation of any third-party rights</li>
+        <li>Your violation of academic integrity policies</li>
+    </ul>
+
+    <h2>11. Payments and Subscriptions</h2>
+    <p><strong>Current Status:</strong> Study Buddy AI is currently free during our beta period.</p>
+    <p>If we introduce paid features in the future:</p>
+    <ul>
+        <li>Pricing will be clearly displayed before purchase</li>
+        <li>Subscriptions renew automatically unless canceled</li>
+        <li>Refunds will be handled on a case-by-case basis</li>
+        <li>We reserve the right to change pricing with 30 days notice</li>
+    </ul>
+
+    <h2>12. Privacy</h2>
+    <p>Your use of Study Buddy AI is also governed by our <a href="privacy.html">Privacy Policy</a>. By using our Service, you consent to our collection and use of data as described in the Privacy Policy.</p>
+
+    <h2>13. Third-Party Services</h2>
+    <p>Our Service uses third-party providers (Firebase, Groq AI, Formspree). These providers have their own terms and privacy policies. We are not responsible for their practices or service interruptions.</p>
+
+    <h2>14. Modifications to Terms</h2>
+    <p>We reserve the right to modify these Terms at any time. We will notify you of material changes by:</p>
+    <ul>
+        <li>Posting the updated Terms on this page</li>
+        <li>Updating the "Last Updated" date</li>
+        <li>Sending an email notification for significant changes</li>
+    </ul>
+    <p>Your continued use of Study Buddy AI after changes constitutes acceptance of the modified Terms.</p>
+
+    <h2>15. Governing Law</h2>
+    <p>These Terms are governed by the laws of the United States and the State of California, without regard to conflict of law principles. Any disputes shall be resolved in the courts of California.</p>
+
+    <h2>16. Dispute Resolution</h2>
+    <p>If you have a dispute with Study Buddy AI, you agree to first contact us at <a href="mailto:support@studybuddyai.site">support@studybuddyai.site</a> to attempt informal resolution before pursuing legal action.</p>
+
+    <h2>17. Severability</h2>
+    <p>If any provision of these Terms is found to be unenforceable, the remaining provisions will remain in full force and effect.</p>
+
+    <h2>18. Entire Agreement</h2>
+    <p>These Terms, along with our Privacy Policy and Cookie Policy, constitute the entire agreement between you and Study Buddy AI regarding your use of the Service.</p>
+
+    <h2>19. Contact Information</h2>
+    <p>For questions about these Terms of Service, contact us:</p>
+    <ul>
+        <li><strong>Email:</strong> <a href="mailto:support@studybuddyai.site">support@studybuddyai.site</a></li>
+        <li><strong>Website:</strong> <a href="https://studybuddyai.site">studybuddyai.site</a></li>
+    </ul>
+
+    <p style="margin-top: 40px; font-style: italic; color: rgba(255, 255, 255, 0.6);">By clicking "I Accept" or using Study Buddy AI, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.</p>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-brand">
+            <h3>NIXY<span>DIGITAL</span></h3>
+            <p>
+                Building the future of education with AI-powered tools
+                that make learning accessible, efficient, and enjoyable for everyone.
+            </p>
+        </div>
+        <div class="footer-links">
+            <h4>Product</h4>
+            <ul>
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="pricing.html">Pricing</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h4>Company</h4>
+            <ul>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="mailto:support@studybuddyai.site">Contact</a></li>
+            </ul>
+        </div>
+        <div class="footer-links">
+            <h4>Legal</h4>
+            <ul>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <li><a href="terms.html">Terms of Service</a></li>
+                <li><a href="cookies.html">Cookie Policy</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div>
+            <p>© 2026 NixyDigital. All rights reserved.</p>
+            <div class="footer-legal">
+                <a href="privacy.html">Privacy</a>
+                <a href="terms.html">Terms</a>
+                <a href="cookies.html">Cookies</a>
+            </div>
+        </div>
+        <div class="social-links">
+            <a href="#">Twitter</a>
+            <a href="#">Instagram</a>
+            <a href="#">LinkedIn</a>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
