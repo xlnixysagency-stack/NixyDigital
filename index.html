@@ -3,938 +3,1263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Buddy AI - Premium Study Tools by NixyDigital</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <title>NixyDigital — EE Lab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --black: #020202;
-            --evergreen: #0d2818;
-            --forest: #04471c;
-            --sea-green: #058c42;
-            --malachite: #16db65;
-            --white: #FAFAFA;
-            --off-white: #F5F5F5;
-        }
-
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-            background: var(--black);
-            color: var(--white);
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
-
-        /* Animated gradient background */
-        .gradient-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background:
-                radial-gradient(ellipse at 20% 30%, rgba(22, 219, 101, 0.15), transparent 50%),
-                radial-gradient(ellipse at 80% 70%, rgba(5, 140, 66, 0.1), transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(4, 71, 28, 0.2), transparent 70%);
-            animation: drift 15s ease-in-out infinite;
-        }
-
-        @keyframes drift {
-            0%, 100% { transform: scale(1) translate(0, 0); }
-            50% { transform: scale(1.1) translate(20px, -20px); }
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 28px 60px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            background: rgba(2, 2, 2, 0.85);
-            backdrop-filter: blur(20px) saturate(180%);
-            border-bottom: 1px solid rgba(22, 219, 101, 0.15);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .logo {
-            font-family: 'Syne', sans-serif;
-            font-size: 28px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            color: var(--white);
-        }
-
-        .logo span {
-            color: var(--malachite);
-        }
-
-        .nav-right {
-            display: flex;
-            gap: 32px;
-            align-items: center;
-        }
-
-        .nav-link {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 15px;
-            transition: color 0.3s ease;
-        }
-
-        .nav-link:hover {
-            color: var(--malachite);
-        }
-
-        .nav-cta {
-            background: var(--malachite);
-            color: var(--black);
-            padding: 12px 28px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            font-size: 15px;
-            border-radius: 4px;
-        }
-
-        .nav-cta:hover {
-            background: var(--sea-green);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(22, 219, 101, 0.3);
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 140px 60px 100px;
-            position: relative;
-        }
-
-        .hero-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(22, 219, 101, 0.1);
-            border: 1px solid rgba(22, 219, 101, 0.3);
-            color: var(--malachite);
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 40px;
-            letter-spacing: 0.5px;
-        }
-
-        .hero h1 {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(48px, 7vw, 88px);
-            line-height: 1.1;
-            margin-bottom: 28px;
-            font-weight: 800;
-            letter-spacing: -2px;
-            background: linear-gradient(135deg, var(--white) 0%, var(--malachite) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            font-size: clamp(18px, 2.5vw, 24px);
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 48px;
-            max-width: 700px;
-            line-height: 1.6;
-        }
-
-        .cta-group {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .cta-primary {
-            background: var(--malachite);
-            color: var(--black);
-            padding: 20px 48px;
-            font-size: 17px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            font-family: 'Space Grotesk', sans-serif;
-            border-radius: 4px;
-            text-decoration: none;
-            display: inline-block;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-primary::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .cta-primary:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .cta-primary:hover {
-            background: var(--sea-green);
-            transform: translateY(-3px);
-            box-shadow: 0 20px 50px rgba(22, 219, 101, 0.5);
-        }
-
-        .cta-secondary {
-            color: var(--white);
-            padding: 20px 48px;
-            font-size: 18px;
-            font-weight: 600;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: transparent;
-            font-family: 'Space Grotesk', sans-serif;
-            border-radius: 4px;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .cta-secondary:hover {
-            border-color: var(--malachite);
-            color: var(--malachite);
-        }
-
-        .trust-line {
-            margin-top: 32px;
-            font-size: 15px;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        /* Stats Section */
-        .stats {
-            padding: 100px 60px;
-            background: var(--evergreen);
-            border-top: 1px solid rgba(22, 219, 101, 0.1);
-            border-bottom: 1px solid rgba(22, 219, 101, 0.1);
-        }
-
-        .stats-grid {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 60px;
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-family: 'Syne', sans-serif;
-            font-size: 56px;
-            font-weight: 800;
-            color: var(--malachite);
-            margin-bottom: 10px;
-            line-height: 1;
-        }
-
-        .stat-label {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 15px;
-            font-weight: 500;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 140px 60px;
-        }
-
-        .section-header {
-            max-width: 800px;
-            margin: 0 auto 100px;
-            text-align: center;
-        }
-
-        .section-header h2 {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(36px, 5vw, 56px);
-            margin-bottom: 20px;
-            font-weight: 800;
-            letter-spacing: -1.5px;
-        }
-
-        .section-header p {
-            font-size: 18px;
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.6;
-        }
-
-        .features-grid {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 40px;
-        }
-
-        .feature-card {
-            background: var(--evergreen);
-            padding: 48px;
-            border: 1px solid rgba(22, 219, 101, 0.1);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--malachite), var(--sea-green));
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .feature-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, rgba(22, 219, 101, 0.08), transparent 70%);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        .feature-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .feature-card:hover::after {
-            opacity: 1;
-        }
-
-        .feature-card:hover {
-            border-color: var(--malachite);
-            transform: translateY(-10px);
-            box-shadow: 0 25px 70px rgba(22, 219, 101, 0.25);
-        }
-
-        .feature-card:hover .feature-icon {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .feature-icon {
-            width: 60px;
-            height: 60px;
-            background: rgba(22, 219, 101, 0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            margin-bottom: 28px;
-            color: var(--malachite);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .feature-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 14px;
-        }
-
-        .feature-desc {
-            color: rgba(255, 255, 255, 0.7);
-            line-height: 1.7;
-            font-size: 16px;
-        }
-
-        /* Pricing */
-        .pricing {
-            padding: 140px 60px;
-            background: var(--evergreen);
-        }
-
-        .pricing-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .pricing-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
-            margin-top: 80px;
-        }
-
-        .price-card {
-            background: var(--forest);
-            padding: 48px;
-            border: 2px solid rgba(22, 219, 101, 0.2);
-            border-radius: 12px;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .price-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(22, 219, 101, 0.1), transparent 50%);
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .price-card:hover::before {
-            opacity: 1;
-        }
-
-        .price-card.featured {
-            border-color: var(--malachite);
-            transform: scale(1.05);
-            box-shadow: 0 30px 90px rgba(22, 219, 101, 0.4);
-        }
-
-        .price-card:hover {
-            border-color: var(--malachite);
-            transform: translateY(-8px);
-            box-shadow: 0 35px 100px rgba(22, 219, 101, 0.45);
-        }
-
-        .price-badge {
-            position: absolute;
-            top: -16px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--malachite);
-            color: var(--black);
-            padding: 6px 20px;
-            font-size: 12px;
-            font-weight: 700;
-            border-radius: 20px;
-            letter-spacing: 0.5px;
-        }
-
-        .price-name {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: rgba(255, 255, 255, 0.7);
-            text-align: center;
-        }
-
-        .price-amount {
-            font-family: 'Syne', sans-serif;
-            font-size: 48px;
-            font-weight: 800;
-            margin-bottom: 6px;
-            line-height: 1;
-            text-align: center;
-        }
-
-        .price-period {
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.5);
-            margin-bottom: 32px;
-            text-align: center;
-        }
-
-        .price-features {
-            list-style: none;
-            margin-bottom: 32px;
-        }
-
-        .price-features li {
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 14px;
-        }
-
-        .price-features li:last-child {
-            border-bottom: none;
-        }
-
-        .price-features li::before {
-            content: '✓';
-            color: var(--malachite);
-            font-weight: 700;
-            margin-right: 10px;
-        }
-
-        .price-cta {
-            width: 100%;
-            padding: 16px;
-            background: var(--malachite);
-            color: var(--black);
-            border: none;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Space Grotesk', sans-serif;
-            border-radius: 4px;
-            text-decoration: none;
-            display: block;
-            text-align: center;
-        }
-
-        .price-cta:hover {
-            background: var(--sea-green);
-            transform: translateY(-2px);
-        }
-
-        .price-cta.secondary {
-            background: transparent;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            color: var(--white);
-        }
-
-        .price-cta.secondary:hover {
-            border-color: var(--malachite);
-            color: var(--malachite);
-        }
-
-        /* Final CTA */
-        .final-cta {
-            padding: 140px 60px;
-            text-align: center;
-        }
-
-        .final-cta h2 {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(40px, 6vw, 64px);
-            margin-bottom: 28px;
-            font-weight: 800;
-            letter-spacing: -1.5px;
-        }
-
-        .final-cta p {
-            font-size: 19px;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 44px;
-            max-width: 650px;
-            margin-left: auto;
-            margin-right: auto;
-            line-height: 1.6;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--evergreen);
-            padding: 80px 60px 40px;
-            border-top: 1px solid rgba(22, 219, 101, 0.1);
-        }
-
-        .footer-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 60px;
-            margin-bottom: 60px;
-        }
-
-        .footer-brand h3 {
-            font-family: 'Syne', sans-serif;
-            font-size: 32px;
-            margin-bottom: 16px;
-            font-weight: 800;
-        }
-
-        .footer-brand h3 span {
-            color: var(--malachite);
-        }
-
-        .footer-brand p {
-            color: rgba(255, 255, 255, 0.6);
-            line-height: 1.7;
-            max-width: 350px;
-        }
-
-        .footer-links h4 {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        .footer-links ul {
-            list-style: none;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.6);
-            text-decoration: none;
-            font-size: 15px;
-            display: block;
-            margin-bottom: 12px;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: var(--malachite);
-        }
-
-        .footer-bottom {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding-top: 40px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 14px;
-        }
-
-        .footer-legal {
-            display: flex;
-            gap: 20px;
-        }
-
-        .footer-legal a {
-            color: rgba(255, 255, 255, 0.5);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-legal a:hover {
-            color: var(--malachite);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .social-links a {
-            color: rgba(255, 255, 255, 0.5);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .social-links a:hover {
-            color: var(--malachite);
-        }
-
-        /* Mobile Responsive */
-        @media (max-width: 1024px) {
-            nav {
-                padding: 20px 30px;
-            }
-
-            .hero,
-            .features,
-            .pricing,
-            .final-cta,
-            .stats {
-                padding: 80px 30px;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 40px;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .pricing-cards {
-                grid-template-columns: 1fr;
-            }
-
-            .price-card.featured {
-                transform: scale(1);
-            }
-
-            .footer-content {
-                grid-template-columns: 1fr 1fr;
-                gap: 40px;
-            }
-
-            .footer-bottom {
-                flex-direction: column;
-                gap: 20px;
-            }
-
-            .nav-right {
-                gap: 16px;
-            }
-
-            .nav-link {
-                display: none;
-            }
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+          --bg0:#000000;
+          --bg1:#050505;
+          --bg2:#0a0a0f;
+          --bg3:#0f0a1f;
+          --bg4:#150f2a;
+          --purple:#8b5cf6;
+          --purple-bright:#a78bfa;
+          --purple-dim:#3b1a78;
+          --blue:#3b82f6;
+          --blue-bright:#60a5fa;
+          --neon-purple:#c084fc;
+          --neon-blue:#38bdf8;
+          --text:#ede9fe;
+          --text-dim:#a89ec9;
+          --text-muted:#4a4060;
+          --border:#1a1030;
+          --border-bright:#3a2a70;
+          --glow-p:rgba(139,92,246,0.45);
+          --glow-b:rgba(59,130,246,0.3);
+        }
+        body{background:var(--bg0);color:var(--text);font-family:'Exo 2',sans-serif;min-height:100vh;overflow-x:hidden}
+        body::before{
+          content:'';position:fixed;inset:0;
+          background-image:
+            radial-gradient(1px 1px at 20% 30%,rgba(255,255,255,0.6) 0%,transparent 100%),
+            radial-gradient(1px 1px at 80% 10%,rgba(255,255,255,0.5) 0%,transparent 100%),
+            radial-gradient(1px 1px at 50% 60%,rgba(255,255,255,0.4) 0%,transparent 100%),
+            radial-gradient(1px 1px at 10% 80%,rgba(255,255,255,0.5) 0%,transparent 100%),
+            radial-gradient(1px 1px at 90% 50%,rgba(255,255,255,0.3) 0%,transparent 100%),
+            radial-gradient(1px 1px at 35% 15%,rgba(255,255,255,0.6) 0%,transparent 100%),
+            radial-gradient(1px 1px at 65% 85%,rgba(255,255,255,0.4) 0%,transparent 100%),
+            radial-gradient(1px 1px at 75% 40%,rgba(255,255,255,0.5) 0%,transparent 100%),
+            radial-gradient(1px 1px at 15% 55%,rgba(255,255,255,0.3) 0%,transparent 100%),
+            radial-gradient(1px 1px at 45% 90%,rgba(255,255,255,0.4) 0%,transparent 100%),
+            radial-gradient(2px 2px at 55% 25%,rgba(192,132,252,0.4) 0%,transparent 100%),
+            radial-gradient(2px 2px at 25% 70%,rgba(56,189,248,0.3) 0%,transparent 100%);
+          pointer-events:none;z-index:0;
+        }
+        .shell{display:flex;min-height:100vh;position:relative;z-index:1}
+        .sidebar{
+          width:220px;min-height:100vh;background:var(--bg1);
+          border-right:1px solid var(--border);
+          display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;
+          box-shadow:4px 0 30px rgba(139,92,246,0.1);
+        }
+        .logo{padding:20px 16px 18px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;align-items:center;text-align:center}
+        .logo-ring{
+          width:72px;height:72px;border-radius:50%;
+          background:#000;
+          display:flex;align-items:center;justify-content:center;
+          position:relative;margin-bottom:12px;flex-shrink:0;
+        }
+        .logo-ring::before{
+          content:'';position:absolute;inset:-2px;border-radius:50%;
+          background:conic-gradient(from 0deg,var(--neon-purple),var(--blue),#000,var(--neon-purple));
+          z-index:-1;animation:spin 5s linear infinite;
+        }
+        .logo-ring::after{
+          content:'';position:absolute;inset:2px;border-radius:50%;background:#000;z-index:0;
+        }
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .logo-img{
+          width:160px;height:80px;border-radius:50%;object-fit:cover;
+          position:relative;z-index:1;display:block;
+        }
+        .logo-img-fallback{
+          width:60px;height:60px;border-radius:50%;
+          background:radial-gradient(circle at 30% 30%,#1a0a3e,#000);
+          display:flex;align-items:center;justify-content:center;
+          font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;color:#fff;letter-spacing:1px;
+          position:relative;z-index:1;
+        }
+        .logo-name{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;color:var(--text);letter-spacing:3px;text-transform:uppercase}
+        .logo-sub{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-muted);letter-spacing:1px;margin-top:3px}
+        .nav{flex:1;padding:16px 0}
+        .nav-label{font-size:9px;letter-spacing:2px;color:var(--text-muted);padding:8px 20px 4px;text-transform:uppercase;font-family:'Share Tech Mono',monospace}
+        .nav-item{
+          display:flex;align-items:center;gap:10px;padding:10px 20px;
+          cursor:pointer;transition:all 0.2s;color:var(--text-dim);font-size:13px;font-weight:500;
+          border-left:2px solid transparent;letter-spacing:0.5px;
+        }
+        .nav-item:hover{background:var(--bg3);color:var(--text);border-left-color:var(--purple-dim)}
+        .nav-item.active{background:var(--bg3);color:var(--purple-bright);border-left-color:var(--purple);box-shadow:inset 0 0 20px rgba(139,92,246,0.08)}
+        .nav-icon{font-size:15px;width:20px;text-align:center}
+        .nav-badge{margin-left:auto;background:var(--purple-dim);color:var(--neon-purple);font-size:10px;padding:2px 6px;border-radius:10px;font-family:'Share Tech Mono',monospace}
+        .sidebar-footer{padding:16px 20px;border-top:1px solid var(--border)}
+        .status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px #22c55e;margin-right:6px}
+        .status-text{font-size:11px;color:var(--text-muted);font-family:'Share Tech Mono',monospace}
+        .main{margin-left:220px;flex:1;display:flex;flex-direction:column}
+        .topbar{
+          height:60px;background:var(--bg1);border-bottom:1px solid var(--border);
+          display:flex;align-items:center;padding:0 28px;gap:14px;
+          position:sticky;top:0;z-index:100;
+        }
+        .topbar-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;letter-spacing:1px;color:var(--text);flex:1}
+        .topbar-search{
+          background:var(--bg2);border:1px solid var(--border);border-radius:6px;
+          padding:7px 14px;font-family:'Exo 2',sans-serif;font-size:13px;color:var(--text);
+          width:200px;outline:none;transition:border 0.2s;
+        }
+        .topbar-search:focus{border-color:var(--purple)}
+        .topbar-search::placeholder{color:var(--text-muted)}
+        .btn{padding:8px 16px;border-radius:6px;font-family:'Exo 2',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all 0.2s;letter-spacing:0.5px}
+        .btn-primary{background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff;box-shadow:0 0 16px var(--glow-p)}
+        .btn-primary:hover{box-shadow:0 0 24px var(--glow-p);transform:translateY(-1px)}
+        .btn-ghost{background:transparent;border:1px solid var(--border-bright);color:var(--text-dim)}
+        .btn-ghost:hover{border-color:var(--purple);color:var(--purple-bright)}
+        .btn-sm{padding:5px 12px;font-size:12px}
+        .content{padding:28px;flex:1}
+        .section{display:none}
+        .section.active{display:block;animation:fadeIn 0.25s ease}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+        /* Welcome */
+        .welcome-banner{
+          background:linear-gradient(135deg,var(--bg2),var(--bg3));
+          border:1px solid var(--border-bright);border-radius:12px;
+          padding:28px 32px;margin-bottom:28px;position:relative;overflow:hidden;
+        }
+        .welcome-banner::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.15),transparent 70%)}
+        .welcome-banner::after{content:'';position:absolute;bottom:-60px;right:80px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,0.1),transparent 70%)}
+        .welcome-line{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--neon-blue);letter-spacing:2px;margin-bottom:6px}
+        .welcome-name{font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;color:var(--text);letter-spacing:2px}
+        .welcome-name span{background:linear-gradient(90deg,var(--neon-purple),var(--blue-bright));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .welcome-sub{font-size:13px;color:var(--text-dim);margin-top:6px}
+
+        /* Stats */
+        .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+        .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;position:relative;overflow:hidden;transition:border 0.2s}
+        .stat-card:hover{border-color:var(--border-bright)}
+        .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--purple),var(--blue))}
+        .stat-label{font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;font-family:'Share Tech Mono',monospace;margin-bottom:8px}
+        .stat-value{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:var(--text)}
+        .stat-sub{font-size:11px;color:var(--text-muted);margin-top:4px}
+
+        /* Section header */
+        .sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+        .sec-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;letter-spacing:1px;color:var(--text)}
+        .sec-title span{color:var(--neon-purple)}
+        .neon-line{height:1px;background:linear-gradient(90deg,transparent,var(--purple),var(--blue),transparent);margin:24px 0;opacity:0.4}
+
+        /* Project cards */
+        .projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+        .proj-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px;transition:all 0.2s;position:relative}
+        .proj-card:hover{border-color:var(--border-bright);box-shadow:0 4px 24px var(--glow-p);transform:translateY(-2px)}
+        .proj-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:8px}
+        .proj-name{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:600;color:var(--text);letter-spacing:0.5px}
+        .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;font-family:'Share Tech Mono',monospace;white-space:nowrap}
+        .badge-Planning{background:rgba(234,179,8,0.15);color:#fbbf24;border:1px solid rgba(234,179,8,0.3)}
+        .badge-In-Progress{background:rgba(59,130,246,0.15);color:var(--blue-bright);border:1px solid rgba(59,130,246,0.3)}
+        .badge-Testing{background:rgba(249,115,22,0.15);color:#fb923c;border:1px solid rgba(249,115,22,0.3)}
+        .badge-Done{background:rgba(34,197,94,0.15);color:#4ade80;border:1px solid rgba(34,197,94,0.3)}
+        .proj-desc{font-size:13px;color:var(--text-dim);line-height:1.5;margin-bottom:12px}
+        .proj-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+        .tag{background:var(--bg3);border:1px solid var(--border);color:var(--text-muted);font-size:11px;padding:2px 8px;border-radius:4px;font-family:'Share Tech Mono',monospace}
+        .proj-progress{margin-bottom:12px}
+        .progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:5px;font-family:'Share Tech Mono',monospace}
+        .progress-bar{background:var(--bg3);border-radius:4px;height:5px;overflow:hidden}
+        .progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--purple),var(--blue))}
+        .proj-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);font-family:'Share Tech Mono',monospace;border-top:1px solid var(--border);padding-top:10px}
+        .proj-actions{display:flex;gap:6px;margin-top:10px}
+
+        /* Kanban */
+        .kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start}
+        .kanban-col{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px}
+        .kanban-col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+        .kanban-col-title{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+        .kanban-count{font-family:'Share Tech Mono',monospace;font-size:11px;background:var(--bg3);color:var(--text-muted);padding:2px 8px;border-radius:10px}
+        .kanban-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all 0.2s}
+        .kanban-item:hover{border-color:var(--border-bright);box-shadow:0 2px 12px var(--glow-p)}
+        .kanban-item-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px}
+        .kanban-item-tags{display:flex;flex-wrap:wrap;gap:4px}
+
+        /* Tasks */
+        .task-list{display:flex;flex-direction:column;gap:8px}
+        .task-item{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 18px;display:flex;align-items:center;gap:14px;transition:border 0.2s}
+        .task-item:hover{border-color:var(--border-bright)}
+        .task-check{width:18px;height:18px;border-radius:4px;border:2px solid var(--border-bright);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-size:11px}
+        .task-check.done{background:var(--purple);border-color:var(--purple);color:#fff}
+        .task-info{flex:1}
+        .task-text{font-size:14px;color:var(--text)}
+        .task-text.done{text-decoration:line-through;color:var(--text-muted)}
+        .task-proj{font-size:11px;color:var(--neon-blue);font-family:'Share Tech Mono',monospace;margin-top:3px}
+        .priority{font-size:10px;padding:2px 8px;border-radius:10px;font-family:'Share Tech Mono',monospace;font-weight:600}
+        .priority-High{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3)}
+        .priority-Mid{background:rgba(249,115,22,0.15);color:#fb923c;border:1px solid rgba(249,115,22,0.3)}
+        .priority-Low{background:rgba(34,197,94,0.15);color:#4ade80;border:1px solid rgba(34,197,94,0.3)}
+
+        /* Notes */
+        .notes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+        .note-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px;transition:all 0.2s;cursor:pointer}
+        .note-card:hover{border-color:var(--border-bright);box-shadow:0 4px 20px var(--glow-p)}
+        .note-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:600;color:var(--text);margin-bottom:8px;letter-spacing:0.5px}
+        .note-body{font-size:12px;color:var(--text-dim);line-height:1.6;font-family:'Share Tech Mono',monospace;white-space:pre-wrap}
+        .note-footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid var(--border)}
+        .note-date{font-size:10px;color:var(--text-muted);font-family:'Share Tech Mono',monospace}
+        .note-proj-tag{font-size:10px;color:var(--neon-purple);font-family:'Share Tech Mono',monospace}
+
+        /* Components */
+        .table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+        .comp-table{width:100%;border-collapse:collapse}
+        .comp-table th{background:var(--bg3);color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:1px;font-family:'Share Tech Mono',monospace;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);font-weight:400}
+        .comp-table td{padding:12px 14px;font-size:13px;color:var(--text-dim);border-bottom:1px solid var(--border)}
+        .comp-table tr:last-child td{border-bottom:none}
+        .comp-table tr:hover td{background:rgba(139,92,246,0.04);color:var(--text)}
+        .comp-name{color:var(--text);font-weight:500}
+        .comp-qty{font-family:'Share Tech Mono',monospace;color:var(--neon-blue)}
+        .comp-cost{font-family:'Share Tech Mono',monospace;color:#4ade80}
+        .qty-low{color:#f87171 !important}
+        .comp-link{color:var(--purple-bright);text-decoration:none;font-size:11px}
+        .comp-link:hover{color:var(--neon-purple)}
+
+        /* Modal */
+        .modal-overlay{position:fixed;inset:0;background:rgba(4,2,15,0.85);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+        .modal-overlay.open{display:flex}
+        .modal{background:var(--bg2);border:1px solid var(--border-bright);border-radius:14px;padding:28px;width:540px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 0 60px var(--glow-p)}
+        .modal-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--text);letter-spacing:1px;margin-bottom:20px}
+        .form-group{margin-bottom:16px}
+        .form-label{display:block;font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;font-family:'Share Tech Mono',monospace;margin-bottom:6px}
+        .form-input,.form-select,.form-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px 14px;font-family:'Exo 2',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border 0.2s}
+        .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--purple)}
+        .form-textarea{resize:vertical;min-height:80px}
+        .form-select option{background:var(--bg3)}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+        .chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+        .chip{background:var(--bg3);border:1px solid var(--border);color:var(--text-muted);font-size:11px;padding:3px 10px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Share Tech Mono',monospace}
+        .chip.selected{background:var(--purple-dim);border-color:var(--purple);color:var(--purple-bright)}
+
+        .empty-state{text-align:center;padding:48px 20px;color:var(--text-muted)}
+        .empty-icon{font-size:36px;margin-bottom:12px;opacity:0.3}
+        .empty-text{font-family:'Share Tech Mono',monospace;font-size:12px}
+
+        ::-webkit-scrollbar{width:5px}
+        ::-webkit-scrollbar-track{background:var(--bg0)}
+        ::-webkit-scrollbar-thumb{background:var(--purple-dim);border-radius:10px}
+        ::-webkit-scrollbar-thumb:hover{background:var(--purple)}
     </style>
 </head>
 <body>
-<div class="gradient-bg"></div>
+<div class="shell">
 
-<!-- Navigation -->
-<nav>
-    <div class="logo">NIXY<span>DIGITAL</span></div>
-    <div class="nav-right">
-        <a href="#features" class="nav-link">Features</a>
-        <a href="#pricing" class="nav-link">Pricing</a>
-        <a href="auth.html" class="nav-cta">Sign In</a>
-    </div>
-</nav>
-
-<!-- Hero Section -->
-<section class="hero">
-    <div class="hero-content">
-        <div class="hero-badge">
-            <span>✨</span> Now Live - Start Learning Today
-        </div>
-        <h1>Master Any Subject<br>With AI-Powered<br>Study Tools</h1>
-        <p class="hero-subtitle">
-            Transform your notes into practice questions, get instant explanations,
-            and ace every test. Study Buddy AI makes learning actually enjoyable.
-        </p>
-        <div class="cta-group">
-            <a href="auth.html" class="cta-primary">Get Started Free</a>
-            <a href="pricing.html" class="cta-secondary">View Pricing</a>
-        </div>
-        <p class="trust-line">🔒 Start free, upgrade anytime. No credit card required.</p>
-    </div>
-</section>
-
-<!-- Stats Section -->
-<section class="stats">
-    <div class="stats-grid">
-        <div class="stat">
-            <div class="stat-value">500+</div>
-            <div class="stat-label">Students Learning</div>
-        </div>
-        <div class="stat">
-            <div class="stat-value">10K+</div>
-            <div class="stat-label">Questions Generated</div>
-        </div>
-        <div class="stat">
-            <div class="stat-value">24/7</div>
-            <div class="stat-label">Always Available</div>
-        </div>
-        <div class="stat">
-            <div class="stat-value">95%</div>
-            <div class="stat-label">Success Rate</div>
-        </div>
-    </div>
-</section>
-
-<!-- Features Section -->
-<section class="features" id="features">
-    <div class="section-header">
-        <h2>Everything You Need to Excel</h2>
-        <p>Powerful features designed to make studying efficient, effective, and actually enjoyable.</p>
-    </div>
-    <div class="features-grid">
-        <div class="feature-card">
-            <div class="feature-icon">⚡</div>
-            <h3 class="feature-title">Instant Question Generation</h3>
-            <p class="feature-desc">
-                Upload your notes and get comprehensive practice questions in seconds.
-                No more hours spent creating flashcards manually.
-            </p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🎯</div>
-            <h3 class="feature-title">Smart Learning Analytics</h3>
-            <p class="feature-desc">
-                Track your progress and identify weak spots. Our AI adapts to your learning
-                patterns and focuses on what you need most.
-            </p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">💡</div>
-            <h3 class="feature-title">Crystal Clear Explanations</h3>
-            <p class="feature-desc">
-                Struggling with a concept? Get it explained in multiple ways with real-world
-                examples until it clicks.
-            </p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">📚</div>
-            <h3 class="feature-title">All Subjects Supported</h3>
-            <p class="feature-desc">
-                From AP Biology to Calculus, History to Chemistry. Works with any subject,
-                any grade level, any material.
-            </p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🔄</div>
-            <h3 class="feature-title">Adaptive Quizzing</h3>
-            <p class="feature-desc">
-                Take unlimited practice tests that adapt to your skill level. The more you
-                use it, the smarter it gets.
-            </p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">📱</div>
-            <h3 class="feature-title">Study Anywhere</h3>
-            <p class="feature-desc">
-                Access your study materials on any device. Web, mobile, tablet—study whenever
-                inspiration strikes.
-            </p>
-        </div>
-    </div>
-</section>
-
-<!-- Pricing -->
-<section class="pricing" id="pricing">
-    <div class="pricing-container">
-        <div class="section-header">
-            <h2>Currently Free Beta</h2>
-            <p>All features are free while we're in beta. Enjoy unlimited access!</p>
-        </div>
-        <div class="pricing-cards" style="max-width: 400px; margin: 0 auto;">
-            <!-- Free Plan -->
-            <div class="price-card featured">
-                <div class="price-badge">BETA ACCESS</div>
-                <div class="price-name">Free</div>
-                <div class="price-amount">$0</div>
-                <div class="price-period">forever (beta)</div>
-                <ul class="price-features">
-                    <li>Unlimited study materials</li>
-                    <li>Unlimited quizzes</li>
-                    <li>Unlimited AI writing</li>
-                    <li>AI Tutor Chat</li>
-                    <li>Full progress tracking</li>
-                    <li>All features unlocked</li>
-                </ul>
-                <a href="auth.html" class="price-cta">Get Started Free</a>
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-ring">
+                <img class="logo-img" src="logo.png" alt="NixyDigital" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                <div class="logo-img-fallback" style="display:none">NX</div>
             </div>
+            <div class="logo-name">NixyDigital</div>
+            <div class="logo-sub">// EE LAB v1.0</div>
         </div>
-        <p style="text-align: center; margin-top: 40px; color: rgba(255, 255, 255, 0.5); font-size: 14px;">
-            💡 Paid plans coming soon. Early users get lifetime discount!
-        </p>
-    </div>
-</section>
+        <nav class="nav">
+            <div class="nav-label">Navigation</div>
+            <div class="nav-item active" onclick="goTo('dashboard',this)"><span class="nav-icon">⬡</span> Dashboard</div>
+            <div class="nav-item" onclick="goTo('projects',this)"><span class="nav-icon">◈</span> Projects <span class="nav-badge" id="nb-proj">0</span></div>
+            <div class="nav-item" onclick="goTo('kanban',this)"><span class="nav-icon">▦</span> Kanban Board</div>
+            <div class="nav-item" onclick="goTo('tasks',this)"><span class="nav-icon">◻</span> Tasks <span class="nav-badge" id="nb-tasks">0</span></div>
+            <div class="nav-item" onclick="goTo('notes',this)"><span class="nav-icon">◬</span> Notes &amp; Docs</div>
+            <div class="nav-item" onclick="goTo('components',this)"><span class="nav-icon">⬔</span> Components</div>
+        </nav>
+        <div class="sidebar-footer"><span class="status-dot"></span><span class="status-text">SYSTEM ONLINE</span></div>
+    </aside>
 
-<!-- Final CTA -->
-<section class="final-cta">
-    <h2>Ready to Transform<br>How You Study?</h2>
-    <p>
-        Join hundreds of students already improving their grades with AI-powered learning.
-        Start free today.
-    </p>
-    <div class="cta-group" style="justify-content: center;">
-        <a href="auth.html" class="cta-primary">Get Started Free</a>
-        <a href="pricing.html" class="cta-secondary">View All Plans</a>
-    </div>
-</section>
+    <div class="main">
+        <div class="topbar">
+            <div class="topbar-title" id="topbar-title">Dashboard</div>
+            <input class="topbar-search" type="text" placeholder="" id="search-input" oninput="handleSearch()">
+            <button class="btn btn-primary" onclick="openModal()">+ New</button>
+        </div>
 
-<!-- Footer -->
-<footer>
-    <div class="footer-content">
-        <div class="footer-brand">
-            <h3>NIXY<span>DIGITAL</span></h3>
-            <p>
-                Building the future of education with AI-powered tools
-                that make learning accessible, efficient, and enjoyable for everyone.
-            </p>
-        </div>
-        <div class="footer-links">
-            <h4>Product</h4>
-            <ul>
-                <li><a href="#features">Features</a></li>
-                <li><a href="pricing.html">Pricing</a></li>
-                <li><a href="dashboard.html">Dashboard</a></li>
-            </ul>
-        </div>
-        <div class="footer-links">
-            <h4>Company</h4>
-            <ul>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="mailto:support@studybuddyai.site">Contact</a></li>
-            </ul>
-        </div>
-        <div class="footer-links">
-            <h4>Legal</h4>
-            <ul>
-                <li><a href="privacy.html">Privacy Policy</a></li>
-                <li><a href="terms.html">Terms of Service</a></li>
-                <li><a href="cookies.html">Cookie Policy</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="footer-bottom">
-        <div>
-            <p>© 2026 NixyDigital. All rights reserved.</p>
-            <div class="footer-legal" style="margin-top: 8px;">
-                <a href="privacy.html">Privacy</a>
-                <a href="terms.html">Terms</a>
-                <a href="cookies.html">Cookies</a>
+        <div class="content">
+
+            <!-- DASHBOARD -->
+            <div class="section active" id="sec-dashboard">
+                <div class="welcome-banner">
+                    <div class="welcome-line">// NIXYDIGITAL EE LAB — SYSTEM READY</div>
+                    <div class="welcome-name">Welcome back, <span>Mr. Enzaldo</span></div>
+                    <div class="welcome-sub">Your electrical engineering hub is live. All systems nominal — let's build something great.</div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-label">Total Projects</div><div class="stat-value" id="s-proj">0</div><div class="stat-sub">in lab</div></div>
+                    <div class="stat-card"><div class="stat-label">In Progress</div><div class="stat-value" id="s-active">0</div><div class="stat-sub">active builds</div></div>
+                    <div class="stat-card"><div class="stat-label">Open Tasks</div><div class="stat-value" id="s-tasks">0</div><div class="stat-sub">pending</div></div>
+                    <div class="stat-card"><div class="stat-label">Components</div><div class="stat-value" id="s-comps">0</div><div class="stat-sub">in library</div></div>
+                </div>
+                <div class="neon-line"></div>
+                <div class="sec-header">
+                    <div class="sec-title">Recent <span>Projects</span></div>
+                    <button class="btn btn-ghost btn-sm" onclick="goTo('projects',null)">View all →</button>
+                </div>
+                <div class="projects-grid" id="dash-projects"></div>
             </div>
-        </div>
-        <div class="social-links">
-            <a href="#">Twitter</a>
-            <a href="#">Instagram</a>
-            <a href="#">LinkedIn</a>
+
+            <!-- PROJECTS -->
+            <div class="section" id="sec-projects">
+                <div class="sec-header">
+                    <div class="sec-title">All <span>Projects</span></div>
+                    <div style="display:flex;gap:8px;align-items:center">
+                        <select class="form-select" style="width:auto;padding:7px 12px;font-size:12px" onchange="renderProjects(this.value)">
+                            <option value="all">All Status</option>
+                            <option value="Planning">Planning</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Testing">Testing</option>
+                            <option value="Done">Done</option>
+                        </select>
+                        <button class="btn btn-primary btn-sm" onclick="openModal('project')">+ New Project</button>
+                    </div>
+                </div>
+                <div class="projects-grid" id="proj-grid"></div>
+            </div>
+
+            <!-- KANBAN -->
+            <div class="section" id="sec-kanban">
+                <div class="sec-header"><div class="sec-title">Kanban <span>Board</span></div></div>
+                <div class="kanban" id="kanban-board"></div>
+            </div>
+
+            <!-- TASKS -->
+            <div class="section" id="sec-tasks">
+                <div class="sec-header">
+                    <div class="sec-title">Tasks <span>&amp; To-Dos</span></div>
+                    <button class="btn btn-primary btn-sm" onclick="openModal('task')">+ New Task</button>
+                </div>
+                <div class="task-list" id="task-list"></div>
+            </div>
+
+            <!-- NOTES -->
+            <div class="section" id="sec-notes">
+                <div class="sec-header">
+                    <div class="sec-title">Notes <span>&amp; Docs</span></div>
+                    <button class="btn btn-primary btn-sm" onclick="openModal('note')">+ New Note</button>
+                </div>
+                <div class="notes-grid" id="notes-grid"></div>
+            </div>
+
+            <!-- COMPONENTS -->
+            <div class="section" id="sec-components">
+                <div class="sec-header">
+                    <div class="sec-title">Components <span>Library</span></div>
+                    <button class="btn btn-primary btn-sm" onclick="openModal('component')">+ Add Part</button>
+                </div>
+                <div class="table-wrap">
+                    <table class="comp-table">
+                        <thead><tr><th>Part</th><th>Description</th><th>Qty</th><th>Cost/unit</th><th>Supplier</th><th>Projects</th><th>Datasheet</th><th></th></tr></thead>
+                        <tbody id="comp-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
-</footer>
+</div>
 
-<!-- Smooth scroll -->
-<script>
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            const href = this.getAttribute('href');
-            if (href.length > 1) {
-                e.preventDefault();
-                const target = document.querySelector(href);
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+    <div class="modal">
+        <div class="modal-title" id="modal-title">New Item</div>
+        <div id="modal-body"></div>
+        <div class="modal-actions">
+            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="saveModal()">Save</button>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      getDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCWEzBm2Pwi17okfeumWviLOy8DdDnJ5lU",
+      authDomain: "nixydigital-cb256.firebaseapp.com",
+      projectId: "nixydigital-cb256",
+      storageBucket: "nixydigital-cb256.firebasestorage.app",
+      messagingSenderId: "675908512571",
+      appId: "1:675908512571:web:e4d599840298c04289251e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const TAGS = ["MCU","Power","RF","Audio","Analog","Digital","PCB","Sensor","Motor","Wireless","FPGA","DSP"];
+
+    let D = { projects: [], tasks: [], notes: [], components: [] };
+    let mMode = "";
+    let mId = null;
+    let currentUser = null;
+    let currentSection = "dashboard";
+
+    const LOCAL_KEY = "nxd_v2";
+
+    const SECTION_TITLES = {
+      dashboard: "Dashboard",
+      projects: "Projects",
+      kanban: "Kanban Board",
+      tasks: "Tasks & To-Dos",
+      notes: "Notes & Docs",
+      components: "Components Library"
+    };
+
+    function uid(){
+      return Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+    }
+
+    function today(){
+      return new Date().toISOString().slice(0,10);
+    }
+
+    function safe(v){
+      return String(v ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function getUserDoc(){
+      return doc(db, "users", currentUser.uid, "nixydigital", "state");
+    }
+
+    async function save(){
+      try{
+        localStorage.setItem(LOCAL_KEY, JSON.stringify(D));
+
+        if(currentUser){
+          await setDoc(getUserDoc(), {
+            data: D,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+        }
+      }catch(e){
+        console.error("Save error:", e);
+      }
+    }
+
+    async function load(){
+      try{
+        if(currentUser){
+          const snap = await getDoc(getUserDoc());
+
+          if(snap.exists() && snap.data().data){
+            D = snap.data().data;
+            localStorage.setItem(LOCAL_KEY, JSON.stringify(D));
+          } else {
+            const local = localStorage.getItem(LOCAL_KEY);
+            if(local){
+              D = JSON.parse(local);
+              await save();
             }
-        });
+          }
+        } else {
+          const local = localStorage.getItem(LOCAL_KEY);
+          if(local) D = JSON.parse(local);
+        }
+      }catch(e){
+        console.error("Load error:", e);
+
+        const local = localStorage.getItem(LOCAL_KEY);
+        if(local) D = JSON.parse(local);
+      }
+    }
+
+    function showLogin(){
+      if(document.getElementById("login-overlay")) return;
+
+      const overlay = document.createElement("div");
+      overlay.id = "login-overlay";
+      overlay.style.cssText = `
+        position:fixed;
+        inset:0;
+        z-index:9999;
+        background:rgba(0,0,0,.92);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:20px;
+        font-family:'Exo 2',sans-serif;
+      `;
+
+      overlay.innerHTML = `
+        <div style="width:380px;max-width:95vw;background:#050505;border:1px solid #3a2a70;border-radius:16px;padding:26px;box-shadow:0 0 50px rgba(139,92,246,.35)">
+          <div style="font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;letter-spacing:1px;color:#ede9fe;margin-bottom:4px">
+            NixyDigital Login
+          </div>
+
+          <div style="font-size:13px;color:#a89ec9;margin-bottom:18px">
+            Sign in or create your account to sync your EE Lab anywhere.
+          </div>
+
+          <label style="font-size:11px;color:#4a4060;letter-spacing:1px;text-transform:uppercase;font-family:'Share Tech Mono',monospace">
+            Email
+          </label>
+
+          <input id="login-email" type="email" autocomplete="email" style="width:100%;margin:6px 0 14px;background:#0f0a1f;border:1px solid #1a1030;border-radius:8px;padding:11px 13px;color:#ede9fe;outline:none">
+
+          <label style="font-size:11px;color:#4a4060;letter-spacing:1px;text-transform:uppercase;font-family:'Share Tech Mono',monospace">
+            Password
+          </label>
+
+          <input id="login-pass" type="password" autocomplete="current-password" style="width:100%;margin:6px 0 16px;background:#0f0a1f;border:1px solid #1a1030;border-radius:8px;padding:11px 13px;color:#ede9fe;outline:none">
+
+          <div style="display:flex;gap:10px">
+            <button id="login-btn" style="flex:1;border:none;border-radius:8px;padding:11px 14px;cursor:pointer;color:white;font-weight:700;background:linear-gradient(135deg,#8b5cf6,#3b82f6);box-shadow:0 0 16px rgba(139,92,246,.45)">
+              Login
+            </button>
+
+            <button id="signup-btn" style="flex:1;border:1px solid #3a2a70;border-radius:8px;padding:11px 14px;cursor:pointer;color:#ede9fe;font-weight:700;background:#0a0a0f">
+              Sign Up
+            </button>
+          </div>
+
+          <div id="login-error" style="color:#f87171;font-size:12px;margin-top:12px;min-height:16px"></div>
+        </div>
+      `;
+
+      document.body.appendChild(overlay);
+
+      document.getElementById("login-btn").onclick = async () => {
+        const email = document.getElementById("login-email").value.trim();
+        const pass = document.getElementById("login-pass").value;
+        const err = document.getElementById("login-error");
+
+        try{
+          err.style.color = "#f87171";
+          err.textContent = "";
+
+          if(!email || !pass){
+            err.textContent = "Enter your email and password.";
+            return;
+          }
+
+          await signInWithEmailAndPassword(auth, email, pass);
+        }catch(e){
+          err.style.color = "#f87171";
+
+          if(e.code === "auth/user-not-found" || e.code === "auth/wrong-password" || e.code === "auth/invalid-credential"){
+            err.textContent = "Wrong email or password.";
+          } else if(e.code === "auth/invalid-email"){
+            err.textContent = "Invalid email.";
+          } else {
+            err.textContent = "Login failed. Check Firebase Auth.";
+          }
+        }
+      };
+
+      document.getElementById("signup-btn").onclick = async () => {
+        const email = document.getElementById("login-email").value.trim();
+        const pass = document.getElementById("login-pass").value;
+        const err = document.getElementById("login-error");
+
+        try{
+          err.style.color = "#f87171";
+          err.textContent = "";
+
+          if(!email || !pass){
+            err.textContent = "Enter your email and password.";
+            return;
+          }
+
+          if(pass.length < 6){
+            err.textContent = "Password must be at least 6 characters.";
+            return;
+          }
+
+          await createUserWithEmailAndPassword(auth, email, pass);
+
+          err.style.color = "#4ade80";
+          err.textContent = "Account created. Loading your lab...";
+        }catch(e){
+          err.style.color = "#f87171";
+
+          if(e.code === "auth/email-already-in-use"){
+            err.textContent = "That email already has an account. Login instead.";
+          } else if(e.code === "auth/invalid-email"){
+            err.textContent = "Invalid email.";
+          } else if(e.code === "auth/weak-password"){
+            err.textContent = "Password is too weak.";
+          } else {
+            err.textContent = "Signup failed. Check Firebase Auth is enabled.";
+          }
+        }
+      };
+    }
+
+    function hideLogin(){
+      const overlay = document.getElementById("login-overlay");
+      if(overlay) overlay.remove();
+    }
+
+    function goTo(id, el){
+      currentSection = id;
+
+      document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+      document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+
+      document.getElementById("sec-" + id).classList.add("active");
+
+      if(el){
+        el.classList.add("active");
+      } else {
+        const nav = [...document.querySelectorAll(".nav-item")]
+          .find(n => n.getAttribute("onclick")?.includes(`'${id}'`));
+        if(nav) nav.classList.add("active");
+      }
+
+      document.getElementById("topbar-title").textContent = SECTION_TITLES[id] || id;
+      renderSection(id);
+    }
+
+    function renderSection(id){
+      updateCounts();
+
+      if(id === "dashboard") renderDashboard();
+      else if(id === "projects") renderProjects("all");
+      else if(id === "kanban") renderKanban();
+      else if(id === "tasks") renderTasks();
+      else if(id === "notes") renderNotes();
+      else if(id === "components") renderComponents();
+    }
+
+    function updateCounts(){
+      document.getElementById("nb-proj").textContent = D.projects.length;
+
+      const open = D.tasks.filter(t => !t.done).length;
+
+      document.getElementById("nb-tasks").textContent = open;
+      document.getElementById("s-proj").textContent = D.projects.length;
+      document.getElementById("s-active").textContent = D.projects.filter(p => p.status === "In Progress").length;
+      document.getElementById("s-tasks").textContent = open;
+      document.getElementById("s-comps").textContent = D.components.length;
+    }
+
+    function badge(s){
+      const cls = safe(s).replace(/\s+/g, "-");
+      return `<span class="badge badge-${cls}">${safe(s)}</span>`;
+    }
+
+    function projCard(p){
+      return `
+        <div class="proj-card">
+          <div class="proj-card-top">
+            <div class="proj-name">${safe(p.name)}</div>
+            ${badge(p.status)}
+          </div>
+
+          <div class="proj-desc">${safe(p.desc)}</div>
+
+          <div class="proj-tags">
+            ${(p.tags || []).map(t => `<span class="tag">${safe(t)}</span>`).join("")}
+          </div>
+
+          <div class="proj-progress">
+            <div class="progress-label">
+              <span>Progress</span>
+              <span>${Number(p.progress || 0)}%</span>
+            </div>
+
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:${Number(p.progress || 0)}%"></div>
+            </div>
+          </div>
+
+          <div class="proj-meta">
+            <span>Budget: $${Number(p.budget || 0)}</span>
+            <span>${(p.components || []).length} parts linked</span>
+          </div>
+
+          <div class="proj-actions">
+            <button class="btn btn-ghost btn-sm" onclick="editProject('${p.id}')">Edit</button>
+            <button class="btn btn-ghost btn-sm" style="color:#f87171;border-color:rgba(239,68,68,0.3)" onclick="del('project','${p.id}')">Delete</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDashboard(){
+      const recent = [...D.projects].reverse().slice(0,3);
+
+      document.getElementById("dash-projects").innerHTML =
+        recent.length ? recent.map(projCard).join("") : empty("⬡", "No projects yet — add your first one!");
+    }
+
+    function renderProjects(filter = "all"){
+      let list = D.projects;
+
+      if(filter !== "all"){
+        list = list.filter(p => p.status === filter);
+      }
+
+      document.getElementById("proj-grid").innerHTML =
+        list.length ? list.map(projCard).join("") : empty("◈", "No projects found.");
+    }
+
+    function renderKanban(){
+      const cols = ["Planning", "In Progress", "Testing", "Done"];
+      const colors = {
+        Planning: "#fbbf24",
+        "In Progress": "#60a5fa",
+        Testing: "#fb923c",
+        Done: "#4ade80"
+      };
+
+      document.getElementById("kanban-board").innerHTML = cols.map(col => {
+        const items = D.projects.filter(p => p.status === col);
+
+        return `
+          <div class="kanban-col">
+            <div class="kanban-col-header">
+              <div class="kanban-col-title" style="color:${colors[col]}">${col}</div>
+              <span class="kanban-count">${items.length}</span>
+            </div>
+
+            ${
+              items.length
+                ? items.map(p => `
+                  <div class="kanban-item" onclick="editProject('${p.id}')">
+                    <div class="kanban-item-title">${safe(p.name)}</div>
+
+                    <div class="kanban-item-tags">
+                      ${(p.tags || []).map(t => `<span class="tag">${safe(t)}</span>`).join("")}
+                    </div>
+
+                    <div style="margin-top:8px">
+                      <div class="progress-bar">
+                        <div class="progress-fill" style="width:${Number(p.progress || 0)}%"></div>
+                      </div>
+                    </div>
+
+                    <div style="font-size:10px;color:var(--text-muted);font-family:'Share Tech Mono',monospace;margin-top:4px">
+                      ${Number(p.progress || 0)}% complete · $${Number(p.budget || 0)} budget
+                    </div>
+                  </div>
+                `).join("")
+                : `<div style="text-align:center;padding:24px 0;color:var(--text-muted);font-size:11px;font-family:'Share Tech Mono',monospace">empty</div>`
+            }
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderTasks(){
+      document.getElementById("task-list").innerHTML =
+        D.tasks.length ? D.tasks.map(taskHTML).join("") : empty("◻", "No tasks yet. Add one above!");
+    }
+
+    function taskHTML(t){
+      return `
+        <div class="task-item">
+          <div class="task-check ${t.done ? "done" : ""}" onclick="toggleTask('${t.id}')">${t.done ? "✓" : ""}</div>
+
+          <div class="task-info">
+            <div class="task-text ${t.done ? "done" : ""}">${safe(t.text)}</div>
+            <div class="task-proj">${safe(t.project || "No project")}</div>
+          </div>
+
+          <span class="priority priority-${safe(t.priority || "Mid")}">${safe(t.priority || "Mid")}</span>
+
+          <button class="btn btn-ghost btn-sm" style="color:#f87171;border-color:rgba(239,68,68,0.2);margin-left:6px" onclick="del('task','${t.id}')">✕</button>
+        </div>
+      `;
+    }
+
+    async function toggleTask(id){
+      const t = D.tasks.find(x => x.id === id);
+
+      if(t){
+        t.done = !t.done;
+        await save();
+        renderTasks();
+        updateCounts();
+      }
+    }
+
+    function renderNotes(){
+      document.getElementById("notes-grid").innerHTML =
+        D.notes.length
+          ? D.notes.map(noteHTML).join("")
+          : empty("◬", "No notes yet.");
+    }
+
+    function noteHTML(n){
+      return `
+        <div class="note-card" onclick="editNote('${n.id}')">
+          <div class="note-title">${safe(n.title)}</div>
+          <div class="note-body">${safe((n.body || "").slice(0,120))}${(n.body || "").length > 120 ? "…" : ""}</div>
+
+          <div class="note-footer">
+            <span class="note-date">${safe(n.date)}</span>
+            <span class="note-proj-tag">${safe(n.project || "")}</span>
+          </div>
+
+          <div style="display:flex;gap:6px;margin-top:12px" onclick="event.stopPropagation()">
+            <button class="btn btn-ghost btn-sm" onclick="editNote('${n.id}')">Edit</button>
+            <button class="btn btn-ghost btn-sm" style="color:#f87171;border-color:rgba(239,68,68,0.3)" onclick="del('note','${n.id}')">Delete</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderComponents(list = D.components){
+      document.getElementById("comp-tbody").innerHTML =
+        list.length
+          ? list.map(c => `
+            <tr>
+              <td class="comp-name">${safe(c.name)}</td>
+              <td>${safe(c.desc)}</td>
+              <td class="comp-qty ${Number(c.qty) <= 2 ? "qty-low" : ""}">${Number(c.qty || 0)}</td>
+              <td class="comp-cost">$${Number(c.cost || 0).toFixed(2)}</td>
+              <td>${safe(c.supplier || "—")}</td>
+              <td style="font-size:11px;color:var(--text-muted)">${safe((c.projects || []).join(", ") || "—")}</td>
+              <td>${c.datasheet ? `<a href="${safe(c.datasheet)}" target="_blank" class="comp-link">View ↗</a>` : "—"}</td>
+
+              <td style="display:flex;gap:4px">
+                <button class="btn btn-ghost btn-sm" onclick="editComponent('${c.id}')">Edit</button>
+                <button class="btn btn-ghost btn-sm" style="color:#f87171;border-color:rgba(239,68,68,0.2)" onclick="del('component','${c.id}')">✕</button>
+              </td>
+            </tr>
+          `).join("")
+          : `<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text-muted);font-family:'Share Tech Mono',monospace;font-size:12px">No components yet.</td></tr>`;
+    }
+
+    function empty(icon, txt){
+      return `
+        <div class="empty-state">
+          <div class="empty-icon">${icon}</div>
+          <div class="empty-text">${safe(txt)}</div>
+        </div>
+      `;
+    }
+
+    async function del(type, id){
+      if(!confirm("Delete this item?")) return;
+
+      if(type === "project") D.projects = D.projects.filter(x => x.id !== id);
+      if(type === "task") D.tasks = D.tasks.filter(x => x.id !== id);
+      if(type === "note") D.notes = D.notes.filter(x => x.id !== id);
+      if(type === "component") D.components = D.components.filter(x => x.id !== id);
+
+      await save();
+      renderSection(currentSection);
+    }
+
+    function openModal(type){
+      if(!type){
+        const cur = currentSection;
+
+        type = {
+          dashboard: "project",
+          projects: "project",
+          kanban: "project",
+          tasks: "task",
+          notes: "note",
+          components: "component"
+        }[cur] || "project";
+      }
+
+      mMode = type;
+      mId = null;
+
+      const titles = {
+        project: "New Project",
+        task: "New Task",
+        note: "New Note",
+        component: "New Component"
+      };
+
+      document.getElementById("modal-title").textContent = titles[type];
+      document.getElementById("modal-body").innerHTML = buildForm(type, {});
+      document.getElementById("modal-overlay").classList.add("open");
+    }
+
+    function closeModal(){
+      document.getElementById("modal-overlay").classList.remove("open");
+      mId = null;
+    }
+
+    function projOpts(sel){
+      return D.projects.map(p => `<option${p.name === sel ? " selected" : ""}>${safe(p.name)}</option>`).join("");
+    }
+
+    function buildForm(type, d){
+      if(type === "project"){
+        return `
+          <div class="form-group">
+            <label class="form-label">Project name</label>
+            <input class="form-input" id="f-name" value="${safe(d.name || "")}" placeholder="">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea class="form-textarea" id="f-desc">${safe(d.desc || "")}</textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select class="form-select" id="f-status">
+                ${["Planning","In Progress","Testing","Done"].map(s => `<option${d.status === s ? " selected" : ""}>${s}</option>`).join("")}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Progress %</label>
+              <input class="form-input" id="f-progress" type="number" min="0" max="100" value="${Number(d.progress || 0)}">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Budget ($)</label>
+            <input class="form-input" id="f-budget" type="number" value="${Number(d.budget || 0)}">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tags</label>
+            <div class="chip-row">
+              ${TAGS.map(t => `<span class="chip${(d.tags || []).includes(t) ? " selected" : ""}" onclick="this.classList.toggle('selected')">${t}</span>`).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      if(type === "task"){
+        return `
+          <div class="form-group">
+            <label class="form-label">Task</label>
+            <input class="form-input" id="f-text" value="${safe(d.text || "")}" placeholder="">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Project</label>
+              <select class="form-select" id="f-project">
+                <option value="">— None —</option>
+                ${projOpts(d.project)}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Priority</label>
+              <select class="form-select" id="f-priority">
+                ${["High","Mid","Low"].map(p => `<option${d.priority === p ? " selected" : ""}>${p}</option>`).join("")}
+              </select>
+            </div>
+          </div>
+        `;
+      }
+
+      if(type === "note"){
+        return `
+          <div class="form-group">
+            <label class="form-label">Title</label>
+            <input class="form-input" id="f-title" value="${safe(d.title || "")}" placeholder="">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Project</label>
+            <select class="form-select" id="f-project">
+              <option value="">— None —</option>
+              ${projOpts(d.project)}
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Content</label>
+            <textarea class="form-textarea" id="f-body" style="min-height:140px;font-family:'Share Tech Mono',monospace;font-size:12px">${safe(d.body || "")}</textarea>
+          </div>
+        `;
+      }
+
+      if(type === "component"){
+        return `
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Part name</label>
+              <input class="form-input" id="f-name" value="${safe(d.name || "")}" placeholder="">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Quantity</label>
+              <input class="form-input" id="f-qty" type="number" value="${Number(d.qty || 1)}">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <input class="form-input" id="f-desc" value="${safe(d.desc || "")}" placeholder="">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Cost / unit ($)</label>
+              <input class="form-input" id="f-cost" type="number" step="0.01" value="${Number(d.cost || 0)}">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Supplier</label>
+              <input class="form-input" id="f-supplier" value="${safe(d.supplier || "")}" placeholder="">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Datasheet URL</label>
+            <input class="form-input" id="f-datasheet" value="${safe(d.datasheet || "")}" placeholder="">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Used in projects</label>
+            <div class="chip-row">
+              ${D.projects.map(p => `<span class="chip${(d.projects || []).includes(p.name) ? " selected" : ""}" onclick="this.classList.toggle('selected')">${safe(p.name)}</span>`).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      return "";
+    }
+
+    async function saveModal(){
+      const type = mMode;
+
+      if(type === "project"){
+        const name = document.getElementById("f-name").value.trim();
+
+        if(!name) return alert("Project name required");
+
+        const tags = [...document.querySelectorAll("#modal-body .chip.selected")].map(c => c.textContent);
+
+        const obj = {
+          id: mId || uid(),
+          name,
+          desc: document.getElementById("f-desc").value,
+          status: document.getElementById("f-status").value,
+          progress: Math.min(100, Math.max(0, parseInt(document.getElementById("f-progress").value) || 0)),
+          budget: parseFloat(document.getElementById("f-budget").value) || 0,
+          tags,
+          components: []
+        };
+
+        if(mId){
+          const i = D.projects.findIndex(x => x.id === mId);
+          if(i >= 0) D.projects[i] = { ...D.projects[i], ...obj };
+        } else {
+          D.projects.push(obj);
+        }
+      }
+
+      if(type === "task"){
+        const text = document.getElementById("f-text").value.trim();
+
+        if(!text) return alert("Task text required");
+
+        const obj = {
+          id: mId || uid(),
+          text,
+          project: document.getElementById("f-project").value,
+          priority: document.getElementById("f-priority").value,
+          done: mId ? (D.tasks.find(x => x.id === mId)?.done || false) : false
+        };
+
+        if(mId){
+          const i = D.tasks.findIndex(x => x.id === mId);
+          if(i >= 0) D.tasks[i] = obj;
+        } else {
+          D.tasks.push(obj);
+        }
+      }
+
+      if(type === "note"){
+        const title = document.getElementById("f-title").value.trim();
+
+        if(!title) return alert("Title required");
+
+        const old = D.notes.find(x => x.id === mId);
+
+        const obj = {
+          id: mId || uid(),
+          title,
+          project: document.getElementById("f-project").value,
+          body: document.getElementById("f-body").value,
+          date: old?.date || today()
+        };
+
+        if(mId){
+          const i = D.notes.findIndex(x => x.id === mId);
+          if(i >= 0) D.notes[i] = obj;
+        } else {
+          D.notes.push(obj);
+        }
+      }
+
+      if(type === "component"){
+        const name = document.getElementById("f-name").value.trim();
+
+        if(!name) return alert("Part name required");
+
+        const projects = [...document.querySelectorAll("#modal-body .chip.selected")].map(c => c.textContent);
+
+        const obj = {
+          id: mId || uid(),
+          name,
+          desc: document.getElementById("f-desc").value,
+          qty: parseInt(document.getElementById("f-qty").value) || 0,
+          cost: parseFloat(document.getElementById("f-cost").value) || 0,
+          supplier: document.getElementById("f-supplier").value,
+          datasheet: document.getElementById("f-datasheet").value,
+          projects
+        };
+
+        if(mId){
+          const i = D.components.findIndex(x => x.id === mId);
+          if(i >= 0) D.components[i] = obj;
+        } else {
+          D.components.push(obj);
+        }
+      }
+
+      await save();
+      closeModal();
+      renderSection(currentSection);
+      updateCounts();
+    }
+
+    function editProject(id){
+      const p = D.projects.find(x => x.id === id);
+      if(!p) return;
+
+      mMode = "project";
+      mId = id;
+
+      document.getElementById("modal-title").textContent = "Edit Project";
+      document.getElementById("modal-body").innerHTML = buildForm("project", p);
+      document.getElementById("modal-overlay").classList.add("open");
+    }
+
+    function editNote(id){
+      const n = D.notes.find(x => x.id === id);
+      if(!n) return;
+
+      mMode = "note";
+      mId = id;
+
+      document.getElementById("modal-title").textContent = "Edit Note";
+      document.getElementById("modal-body").innerHTML = buildForm("note", n);
+      document.getElementById("modal-overlay").classList.add("open");
+    }
+
+    function editComponent(id){
+      const c = D.components.find(x => x.id === id);
+      if(!c) return;
+
+      mMode = "component";
+      mId = id;
+
+      document.getElementById("modal-title").textContent = "Edit Component";
+      document.getElementById("modal-body").innerHTML = buildForm("component", c);
+      document.getElementById("modal-overlay").classList.add("open");
+    }
+
+    function handleSearch(){
+      const q = document.getElementById("search-input").value.toLowerCase().trim();
+
+      if(!q){
+        renderSection(currentSection);
+        return;
+      }
+
+      if(currentSection === "projects"){
+        const f = D.projects.filter(p =>
+          (p.name || "").toLowerCase().includes(q) ||
+          (p.desc || "").toLowerCase().includes(q) ||
+          (p.tags || []).some(t => t.toLowerCase().includes(q))
+        );
+
+        document.getElementById("proj-grid").innerHTML =
+          f.length ? f.map(projCard).join("") : empty("◈", `No results for "${q}"`);
+      }
+
+      if(currentSection === "tasks"){
+        const f = D.tasks.filter(t =>
+          (t.text || "").toLowerCase().includes(q) ||
+          (t.project || "").toLowerCase().includes(q)
+        );
+
+        document.getElementById("task-list").innerHTML =
+          f.length ? f.map(taskHTML).join("") : empty("◻", `No tasks matching "${q}"`);
+      }
+
+      if(currentSection === "notes"){
+        const f = D.notes.filter(n =>
+          (n.title || "").toLowerCase().includes(q) ||
+          (n.body || "").toLowerCase().includes(q) ||
+          (n.project || "").toLowerCase().includes(q)
+        );
+
+        document.getElementById("notes-grid").innerHTML =
+          f.length ? f.map(noteHTML).join("") : empty("◬", `No notes matching "${q}"`);
+      }
+
+      if(currentSection === "components"){
+        const f = D.components.filter(c =>
+          (c.name || "").toLowerCase().includes(q) ||
+          (c.desc || "").toLowerCase().includes(q) ||
+          (c.supplier || "").toLowerCase().includes(q) ||
+          (c.projects || []).some(p => p.toLowerCase().includes(q))
+        );
+
+        renderComponents(f);
+      }
+    }
+
+    onAuthStateChanged(auth, async user => {
+      currentUser = user;
+
+      if(user){
+        hideLogin();
+        await load();
+        renderSection("dashboard");
+      } else {
+        await load();
+        renderSection("dashboard");
+        showLogin();
+      }
     });
+
+    window.goTo = goTo;
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+    window.saveModal = saveModal;
+    window.editProject = editProject;
+    window.editNote = editNote;
+    window.editComponent = editComponent;
+    window.del = del;
+    window.toggleTask = toggleTask;
+    window.handleSearch = handleSearch;
+    window.renderProjects = renderProjects;
+    window.signOutNixy = () => signOut(auth);
 </script>
+
 </body>
 </html>
