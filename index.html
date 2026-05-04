@@ -1,1265 +1,1107 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NixyDigital — EE Lab</title>
-    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexr — Social, leveled up</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{
-          --bg0:#000000;
-          --bg1:#050505;
-          --bg2:#0a0a0f;
-          --bg3:#0f0a1f;
-          --bg4:#150f2a;
-          --purple:#8b5cf6;
-          --purple-bright:#a78bfa;
-          --purple-dim:#3b1a78;
-          --blue:#3b82f6;
-          --blue-bright:#60a5fa;
-          --neon-purple:#c084fc;
-          --neon-blue:#38bdf8;
-          --text:#ede9fe;
-          --text-dim:#a89ec9;
-          --text-muted:#4a4060;
-          --border:#1a1030;
-          --border-bright:#3a2a70;
-          --glow-p:rgba(139,92,246,0.45);
-          --glow-b:rgba(59,130,246,0.3);
+        :root {
+          --bg:#050505;
+          --panel:rgba(16,16,19,.9);
+          --soft:rgba(255,255,255,.045);
+          --line:#26262c;
+          --text:#fff;
+          --muted:#a1a1aa;
+          --accent:#00e5ff;
+          --accent2:#7c3aed;
+          --hot:#ff2bd6;
+          --danger:#ff4d6d;
         }
-        body{background:var(--bg0);color:var(--text);font-family:'Exo 2',sans-serif;min-height:100vh;overflow-x:hidden}
-        body::before{
-          content:'';position:fixed;inset:0;
-          background-image:
-            radial-gradient(1px 1px at 20% 30%,rgba(255,255,255,0.6) 0%,transparent 100%),
-            radial-gradient(1px 1px at 80% 10%,rgba(255,255,255,0.5) 0%,transparent 100%),
-            radial-gradient(1px 1px at 50% 60%,rgba(255,255,255,0.4) 0%,transparent 100%),
-            radial-gradient(1px 1px at 10% 80%,rgba(255,255,255,0.5) 0%,transparent 100%),
-            radial-gradient(1px 1px at 90% 50%,rgba(255,255,255,0.3) 0%,transparent 100%),
-            radial-gradient(1px 1px at 35% 15%,rgba(255,255,255,0.6) 0%,transparent 100%),
-            radial-gradient(1px 1px at 65% 85%,rgba(255,255,255,0.4) 0%,transparent 100%),
-            radial-gradient(1px 1px at 75% 40%,rgba(255,255,255,0.5) 0%,transparent 100%),
-            radial-gradient(1px 1px at 15% 55%,rgba(255,255,255,0.3) 0%,transparent 100%),
-            radial-gradient(1px 1px at 45% 90%,rgba(255,255,255,0.4) 0%,transparent 100%),
-            radial-gradient(2px 2px at 55% 25%,rgba(192,132,252,0.4) 0%,transparent 100%),
-            radial-gradient(2px 2px at 25% 70%,rgba(56,189,248,0.3) 0%,transparent 100%);
-          pointer-events:none;z-index:0;
-        }
-        .shell{display:flex;min-height:100vh;position:relative;z-index:1}
-        .sidebar{
-          width:220px;min-height:100vh;background:var(--bg1);
-          border-right:1px solid var(--border);
-          display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;
-          box-shadow:4px 0 30px rgba(139,92,246,0.1);
-        }
-        .logo{padding:20px 16px 18px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;align-items:center;text-align:center}
-        .logo-ring{
-          width:72px;height:72px;border-radius:50%;
-          background:#000;
-          display:flex;align-items:center;justify-content:center;
-          position:relative;margin-bottom:12px;flex-shrink:0;
-        }
-        .logo-ring::before{
-          content:'';position:absolute;inset:-2px;border-radius:50%;
-          background:conic-gradient(from 0deg,var(--neon-purple),var(--blue),#000,var(--neon-purple));
-          z-index:-1;animation:spin 5s linear infinite;
-        }
-        .logo-ring::after{
-          content:'';position:absolute;inset:2px;border-radius:50%;background:#000;z-index:0;
-        }
-        @keyframes spin{to{transform:rotate(360deg)}}
-        .logo-img{
-          width:160px;height:80px;border-radius:50%;object-fit:cover;
-          position:relative;z-index:1;display:block;
-        }
-        .logo-img-fallback{
-          width:60px;height:60px;border-radius:50%;
-          background:radial-gradient(circle at 30% 30%,#1a0a3e,#000);
-          display:flex;align-items:center;justify-content:center;
-          font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;color:#fff;letter-spacing:1px;
-          position:relative;z-index:1;
-        }
-        .logo-name{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;color:var(--text);letter-spacing:3px;text-transform:uppercase}
-        .logo-sub{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--text-muted);letter-spacing:1px;margin-top:3px}
-        .nav{flex:1;padding:16px 0}
-        .nav-label{font-size:9px;letter-spacing:2px;color:var(--text-muted);padding:8px 20px 4px;text-transform:uppercase;font-family:'Share Tech Mono',monospace}
-        .nav-item{
-          display:flex;align-items:center;gap:10px;padding:10px 20px;
-          cursor:pointer;transition:all 0.2s;color:var(--text-dim);font-size:13px;font-weight:500;
-          border-left:2px solid transparent;letter-spacing:0.5px;
-        }
-        .nav-item:hover{background:var(--bg3);color:var(--text);border-left-color:var(--purple-dim)}
-        .nav-item.active{background:var(--bg3);color:var(--purple-bright);border-left-color:var(--purple);box-shadow:inset 0 0 20px rgba(139,92,246,0.08)}
-        .nav-icon{font-size:15px;width:20px;text-align:center}
-        .nav-badge{margin-left:auto;background:var(--purple-dim);color:var(--neon-purple);font-size:10px;padding:2px 6px;border-radius:10px;font-family:'Share Tech Mono',monospace}
-        .sidebar-footer{padding:16px 20px;border-top:1px solid var(--border)}
-        .status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px #22c55e;margin-right:6px}
-        .status-text{font-size:11px;color:var(--text-muted);font-family:'Share Tech Mono',monospace}
-        .main{margin-left:220px;flex:1;display:flex;flex-direction:column}
-        .topbar{
-          height:60px;background:var(--bg1);border-bottom:1px solid var(--border);
-          display:flex;align-items:center;padding:0 28px;gap:14px;
-          position:sticky;top:0;z-index:100;
-        }
-        .topbar-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;letter-spacing:1px;color:var(--text);flex:1}
-        .topbar-search{
-          background:var(--bg2);border:1px solid var(--border);border-radius:6px;
-          padding:7px 14px;font-family:'Exo 2',sans-serif;font-size:13px;color:var(--text);
-          width:200px;outline:none;transition:border 0.2s;
-        }
-        .topbar-search:focus{border-color:var(--purple)}
-        .topbar-search::placeholder{color:var(--text-muted)}
-        .btn{padding:8px 16px;border-radius:6px;font-family:'Exo 2',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all 0.2s;letter-spacing:0.5px}
-        .btn-primary{background:linear-gradient(135deg,var(--purple),var(--blue));color:#fff;box-shadow:0 0 16px var(--glow-p)}
-        .btn-primary:hover{box-shadow:0 0 24px var(--glow-p);transform:translateY(-1px)}
-        .btn-ghost{background:transparent;border:1px solid var(--border-bright);color:var(--text-dim)}
-        .btn-ghost:hover{border-color:var(--purple);color:var(--purple-bright)}
-        .btn-sm{padding:5px 12px;font-size:12px}
-        .content{padding:28px;flex:1}
-        .section{display:none}
-        .section.active{display:block;animation:fadeIn 0.25s ease}
-        @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-        /* Welcome */
-        .welcome-banner{
-          background:linear-gradient(135deg,var(--bg2),var(--bg3));
-          border:1px solid var(--border-bright);border-radius:12px;
-          padding:28px 32px;margin-bottom:28px;position:relative;overflow:hidden;
+        * { box-sizing:border-box; }
+
+        body {
+          margin:0;
+          min-height:100vh;
+          color:var(--text);
+          font-family:Arial,sans-serif;
+          background:
+            radial-gradient(circle at 15% 5%, rgba(0,229,255,.14), transparent 32%),
+            radial-gradient(circle at 85% 15%, rgba(124,58,237,.2), transparent 34%),
+            radial-gradient(circle at 45% 100%, rgba(255,43,214,.1), transparent 32%),
+            var(--bg);
         }
-        .welcome-banner::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(139,92,246,0.15),transparent 70%)}
-        .welcome-banner::after{content:'';position:absolute;bottom:-60px;right:80px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(59,130,246,0.1),transparent 70%)}
-        .welcome-line{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--neon-blue);letter-spacing:2px;margin-bottom:6px}
-        .welcome-name{font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;color:var(--text);letter-spacing:2px}
-        .welcome-name span{background:linear-gradient(90deg,var(--neon-purple),var(--blue-bright));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-        .welcome-sub{font-size:13px;color:var(--text-dim);margin-top:6px}
 
-        /* Stats */
-        .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
-        .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px 20px;position:relative;overflow:hidden;transition:border 0.2s}
-        .stat-card:hover{border-color:var(--border-bright)}
-        .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--purple),var(--blue))}
-        .stat-label{font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;font-family:'Share Tech Mono',monospace;margin-bottom:8px}
-        .stat-value{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:var(--text)}
-        .stat-sub{font-size:11px;color:var(--text-muted);margin-top:4px}
+        a { color:inherit; text-decoration:none; }
+        button { font-family:inherit; cursor:pointer; transition:.18s ease; }
+        button:hover { transform:translateY(-2px); }
+        button:active { transform:scale(.96); }
+        svg { width:21px; height:21px; }
 
-        /* Section header */
-        .sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-        .sec-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;letter-spacing:1px;color:var(--text)}
-        .sec-title span{color:var(--neon-purple)}
-        .neon-line{height:1px;background:linear-gradient(90deg,transparent,var(--purple),var(--blue),transparent);margin:24px 0;opacity:0.4}
+        .app {
+          width:min(1180px,96vw);
+          margin:auto;
+          padding:22px 0 70px;
+          display:grid;
+          grid-template-columns:230px 1fr 285px;
+          gap:20px;
+        }
 
-        /* Project cards */
-        .projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-        .proj-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:20px;transition:all 0.2s;position:relative}
-        .proj-card:hover{border-color:var(--border-bright);box-shadow:0 4px 24px var(--glow-p);transform:translateY(-2px)}
-        .proj-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:8px}
-        .proj-name{font-family:'Rajdhani',sans-serif;font-size:17px;font-weight:600;color:var(--text);letter-spacing:0.5px}
-        .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;font-family:'Share Tech Mono',monospace;white-space:nowrap}
-        .badge-Planning{background:rgba(234,179,8,0.15);color:#fbbf24;border:1px solid rgba(234,179,8,0.3)}
-        .badge-In-Progress{background:rgba(59,130,246,0.15);color:var(--blue-bright);border:1px solid rgba(59,130,246,0.3)}
-        .badge-Testing{background:rgba(249,115,22,0.15);color:#fb923c;border:1px solid rgba(249,115,22,0.3)}
-        .badge-Done{background:rgba(34,197,94,0.15);color:#4ade80;border:1px solid rgba(34,197,94,0.3)}
-        .proj-desc{font-size:13px;color:var(--text-dim);line-height:1.5;margin-bottom:12px}
-        .proj-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-        .tag{background:var(--bg3);border:1px solid var(--border);color:var(--text-muted);font-size:11px;padding:2px 8px;border-radius:4px;font-family:'Share Tech Mono',monospace}
-        .proj-progress{margin-bottom:12px}
-        .progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:5px;font-family:'Share Tech Mono',monospace}
-        .progress-bar{background:var(--bg3);border-radius:4px;height:5px;overflow:hidden}
-        .progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--purple),var(--blue))}
-        .proj-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);font-family:'Share Tech Mono',monospace;border-top:1px solid var(--border);padding-top:10px}
-        .proj-actions{display:flex;gap:6px;margin-top:10px}
+        .card {
+          background:var(--panel);
+          border:1px solid var(--line);
+          border-radius:28px;
+          backdrop-filter:blur(18px);
+          box-shadow:0 20px 80px rgba(0,0,0,.22);
+        }
 
-        /* Kanban */
-        .kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start}
-        .kanban-col{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px}
-        .kanban-col-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
-        .kanban-col-title{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase}
-        .kanban-count{font-family:'Share Tech Mono',monospace;font-size:11px;background:var(--bg3);color:var(--text-muted);padding:2px 8px;border-radius:10px}
-        .kanban-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all 0.2s}
-        .kanban-item:hover{border-color:var(--border-bright);box-shadow:0 2px 12px var(--glow-p)}
-        .kanban-item-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:6px}
-        .kanban-item-tags{display:flex;flex-wrap:wrap;gap:4px}
+        .sidebar {
+          position:sticky;
+          top:20px;
+          height:max-content;
+          padding:18px;
+          z-index:2;
+        }
 
-        /* Tasks */
-        .task-list{display:flex;flex-direction:column;gap:8px}
-        .task-item{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 18px;display:flex;align-items:center;gap:14px;transition:border 0.2s}
-        .task-item:hover{border-color:var(--border-bright)}
-        .task-check{width:18px;height:18px;border-radius:4px;border:2px solid var(--border-bright);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-size:11px}
-        .task-check.done{background:var(--purple);border-color:var(--purple);color:#fff}
-        .task-info{flex:1}
-        .task-text{font-size:14px;color:var(--text)}
-        .task-text.done{text-decoration:line-through;color:var(--text-muted)}
-        .task-proj{font-size:11px;color:var(--neon-blue);font-family:'Share Tech Mono',monospace;margin-top:3px}
-        .priority{font-size:10px;padding:2px 8px;border-radius:10px;font-family:'Share Tech Mono',monospace;font-weight:600}
-        .priority-High{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3)}
-        .priority-Mid{background:rgba(249,115,22,0.15);color:#fb923c;border:1px solid rgba(249,115,22,0.3)}
-        .priority-Low{background:rgba(34,197,94,0.15);color:#4ade80;border:1px solid rgba(34,197,94,0.3)}
+        .logo {
+          font-size:34px;
+          font-weight:950;
+          letter-spacing:-1px;
+          margin-bottom:24px;
+        }
 
-        /* Notes */
-        .notes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
-        .note-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px;transition:all 0.2s;cursor:pointer}
-        .note-card:hover{border-color:var(--border-bright);box-shadow:0 4px 20px var(--glow-p)}
-        .note-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:600;color:var(--text);margin-bottom:8px;letter-spacing:0.5px}
-        .note-body{font-size:12px;color:var(--text-dim);line-height:1.6;font-family:'Share Tech Mono',monospace;white-space:pre-wrap}
-        .note-footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid var(--border)}
-        .note-date{font-size:10px;color:var(--text-muted);font-family:'Share Tech Mono',monospace}
-        .note-proj-tag{font-size:10px;color:var(--neon-purple);font-family:'Share Tech Mono',monospace}
+        .logo span {
+          color:var(--accent);
+          text-shadow:0 0 18px var(--accent);
+        }
 
-        /* Components */
-        .table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden}
-        .comp-table{width:100%;border-collapse:collapse}
-        .comp-table th{background:var(--bg3);color:var(--text-muted);font-size:11px;text-transform:uppercase;letter-spacing:1px;font-family:'Share Tech Mono',monospace;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);font-weight:400}
-        .comp-table td{padding:12px 14px;font-size:13px;color:var(--text-dim);border-bottom:1px solid var(--border)}
-        .comp-table tr:last-child td{border-bottom:none}
-        .comp-table tr:hover td{background:rgba(139,92,246,0.04);color:var(--text)}
-        .comp-name{color:var(--text);font-weight:500}
-        .comp-qty{font-family:'Share Tech Mono',monospace;color:var(--neon-blue)}
-        .comp-cost{font-family:'Share Tech Mono',monospace;color:#4ade80}
-        .qty-low{color:#f87171 !important}
-        .comp-link{color:var(--purple-bright);text-decoration:none;font-size:11px}
-        .comp-link:hover{color:var(--neon-purple)}
+        .nav {
+          display:grid;
+          gap:8px;
+        }
 
-        /* Modal */
-        .modal-overlay{position:fixed;inset:0;background:rgba(4,2,15,0.85);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-        .modal-overlay.open{display:flex}
-        .modal{background:var(--bg2);border:1px solid var(--border-bright);border-radius:14px;padding:28px;width:540px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 0 60px var(--glow-p)}
-        .modal-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--text);letter-spacing:1px;margin-bottom:20px}
-        .form-group{margin-bottom:16px}
-        .form-label{display:block;font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;font-family:'Share Tech Mono',monospace;margin-bottom:6px}
-        .form-input,.form-select,.form-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px 14px;font-family:'Exo 2',sans-serif;font-size:13px;color:var(--text);outline:none;transition:border 0.2s}
-        .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--purple)}
-        .form-textarea{resize:vertical;min-height:80px}
-        .form-select option{background:var(--bg3)}
-        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-        .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
-        .chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-        .chip{background:var(--bg3);border:1px solid var(--border);color:var(--text-muted);font-size:11px;padding:3px 10px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Share Tech Mono',monospace}
-        .chip.selected{background:var(--purple-dim);border-color:var(--purple);color:var(--purple-bright)}
+        .nav a {
+          display:flex;
+          align-items:center;
+          gap:12px;
+          padding:13px 14px;
+          border-radius:18px;
+          color:var(--muted);
+          font-weight:850;
+        }
 
-        .empty-state{text-align:center;padding:48px 20px;color:var(--text-muted)}
-        .empty-icon{font-size:36px;margin-bottom:12px;opacity:0.3}
-        .empty-text{font-family:'Share Tech Mono',monospace;font-size:12px}
+        .nav a:hover,
+        .nav a.active {
+          color:white;
+          background:var(--soft);
+        }
 
-        ::-webkit-scrollbar{width:5px}
-        ::-webkit-scrollbar-track{background:var(--bg0)}
-        ::-webkit-scrollbar-thumb{background:var(--purple-dim);border-radius:10px}
-        ::-webkit-scrollbar-thumb:hover{background:var(--purple)}
+        .create-btn {
+          margin-top:18px;
+          width:100%;
+          border:0;
+          border-radius:999px;
+          padding:14px;
+          font-weight:950;
+          background:linear-gradient(135deg,var(--accent),var(--accent2));
+          color:black;
+        }
+
+        .feed {
+          display:grid;
+          gap:18px;
+          position:relative;
+          z-index:2;
+        }
+
+        .top-mobile {
+          display:none;
+        }
+
+        .composer {
+          padding:18px;
+        }
+
+        .composer h1 {
+          margin:0;
+          font-size:38px;
+          letter-spacing:-2px;
+        }
+
+        .composer p {
+          margin:8px 0 0;
+          color:var(--muted);
+        }
+
+        .tabs {
+          display:flex;
+          gap:10px;
+          margin-top:16px;
+        }
+
+        .tab {
+          border:1px solid var(--line);
+          background:#101014;
+          color:var(--muted);
+          border-radius:999px;
+          padding:10px 15px;
+          font-weight:900;
+        }
+
+        .tab.active {
+          color:black;
+          background:linear-gradient(135deg,var(--accent),var(--accent2));
+        }
+
+        .pulse {
+          padding:16px;
+          overflow:hidden;
+        }
+
+        .pulse-head {
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          margin-bottom:14px;
+        }
+
+        .pulse-head strong {
+          font-size:18px;
+        }
+
+        .pulse-head small {
+          color:var(--muted);
+        }
+
+        .pulse-row {
+          display:flex;
+          gap:12px;
+          overflow-x:auto;
+          padding-bottom:4px;
+        }
+
+        .pulse-row::-webkit-scrollbar {
+          height:0;
+        }
+
+        .story {
+          flex:0 0 82px;
+          text-align:center;
+        }
+
+        .story-ring {
+          width:76px;
+          height:76px;
+          border-radius:50%;
+          padding:3px;
+          background:linear-gradient(135deg,var(--hot),var(--accent2),var(--accent));
+          margin:auto;
+        }
+
+        .story-inner {
+          width:100%;
+          height:100%;
+          border-radius:50%;
+          overflow:hidden;
+          display:grid;
+          place-items:center;
+          background:#111;
+          border:3px solid #09090b;
+          font-weight:950;
+        }
+
+        .story-inner img {
+          width:100%;
+          height:100%;
+          object-fit:cover;
+        }
+
+        .story span {
+          display:block;
+          color:var(--muted);
+          font-size:12px;
+          margin-top:7px;
+          white-space:nowrap;
+          overflow:hidden;
+          text-overflow:ellipsis;
+        }
+
+        .empty {
+          color:var(--muted);
+          padding:18px;
+          text-align:center;
+        }
+
+        .post {
+          overflow:hidden;
+          animation:rise .45s ease both;
+        }
+
+        @keyframes rise {
+          from { opacity:0; transform:translateY(18px); }
+          to { opacity:1; transform:translateY(0); }
+        }
+
+        .post-head {
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          gap:14px;
+          padding:16px;
+        }
+
+        .user-link {
+          display:flex;
+          align-items:center;
+          gap:12px;
+          min-width:0;
+        }
+
+        .avatar {
+          width:48px;
+          height:48px;
+          border-radius:50%;
+          display:grid;
+          place-items:center;
+          background:linear-gradient(135deg,var(--accent),var(--accent2));
+          color:black;
+          font-weight:950;
+          overflow:hidden;
+          flex:0 0 auto;
+        }
+
+        .avatar img {
+          width:100%;
+          height:100%;
+          object-fit:cover;
+        }
+
+        .user-meta {
+          min-width:0;
+        }
+
+        .user-meta strong,
+        .user-meta small {
+          display:block;
+          white-space:nowrap;
+          overflow:hidden;
+          text-overflow:ellipsis;
+        }
+
+        .user-meta small {
+          color:var(--muted);
+          margin-top:3px;
+        }
+
+        .follow-btn {
+          border:1px solid var(--line);
+          background:#121216;
+          color:white;
+          border-radius:999px;
+          padding:9px 13px;
+          font-weight:950;
+        }
+
+        .follow-btn.following {
+          color:var(--muted);
+          background:transparent;
+        }
+
+        .post-img {
+          width:100%;
+          max-height:680px;
+          object-fit:cover;
+          display:block;
+          background:#09090b;
+        }
+
+        .post-body {
+          padding:15px 16px 18px;
+        }
+
+        .actions {
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          margin-bottom:10px;
+        }
+
+        .action-left {
+          display:flex;
+          gap:10px;
+        }
+
+        .icon-btn {
+          border:0;
+          background:transparent;
+          color:white;
+          width:38px;
+          height:38px;
+          border-radius:50%;
+          display:grid;
+          place-items:center;
+        }
+
+        .icon-btn:hover {
+          background:var(--soft);
+        }
+
+        .icon-btn.active {
+          color:var(--hot);
+        }
+
+        .icon-btn.saved {
+          color:var(--accent);
+        }
+
+        .icon-btn.danger {
+          color:var(--danger);
+        }
+
+        .caption {
+          color:#e9e9ee;
+          line-height:1.55;
+          margin:8px 0 0;
+        }
+
+        .caption strong {
+          color:white;
+        }
+
+        .comments-link {
+          display:inline-block;
+          margin-top:10px;
+          color:var(--muted);
+          font-weight:800;
+        }
+
+        .rightbar {
+          position:sticky;
+          top:20px;
+          height:max-content;
+          display:grid;
+          gap:16px;
+          z-index:2;
+        }
+
+        .profile-card,
+        .suggest {
+          padding:16px;
+        }
+
+        .me,
+        .suggest-user {
+          display:flex;
+          align-items:center;
+          gap:12px;
+          min-width:0;
+        }
+
+        .me-info strong,
+        .me-info small,
+        .suggest-user strong,
+        .suggest-user small {
+          display:block;
+          white-space:nowrap;
+          overflow:hidden;
+          text-overflow:ellipsis;
+        }
+
+        .me-info small,
+        .suggest-user small {
+          color:var(--muted);
+          margin-top:3px;
+        }
+
+        .suggest h3 {
+          margin:0 0 12px;
+        }
+
+        .suggest-item {
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:12px;
+          padding:10px 0;
+          border-top:1px solid var(--line);
+        }
+
+        .message {
+          color:var(--danger);
+          min-height:20px;
+          font-size:14px;
+          padding:0 4px;
+        }
+
+        .message.success {
+          color:var(--accent);
+        }
+
+        .bottom-nav {
+          display:none;
+        }
+
+        @media(max-width:980px) {
+          body {
+            padding-bottom:92px;
+          }
+
+          .app {
+            grid-template-columns:1fr;
+            width:min(720px,96vw);
+            padding-top:16px;
+          }
+
+          .sidebar,
+          .rightbar {
+            display:none;
+          }
+
+          .top-mobile {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding:14px 16px;
+            border-radius:34px;
+          }
+
+          .top-mobile .logo {
+            margin:0;
+            font-size:34px;
+          }
+
+          .mobile-actions {
+            display:flex;
+            gap:10px;
+          }
+
+          .mobile-actions a {
+            width:44px;
+            height:44px;
+            border-radius:50%;
+            display:grid;
+            place-items:center;
+            background:var(--soft);
+          }
+
+          .composer h1 {
+            font-size:34px;
+          }
+
+          .bottom-nav {
+            position:fixed;
+            left:50%;
+            bottom:14px;
+            transform:translateX(-50%);
+            width:min(94vw,520px);
+            height:70px;
+            z-index:999;
+            display:grid;
+            grid-template-columns:1fr 1fr 76px 1fr 1fr;
+            align-items:center;
+            gap:8px;
+            padding:8px;
+            border-radius:999px;
+            background:rgba(16,16,19,.94);
+            border:1px solid var(--line);
+            backdrop-filter:blur(18px);
+            box-shadow:0 18px 60px rgba(0,0,0,.48);
+          }
+
+          .bottom-nav a {
+            height:52px;
+            border-radius:999px;
+            display:grid;
+            place-items:center;
+            color:var(--muted);
+            font-size:10px;
+            font-weight:900;
+          }
+
+          .bottom-nav a svg {
+            width:22px;
+            height:22px;
+          }
+
+          .bottom-nav a span {
+            margin-top:2px;
+          }
+
+          .bottom-nav a.active {
+            color:white;
+            background:rgba(255,255,255,.06);
+          }
+
+          .bottom-nav .create-mobile {
+            width:58px;
+            height:58px;
+            margin:auto;
+            color:black;
+            background:linear-gradient(135deg,var(--accent),var(--accent2));
+            box-shadow:0 0 28px rgba(0,229,255,.24);
+          }
+        }
     </style>
 </head>
-<body>
-<div class="shell">
 
-    <aside class="sidebar">
-        <div class="logo">
-            <div class="logo-ring">
-                <img class="logo-img" src="logo.png" alt="NixyDigital" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-                <div class="logo-img-fallback" style="display:none">NX</div>
-            </div>
-            <div class="logo-name">NixyDigital</div>
-            <div class="logo-sub">// EE LAB v1.0</div>
-        </div>
+<body>
+<div class="app">
+    <aside class="sidebar card">
+        <div class="logo">Nex<span>r</span></div>
+
         <nav class="nav">
-            <div class="nav-label">Navigation</div>
-            <div class="nav-item active" onclick="goTo('dashboard',this)"><span class="nav-icon">⬡</span> Dashboard</div>
-            <div class="nav-item" onclick="goTo('projects',this)"><span class="nav-icon">◈</span> Projects <span class="nav-badge" id="nb-proj">0</span></div>
-            <div class="nav-item" onclick="goTo('kanban',this)"><span class="nav-icon">▦</span> Kanban Board</div>
-            <div class="nav-item" onclick="goTo('tasks',this)"><span class="nav-icon">◻</span> Tasks <span class="nav-badge" id="nb-tasks">0</span></div>
-            <div class="nav-item" onclick="goTo('notes',this)"><span class="nav-icon">◬</span> Notes &amp; Docs</div>
-            <div class="nav-item" onclick="goTo('components',this)"><span class="nav-icon">⬔</span> Components</div>
+            <a class="active" href="index.html"><i data-lucide="home"></i> Home</a>
+            <a href="explore.html"><i data-lucide="compass"></i> Explore</a>
+            <a href="search.html"><i data-lucide="search"></i> Search</a>
+            <a href="notifications.html"><i data-lucide="bell"></i> Notifications</a>
+            <a href="messages.html"><i data-lucide="message-circle"></i> Messages</a>
+            <a href="reels.html"><i data-lucide="clapperboard"></i> Reels</a>
+            <a href="profile.html"><i data-lucide="user"></i> Profile</a>
+            <a href="settings.html"><i data-lucide="settings"></i> Settings</a>
         </nav>
-        <div class="sidebar-footer"><span class="status-dot"></span><span class="status-text">SYSTEM ONLINE</span></div>
+
+        <button class="create-btn" onclick="window.location.href='create.html'">Create</button>
     </aside>
 
-    <div class="main">
-        <div class="topbar">
-            <div class="topbar-title" id="topbar-title">Dashboard</div>
-            <input class="topbar-search" type="text" placeholder="" id="search-input" oninput="handleSearch()">
-            <button class="btn btn-primary" onclick="openModal()">+ New</button>
-        </div>
-
-        <div class="content">
-
-            <!-- DASHBOARD -->
-            <div class="section active" id="sec-dashboard">
-                <div class="welcome-banner">
-                    <div class="welcome-line">// NIXYDIGITAL EE LAB — SYSTEM READY</div>
-                    <div class="welcome-name">Welcome back, <span>Mr. Enzaldo</span></div>
-                    <div class="welcome-sub">Your electrical engineering hub is live. All systems nominal — let's build something great.</div>
-                </div>
-                <div class="stats-grid">
-                    <div class="stat-card"><div class="stat-label">Total Projects</div><div class="stat-value" id="s-proj">0</div><div class="stat-sub">in lab</div></div>
-                    <div class="stat-card"><div class="stat-label">In Progress</div><div class="stat-value" id="s-active">0</div><div class="stat-sub">active builds</div></div>
-                    <div class="stat-card"><div class="stat-label">Open Tasks</div><div class="stat-value" id="s-tasks">0</div><div class="stat-sub">pending</div></div>
-                    <div class="stat-card"><div class="stat-label">Components</div><div class="stat-value" id="s-comps">0</div><div class="stat-sub">in library</div></div>
-                </div>
-                <div class="neon-line"></div>
-                <div class="sec-header">
-                    <div class="sec-title">Recent <span>Projects</span></div>
-                    <button class="btn btn-ghost btn-sm" onclick="goTo('projects',null)">View all →</button>
-                </div>
-                <div class="projects-grid" id="dash-projects"></div>
+    <main class="feed">
+        <header class="top-mobile card">
+            <div class="logo">Nex<span>r</span></div>
+            <div class="mobile-actions">
+                <a href="create.html"><i data-lucide="plus"></i></a>
+                <a href="notifications.html"><i data-lucide="bell"></i></a>
+                <a href="profile.html"><i data-lucide="user"></i></a>
             </div>
+        </header>
 
-            <!-- PROJECTS -->
-            <div class="section" id="sec-projects">
-                <div class="sec-header">
-                    <div class="sec-title">All <span>Projects</span></div>
-                    <div style="display:flex;gap:8px;align-items:center">
-                        <select class="form-select" style="width:auto;padding:7px 12px;font-size:12px" onchange="renderProjects(this.value)">
-                            <option value="all">All Status</option>
-                            <option value="Planning">Planning</option>
-                            <option value="In Progress">In Progress</option>
-                            <option value="Testing">Testing</option>
-                            <option value="Done">Done</option>
-                        </select>
-                        <button class="btn btn-primary btn-sm" onclick="openModal('project')">+ New Project</button>
-                    </div>
-                </div>
-                <div class="projects-grid" id="proj-grid"></div>
+        <section class="composer card">
+            <h1>Nexr Flow</h1>
+            <p>Real posts from real creators. Social, leveled up.</p>
+
+            <div class="tabs">
+                <button class="tab active" data-feed="forYou">For You</button>
+                <button class="tab" data-feed="following">Following</button>
+                <button class="tab" data-feed="rising">Rising</button>
             </div>
+        </section>
 
-            <!-- KANBAN -->
-            <div class="section" id="sec-kanban">
-                <div class="sec-header"><div class="sec-title">Kanban <span>Board</span></div></div>
-                <div class="kanban" id="kanban-board"></div>
+        <section class="pulse card">
+            <div class="pulse-head">
+                <strong>Pulse</strong>
+                <small>Story posts only</small>
             </div>
+            <div class="pulse-row" id="pulseRow"></div>
+        </section>
 
-            <!-- TASKS -->
-            <div class="section" id="sec-tasks">
-                <div class="sec-header">
-                    <div class="sec-title">Tasks <span>&amp; To-Dos</span></div>
-                    <button class="btn btn-primary btn-sm" onclick="openModal('task')">+ New Task</button>
-                </div>
-                <div class="task-list" id="task-list"></div>
-            </div>
+        <div class="message" id="message"></div>
+        <section id="posts"></section>
+    </main>
 
-            <!-- NOTES -->
-            <div class="section" id="sec-notes">
-                <div class="sec-header">
-                    <div class="sec-title">Notes <span>&amp; Docs</span></div>
-                    <button class="btn btn-primary btn-sm" onclick="openModal('note')">+ New Note</button>
-                </div>
-                <div class="notes-grid" id="notes-grid"></div>
-            </div>
+    <aside class="rightbar">
+        <section class="profile-card card">
+            <div class="me" id="meCard"></div>
+        </section>
 
-            <!-- COMPONENTS -->
-            <div class="section" id="sec-components">
-                <div class="sec-header">
-                    <div class="sec-title">Components <span>Library</span></div>
-                    <button class="btn btn-primary btn-sm" onclick="openModal('component')">+ Add Part</button>
-                </div>
-                <div class="table-wrap">
-                    <table class="comp-table">
-                        <thead><tr><th>Part</th><th>Description</th><th>Qty</th><th>Cost/unit</th><th>Supplier</th><th>Projects</th><th>Datasheet</th><th></th></tr></thead>
-                        <tbody id="comp-tbody"></tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
-    </div>
+        <section class="suggest card">
+            <h3>Rising creators</h3>
+            <div id="suggestions"></div>
+        </section>
+    </aside>
 </div>
 
-<!-- Modal -->
-<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
-    <div class="modal">
-        <div class="modal-title" id="modal-title">New Item</div>
-        <div id="modal-body"></div>
-        <div class="modal-actions">
-            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
-            <button class="btn btn-primary" onclick="saveModal()">Save</button>
-        </div>
-    </div>
-</div>
+<nav class="bottom-nav">
+    <a class="active" href="index.html"><i data-lucide="home"></i><span>Home</span></a>
+    <a href="explore.html"><i data-lucide="compass"></i><span>Explore</span></a>
+    <a class="create-mobile" href="create.html"><i data-lucide="plus"></i></a>
+    <a href="search.html"><i data-lucide="search"></i><span>Search</span></a>
+    <a href="profile.html"><i data-lucide="user"></i><span>Profile</span></a>
+</nav>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+    import { auth, db } from "./firebase.js";
+
     import {
-      getAuth,
-      signInWithEmailAndPassword,
-      createUserWithEmailAndPassword,
-      signOut,
       onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
     import {
-      getFirestore,
+      collection,
       doc,
-      setDoc,
       getDoc,
-      serverTimestamp
+      getDocs,
+      query,
+      orderBy,
+      onSnapshot,
+      updateDoc,
+      arrayUnion,
+      arrayRemove,
+      addDoc,
+      deleteDoc,
+      serverTimestamp,
+      limit
     } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCWEzBm2Pwi17okfeumWviLOy8DdDnJ5lU",
-      authDomain: "nixydigital-cb256.firebaseapp.com",
-      projectId: "nixydigital-cb256",
-      storageBucket: "nixydigital-cb256.firebasestorage.app",
-      messagingSenderId: "675908512571",
-      appId: "1:675908512571:web:e4d599840298c04289251e"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    const TAGS = ["MCU","Power","RF","Audio","Analog","Digital","PCB","Sensor","Motor","Wireless","FPGA","DSP"];
-
-    let D = { projects: [], tasks: [], notes: [], components: [] };
-    let mMode = "";
-    let mId = null;
     let currentUser = null;
-    let currentSection = "dashboard";
-
-    const LOCAL_KEY = "nxd_v2";
-
-    const SECTION_TITLES = {
-      dashboard: "Dashboard",
-      projects: "Projects",
-      kanban: "Kanban Board",
-      tasks: "Tasks & To-Dos",
-      notes: "Notes & Docs",
-      components: "Components Library"
-    };
-
-    function uid(){
-      return Date.now().toString(36) + Math.random().toString(36).slice(2,7);
-    }
-
-    function today(){
-      return new Date().toISOString().slice(0,10);
-    }
-
-    function safe(v){
-      return String(v ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-
-    function getUserDoc(){
-      return doc(db, "users", currentUser.uid, "nixydigital", "state");
-    }
-
-    async function save(){
-      try{
-        localStorage.setItem(LOCAL_KEY, JSON.stringify(D));
-
-        if(currentUser){
-          await setDoc(getUserDoc(), {
-            data: D,
-            updatedAt: serverTimestamp()
-          }, { merge: true });
-        }
-      }catch(e){
-        console.error("Save error:", e);
-      }
-    }
-
-    async function load(){
-      try{
-        if(currentUser){
-          const snap = await getDoc(getUserDoc());
-
-          if(snap.exists() && snap.data().data){
-            D = snap.data().data;
-            localStorage.setItem(LOCAL_KEY, JSON.stringify(D));
-          } else {
-            const local = localStorage.getItem(LOCAL_KEY);
-            if(local){
-              D = JSON.parse(local);
-              await save();
-            }
-          }
-        } else {
-          const local = localStorage.getItem(LOCAL_KEY);
-          if(local) D = JSON.parse(local);
-        }
-      }catch(e){
-        console.error("Load error:", e);
-
-        const local = localStorage.getItem(LOCAL_KEY);
-        if(local) D = JSON.parse(local);
-      }
-    }
-
-    function showLogin(){
-      if(document.getElementById("login-overlay")) return;
-
-      const overlay = document.createElement("div");
-      overlay.id = "login-overlay";
-      overlay.style.cssText = `
-        position:fixed;
-        inset:0;
-        z-index:9999;
-        background:rgba(0,0,0,.92);
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        padding:20px;
-        font-family:'Exo 2',sans-serif;
-      `;
-
-      overlay.innerHTML = `
-        <div style="width:380px;max-width:95vw;background:#050505;border:1px solid #3a2a70;border-radius:16px;padding:26px;box-shadow:0 0 50px rgba(139,92,246,.35)">
-          <div style="font-family:'Rajdhani',sans-serif;font-size:26px;font-weight:700;letter-spacing:1px;color:#ede9fe;margin-bottom:4px">
-            NixyDigital Login
-          </div>
-
-          <div style="font-size:13px;color:#a89ec9;margin-bottom:18px">
-            Sign in or create your account to sync your EE Lab anywhere.
-          </div>
-
-          <label style="font-size:11px;color:#4a4060;letter-spacing:1px;text-transform:uppercase;font-family:'Share Tech Mono',monospace">
-            Email
-          </label>
-
-          <input id="login-email" type="email" autocomplete="email" style="width:100%;margin:6px 0 14px;background:#0f0a1f;border:1px solid #1a1030;border-radius:8px;padding:11px 13px;color:#ede9fe;outline:none">
-
-          <label style="font-size:11px;color:#4a4060;letter-spacing:1px;text-transform:uppercase;font-family:'Share Tech Mono',monospace">
-            Password
-          </label>
-
-          <input id="login-pass" type="password" autocomplete="current-password" style="width:100%;margin:6px 0 16px;background:#0f0a1f;border:1px solid #1a1030;border-radius:8px;padding:11px 13px;color:#ede9fe;outline:none">
-
-          <div style="display:flex;gap:10px">
-            <button id="login-btn" style="flex:1;border:none;border-radius:8px;padding:11px 14px;cursor:pointer;color:white;font-weight:700;background:linear-gradient(135deg,#8b5cf6,#3b82f6);box-shadow:0 0 16px rgba(139,92,246,.45)">
-              Login
-            </button>
-
-            <button id="signup-btn" style="flex:1;border:1px solid #3a2a70;border-radius:8px;padding:11px 14px;cursor:pointer;color:#ede9fe;font-weight:700;background:#0a0a0f">
-              Sign Up
-            </button>
-          </div>
-
-          <div id="login-error" style="color:#f87171;font-size:12px;margin-top:12px;min-height:16px"></div>
-        </div>
-      `;
-
-      document.body.appendChild(overlay);
-
-      document.getElementById("login-btn").onclick = async () => {
-        const email = document.getElementById("login-email").value.trim();
-        const pass = document.getElementById("login-pass").value;
-        const err = document.getElementById("login-error");
-
-        try{
-          err.style.color = "#f87171";
-          err.textContent = "";
-
-          if(!email || !pass){
-            err.textContent = "Enter your email and password.";
-            return;
-          }
-
-          await signInWithEmailAndPassword(auth, email, pass);
-        }catch(e){
-          err.style.color = "#f87171";
-
-          if(e.code === "auth/user-not-found" || e.code === "auth/wrong-password" || e.code === "auth/invalid-credential"){
-            err.textContent = "Wrong email or password.";
-          } else if(e.code === "auth/invalid-email"){
-            err.textContent = "Invalid email.";
-          } else {
-            err.textContent = "Login failed. Check Firebase Auth.";
-          }
-        }
-      };
-
-      document.getElementById("signup-btn").onclick = async () => {
-        const email = document.getElementById("login-email").value.trim();
-        const pass = document.getElementById("login-pass").value;
-        const err = document.getElementById("login-error");
-
-        try{
-          err.style.color = "#f87171";
-          err.textContent = "";
-
-          if(!email || !pass){
-            err.textContent = "Enter your email and password.";
-            return;
-          }
-
-          if(pass.length < 6){
-            err.textContent = "Password must be at least 6 characters.";
-            return;
-          }
-
-          await createUserWithEmailAndPassword(auth, email, pass);
-
-          err.style.color = "#4ade80";
-          err.textContent = "Account created. Loading your lab...";
-        }catch(e){
-          err.style.color = "#f87171";
-
-          if(e.code === "auth/email-already-in-use"){
-            err.textContent = "That email already has an account. Login instead.";
-          } else if(e.code === "auth/invalid-email"){
-            err.textContent = "Invalid email.";
-          } else if(e.code === "auth/weak-password"){
-            err.textContent = "Password is too weak.";
-          } else {
-            err.textContent = "Signup failed. Check Firebase Auth is enabled.";
-          }
-        }
-      };
-    }
-
-    function hideLogin(){
-      const overlay = document.getElementById("login-overlay");
-      if(overlay) overlay.remove();
-    }
-
-    function goTo(id, el){
-      currentSection = id;
-
-      document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-      document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
-
-      document.getElementById("sec-" + id).classList.add("active");
-
-      if(el){
-        el.classList.add("active");
-      } else {
-        const nav = [...document.querySelectorAll(".nav-item")]
-          .find(n => n.getAttribute("onclick")?.includes(`'${id}'`));
-        if(nav) nav.classList.add("active");
-      }
-
-      document.getElementById("topbar-title").textContent = SECTION_TITLES[id] || id;
-      renderSection(id);
-    }
-
-    function renderSection(id){
-      updateCounts();
-
-      if(id === "dashboard") renderDashboard();
-      else if(id === "projects") renderProjects("all");
-      else if(id === "kanban") renderKanban();
-      else if(id === "tasks") renderTasks();
-      else if(id === "notes") renderNotes();
-      else if(id === "components") renderComponents();
-    }
-
-    function updateCounts(){
-      document.getElementById("nb-proj").textContent = D.projects.length;
-
-      const open = D.tasks.filter(t => !t.done).length;
-
-      document.getElementById("nb-tasks").textContent = open;
-      document.getElementById("s-proj").textContent = D.projects.length;
-      document.getElementById("s-active").textContent = D.projects.filter(p => p.status === "In Progress").length;
-      document.getElementById("s-tasks").textContent = open;
-      document.getElementById("s-comps").textContent = D.components.length;
-    }
-
-    function badge(s){
-      const cls = safe(s).replace(/\s+/g, "-");
-      return `<span class="badge badge-${cls}">${safe(s)}</span>`;
-    }
-
-    function projCard(p){
-      return `
-        <div class="proj-card">
-          <div class="proj-card-top">
-            <div class="proj-name">${safe(p.name)}</div>
-            ${badge(p.status)}
-          </div>
-
-          <div class="proj-desc">${safe(p.desc)}</div>
-
-          <div class="proj-tags">
-            ${(p.tags || []).map(t => `<span class="tag">${safe(t)}</span>`).join("")}
-          </div>
-
-          <div class="proj-progress">
-            <div class="progress-label">
-              <span>Progress</span>
-              <span>${Number(p.progress || 0)}%</span>
-            </div>
-
-            <div class="progress-bar">
-              <div class="progress-fill" style="width:${Number(p.progress || 0)}%"></div>
-            </div>
-          </div>
-
-          <div class="proj-meta">
-            <span>Budget: $${Number(p.budget || 0)}</span>
-            <span>${(p.components || []).length} parts linked</span>
-          </div>
-
-          <div class="proj-actions">
-            <button class="btn btn-ghost btn-sm" onclick="editProject('${p.id}')">Edit</button>
-            <button class="btn btn-ghost btn-sm" style="color:#f87171;border-color:rgba(239,68,68,0.3)" onclick="del('project','${p.id}')">Delete</button>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderDashboard(){
-      const recent = [...D.projects].reverse().slice(0,3);
-
-      document.getElementById("dash-projects").innerHTML =
-        recent.length ? recent.map(projCard).join("") : empty("⬡", "No projects yet — add your first one!");
-    }
-
-    function renderProjects(filter = "all"){
-      let list = D.projects;
-
-      if(filter !== "all"){
-        list = list.filter(p => p.status === filter);
-      }
-
-      document.getElementById("proj-grid").innerHTML =
-        list.length ? list.map(projCard).join("") : empty("◈", "No projects found.");
-    }
-
-    function renderKanban(){
-      const cols = ["Planning", "In Progress", "Testing", "Done"];
-      const colors = {
-        Planning: "#fbbf24",
-        "In Progress": "#60a5fa",
-        Testing: "#fb923c",
-        Done: "#4ade80"
-      };
-
-      document.getElementById("kanban-board").innerHTML = cols.map(col => {
-        const items = D.projects.filter(p => p.status === col);
-
-        return `
-          <div class="kanban-col">
-            <div class="kanban-col-header">
-              <div class="kanban-col-title" style="color:${colors[col]}">${col}</div>
-              <span class="kanban-count">${items.length}</span>
-            </div>
-
-            ${
-              items.length
-                ? items.map(p => `
-                  <div class="kanban-item" onclick="editProject('${p.id}')">
-                    <div class="kanban-item-title">${safe(p.name)}</div>
-
-                    <div class="kanban-item-tags">
-                      ${(p.tags || []).map(t => `<span class="tag">${safe(t)}</span>`).join("")}
-                    </div>
-
-                    <div style="margin-top:8px">
-                      <div class="progress-bar">
-                        <div class="progress-fill" style="width:${Number(p.progress || 0)}%"></div>
-                      </div>
-                    </div>
-
-                    <div style="font-size:10px;color:var(--text-muted);font-family:'Share Tech Mono',monospace;margin-top:4px">
-                      ${Number(p.progress || 0)}% complete · $${Number(p.budget || 0)} budget
-                    </div>
-                  </div>
-                `).join("")
-                : `<div style="text-align:center;padding:24px 0;color:var(--text-muted);font-size:11px;font-family:'Share Tech Mono',monospace">empty</div>`
-            }
-          </div>
-        `;
-      }).join("");
-    }
-
-    function renderTasks(){
-      document.getElementById("task-list").innerHTML =
-        D.tasks.length ? D.tasks.map(taskHTML).join("") : empty("◻", "No tasks yet. Add one above!");
-    }
-
-    function taskHTML(t){
-      return `
-        <div class="task-item">
-          <div class="task-check ${t.done ? "done" : ""}" onclick="toggleTask('${t.id}')">${t.done ? "✓" : ""}</div>
-
-          <div class="task-info">
-            <div class="task-text ${t.done ? "done" : ""}">${safe(t.text)}</div>
-            <div class="task-proj">${safe(t.project || "No project")}</div>
-          </div>
-
-          <span class="priority priority-${safe(t.priority || "Mid")}">${safe(t.priority || "Mid")}</span>
-
-          <button class="btn btn-ghost btn-sm" style="color:#f87171;border-color:rgba(239,68,68,0.2);margin-left:6px" onclick="del('task','${t.id}')">✕</button>
-        </div>
-      `;
-    }
-
-    async function toggleTask(id){
-      const t = D.tasks.find(x => x.id === id);
-
-      if(t){
-        t.done = !t.done;
-        await save();
-        renderTasks();
-        updateCounts();
-      }
-    }
-
-    function renderNotes(){
-      document.getElementById("notes-grid").innerHTML =
-        D.notes.length
-          ? D.notes.map(noteHTML).join("")
-          : empty("◬", "No notes yet.");
-    }
-
-    function noteHTML(n){
-      return `
-        <div class="note-card" onclick="editNote('${n.id}')">
-          <div class="note-title">${safe(n.title)}</div>
-          <div class="note-body">${safe((n.body || "").slice(0,120))}${(n.body || "").length > 120 ? "…" : ""}</div>
-
-          <div class="note-footer">
-            <span class="note-date">${safe(n.date)}</span>
-            <span class="note-proj-tag">${safe(n.project || "")}</span>
-          </div>
-
-          <div style="display:flex;gap:6px;margin-top:12px" onclick="event.stopPropagation()">
-            <button class="btn btn-ghost btn-sm" onclick="editNote('${n.id}')">Edit</button>
-            <button class="btn btn-ghost btn-sm" style="color:#f87171;border-color:rgba(239,68,68,0.3)" onclick="del('note','${n.id}')">Delete</button>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderComponents(list = D.components){
-      document.getElementById("comp-tbody").innerHTML =
-        list.length
-          ? list.map(c => `
-            <tr>
-              <td class="comp-name">${safe(c.name)}</td>
-              <td>${safe(c.desc)}</td>
-              <td class="comp-qty ${Number(c.qty) <= 2 ? "qty-low" : ""}">${Number(c.qty || 0)}</td>
-              <td class="comp-cost">$${Number(c.cost || 0).toFixed(2)}</td>
-              <td>${safe(c.supplier || "—")}</td>
-              <td style="font-size:11px;color:var(--text-muted)">${safe((c.projects || []).join(", ") || "—")}</td>
-              <td>${c.datasheet ? `<a href="${safe(c.datasheet)}" target="_blank" class="comp-link">View ↗</a>` : "—"}</td>
-
-              <td style="display:flex;gap:4px">
-                <button class="btn btn-ghost btn-sm" onclick="editComponent('${c.id}')">Edit</button>
-                <button class="btn btn-ghost btn-sm" style="color:#f87171;border-color:rgba(239,68,68,0.2)" onclick="del('component','${c.id}')">✕</button>
-              </td>
-            </tr>
-          `).join("")
-          : `<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text-muted);font-family:'Share Tech Mono',monospace;font-size:12px">No components yet.</td></tr>`;
-    }
-
-    function empty(icon, txt){
-      return `
-        <div class="empty-state">
-          <div class="empty-icon">${icon}</div>
-          <div class="empty-text">${safe(txt)}</div>
-        </div>
-      `;
-    }
-
-    async function del(type, id){
-      if(!confirm("Delete this item?")) return;
-
-      if(type === "project") D.projects = D.projects.filter(x => x.id !== id);
-      if(type === "task") D.tasks = D.tasks.filter(x => x.id !== id);
-      if(type === "note") D.notes = D.notes.filter(x => x.id !== id);
-      if(type === "component") D.components = D.components.filter(x => x.id !== id);
-
-      await save();
-      renderSection(currentSection);
-    }
-
-    function openModal(type){
-      if(!type){
-        const cur = currentSection;
-
-        type = {
-          dashboard: "project",
-          projects: "project",
-          kanban: "project",
-          tasks: "task",
-          notes: "note",
-          components: "component"
-        }[cur] || "project";
-      }
-
-      mMode = type;
-      mId = null;
-
-      const titles = {
-        project: "New Project",
-        task: "New Task",
-        note: "New Note",
-        component: "New Component"
-      };
-
-      document.getElementById("modal-title").textContent = titles[type];
-      document.getElementById("modal-body").innerHTML = buildForm(type, {});
-      document.getElementById("modal-overlay").classList.add("open");
-    }
-
-    function closeModal(){
-      document.getElementById("modal-overlay").classList.remove("open");
-      mId = null;
-    }
-
-    function projOpts(sel){
-      return D.projects.map(p => `<option${p.name === sel ? " selected" : ""}>${safe(p.name)}</option>`).join("");
-    }
-
-    function buildForm(type, d){
-      if(type === "project"){
-        return `
-          <div class="form-group">
-            <label class="form-label">Project name</label>
-            <input class="form-input" id="f-name" value="${safe(d.name || "")}" placeholder="">
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Description</label>
-            <textarea class="form-textarea" id="f-desc">${safe(d.desc || "")}</textarea>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Status</label>
-              <select class="form-select" id="f-status">
-                ${["Planning","In Progress","Testing","Done"].map(s => `<option${d.status === s ? " selected" : ""}>${s}</option>`).join("")}
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Progress %</label>
-              <input class="form-input" id="f-progress" type="number" min="0" max="100" value="${Number(d.progress || 0)}">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Budget ($)</label>
-            <input class="form-input" id="f-budget" type="number" value="${Number(d.budget || 0)}">
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Tags</label>
-            <div class="chip-row">
-              ${TAGS.map(t => `<span class="chip${(d.tags || []).includes(t) ? " selected" : ""}" onclick="this.classList.toggle('selected')">${t}</span>`).join("")}
-            </div>
-          </div>
-        `;
-      }
-
-      if(type === "task"){
-        return `
-          <div class="form-group">
-            <label class="form-label">Task</label>
-            <input class="form-input" id="f-text" value="${safe(d.text || "")}" placeholder="">
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Project</label>
-              <select class="form-select" id="f-project">
-                <option value="">— None —</option>
-                ${projOpts(d.project)}
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Priority</label>
-              <select class="form-select" id="f-priority">
-                ${["High","Mid","Low"].map(p => `<option${d.priority === p ? " selected" : ""}>${p}</option>`).join("")}
-              </select>
-            </div>
-          </div>
-        `;
-      }
-
-      if(type === "note"){
-        return `
-          <div class="form-group">
-            <label class="form-label">Title</label>
-            <input class="form-input" id="f-title" value="${safe(d.title || "")}" placeholder="">
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Project</label>
-            <select class="form-select" id="f-project">
-              <option value="">— None —</option>
-              ${projOpts(d.project)}
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Content</label>
-            <textarea class="form-textarea" id="f-body" style="min-height:140px;font-family:'Share Tech Mono',monospace;font-size:12px">${safe(d.body || "")}</textarea>
-          </div>
-        `;
-      }
-
-      if(type === "component"){
-        return `
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Part name</label>
-              <input class="form-input" id="f-name" value="${safe(d.name || "")}" placeholder="">
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Quantity</label>
-              <input class="form-input" id="f-qty" type="number" value="${Number(d.qty || 1)}">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Description</label>
-            <input class="form-input" id="f-desc" value="${safe(d.desc || "")}" placeholder="">
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Cost / unit ($)</label>
-              <input class="form-input" id="f-cost" type="number" step="0.01" value="${Number(d.cost || 0)}">
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Supplier</label>
-              <input class="form-input" id="f-supplier" value="${safe(d.supplier || "")}" placeholder="">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Datasheet URL</label>
-            <input class="form-input" id="f-datasheet" value="${safe(d.datasheet || "")}" placeholder="">
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Used in projects</label>
-            <div class="chip-row">
-              ${D.projects.map(p => `<span class="chip${(d.projects || []).includes(p.name) ? " selected" : ""}" onclick="this.classList.toggle('selected')">${safe(p.name)}</span>`).join("")}
-            </div>
-          </div>
-        `;
-      }
-
-      return "";
-    }
-
-    async function saveModal(){
-      const type = mMode;
-
-      if(type === "project"){
-        const name = document.getElementById("f-name").value.trim();
-
-        if(!name) return alert("Project name required");
-
-        const tags = [...document.querySelectorAll("#modal-body .chip.selected")].map(c => c.textContent);
-
-        const obj = {
-          id: mId || uid(),
-          name,
-          desc: document.getElementById("f-desc").value,
-          status: document.getElementById("f-status").value,
-          progress: Math.min(100, Math.max(0, parseInt(document.getElementById("f-progress").value) || 0)),
-          budget: parseFloat(document.getElementById("f-budget").value) || 0,
-          tags,
-          components: []
-        };
-
-        if(mId){
-          const i = D.projects.findIndex(x => x.id === mId);
-          if(i >= 0) D.projects[i] = { ...D.projects[i], ...obj };
-        } else {
-          D.projects.push(obj);
-        }
-      }
-
-      if(type === "task"){
-        const text = document.getElementById("f-text").value.trim();
-
-        if(!text) return alert("Task text required");
-
-        const obj = {
-          id: mId || uid(),
-          text,
-          project: document.getElementById("f-project").value,
-          priority: document.getElementById("f-priority").value,
-          done: mId ? (D.tasks.find(x => x.id === mId)?.done || false) : false
-        };
-
-        if(mId){
-          const i = D.tasks.findIndex(x => x.id === mId);
-          if(i >= 0) D.tasks[i] = obj;
-        } else {
-          D.tasks.push(obj);
-        }
-      }
-
-      if(type === "note"){
-        const title = document.getElementById("f-title").value.trim();
-
-        if(!title) return alert("Title required");
-
-        const old = D.notes.find(x => x.id === mId);
-
-        const obj = {
-          id: mId || uid(),
-          title,
-          project: document.getElementById("f-project").value,
-          body: document.getElementById("f-body").value,
-          date: old?.date || today()
-        };
-
-        if(mId){
-          const i = D.notes.findIndex(x => x.id === mId);
-          if(i >= 0) D.notes[i] = obj;
-        } else {
-          D.notes.push(obj);
-        }
-      }
-
-      if(type === "component"){
-        const name = document.getElementById("f-name").value.trim();
-
-        if(!name) return alert("Part name required");
-
-        const projects = [...document.querySelectorAll("#modal-body .chip.selected")].map(c => c.textContent);
-
-        const obj = {
-          id: mId || uid(),
-          name,
-          desc: document.getElementById("f-desc").value,
-          qty: parseInt(document.getElementById("f-qty").value) || 0,
-          cost: parseFloat(document.getElementById("f-cost").value) || 0,
-          supplier: document.getElementById("f-supplier").value,
-          datasheet: document.getElementById("f-datasheet").value,
-          projects
-        };
-
-        if(mId){
-          const i = D.components.findIndex(x => x.id === mId);
-          if(i >= 0) D.components[i] = obj;
-        } else {
-          D.components.push(obj);
-        }
-      }
-
-      await save();
-      closeModal();
-      renderSection(currentSection);
-      updateCounts();
-    }
-
-    function editProject(id){
-      const p = D.projects.find(x => x.id === id);
-      if(!p) return;
-
-      mMode = "project";
-      mId = id;
-
-      document.getElementById("modal-title").textContent = "Edit Project";
-      document.getElementById("modal-body").innerHTML = buildForm("project", p);
-      document.getElementById("modal-overlay").classList.add("open");
-    }
-
-    function editNote(id){
-      const n = D.notes.find(x => x.id === id);
-      if(!n) return;
-
-      mMode = "note";
-      mId = id;
-
-      document.getElementById("modal-title").textContent = "Edit Note";
-      document.getElementById("modal-body").innerHTML = buildForm("note", n);
-      document.getElementById("modal-overlay").classList.add("open");
-    }
-
-    function editComponent(id){
-      const c = D.components.find(x => x.id === id);
-      if(!c) return;
-
-      mMode = "component";
-      mId = id;
-
-      document.getElementById("modal-title").textContent = "Edit Component";
-      document.getElementById("modal-body").innerHTML = buildForm("component", c);
-      document.getElementById("modal-overlay").classList.add("open");
-    }
-
-    function handleSearch(){
-      const q = document.getElementById("search-input").value.toLowerCase().trim();
-
-      if(!q){
-        renderSection(currentSection);
+    let currentUserData = null;
+    let allPosts = [];
+    let allUsers = [];
+    let activeFeed = "forYou";
+
+    const postsEl = document.getElementById("posts");
+    const pulseRow = document.getElementById("pulseRow");
+    const messageEl = document.getElementById("message");
+    const meCard = document.getElementById("meCard");
+    const suggestionsEl = document.getElementById("suggestions");
+
+    onAuthStateChanged(auth, async user => {
+      if (!user) {
+        window.location.href = "login.html";
         return;
       }
 
-      if(currentSection === "projects"){
-        const f = D.projects.filter(p =>
-          (p.name || "").toLowerCase().includes(q) ||
-          (p.desc || "").toLowerCase().includes(q) ||
-          (p.tags || []).some(t => t.toLowerCase().includes(q))
-        );
+      currentUser = user;
+      currentUserData = await getUserData(user.uid);
 
-        document.getElementById("proj-grid").innerHTML =
-          f.length ? f.map(projCard).join("") : empty("◈", `No results for "${q}"`);
+      renderMe();
+      await loadUsers();
+      renderSuggestions();
+      listenForPosts();
+    });
+
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(item => item.classList.remove("active"));
+        tab.classList.add("active");
+        activeFeed = tab.dataset.feed;
+        renderPosts();
+      });
+    });
+
+    async function getUserData(uid) {
+      const userRef = doc(db, "users", uid);
+      const snapshot = await getDoc(userRef);
+
+      if (!snapshot.exists()) {
+        return {
+          uid,
+          username: currentUser.displayName || currentUser.email.split("@")[0],
+          email: currentUser.email || "",
+          avatarUrl: currentUser.photoURL || "",
+          bio: "Social, leveled up.",
+          followers: [],
+          following: [],
+          savedPosts: []
+        };
       }
 
-      if(currentSection === "tasks"){
-        const f = D.tasks.filter(t =>
-          (t.text || "").toLowerCase().includes(q) ||
-          (t.project || "").toLowerCase().includes(q)
-        );
+      return {
+        uid,
+        followers: [],
+        following: [],
+        savedPosts: [],
+        ...snapshot.data()
+      };
+    }
 
-        document.getElementById("task-list").innerHTML =
-          f.length ? f.map(taskHTML).join("") : empty("◻", `No tasks matching "${q}"`);
+    async function loadUsers() {
+      const snapshot = await getDocs(collection(db, "users"));
+
+      allUsers = snapshot.docs.map(userDoc => ({
+        id: userDoc.id,
+        uid: userDoc.id,
+        followers: [],
+        following: [],
+        savedPosts: [],
+        ...userDoc.data()
+      }));
+    }
+
+    function listenForPosts() {
+      const postsQuery = query(
+        collection(db, "posts"),
+        orderBy("createdAt", "desc"),
+        limit(80)
+      );
+
+      onSnapshot(postsQuery, snapshot => {
+        allPosts = snapshot.docs.map(postDoc => ({
+          id: postDoc.id,
+          likedBy: [],
+          savedBy: [],
+          likesCount: 0,
+          commentsCount: 0,
+          commentPreview: [],
+          isStory: false,
+          ...postDoc.data()
+        }));
+
+        renderPulse();
+        renderPosts();
+      }, error => {
+        console.error(error);
+        showMessage(error.message, false);
+      });
+    }
+
+    function renderMe() {
+      meCard.innerHTML = `
+        ${getAvatarHTML(currentUserData, "avatar")}
+        <div class="me-info">
+          <strong>${escapeHTML(currentUserData.username || "creator")}</strong>
+          <small>${escapeHTML(currentUserData.bio || "Social, leveled up.")}</small>
+        </div>
+      `;
+
+      lucide.createIcons();
+    }
+
+    function renderPulse() {
+      const stories = allPosts.filter(post => post.isStory === true && getPostImage(post));
+
+      if (!stories.length) {
+        pulseRow.innerHTML = `<div class="empty">No Pulse stories yet. Create one with the Pulse toggle.</div>`;
+        return;
       }
 
-      if(currentSection === "notes"){
-        const f = D.notes.filter(n =>
-          (n.title || "").toLowerCase().includes(q) ||
-          (n.body || "").toLowerCase().includes(q) ||
-          (n.project || "").toLowerCase().includes(q)
-        );
+      pulseRow.innerHTML = stories.map(post => `
+        <a class="story" href="post.html?id=${post.id}">
+          <div class="story-ring">
+            <div class="story-inner">
+              <img src="${getPostImage(post)}" alt="${escapeHTML(post.username || "Story")}">
+            </div>
+          </div>
+          <span>${escapeHTML(post.username || "creator")}</span>
+        </a>
+      `).join("");
+    }
 
-        document.getElementById("notes-grid").innerHTML =
-          f.length ? f.map(noteHTML).join("") : empty("◬", `No notes matching "${q}"`);
+    function renderPosts() {
+      let posts = [...allPosts];
+
+      if (activeFeed === "following") {
+        const following = currentUserData.following || [];
+        posts = posts.filter(post => following.includes(post.userId));
       }
 
-      if(currentSection === "components"){
-        const f = D.components.filter(c =>
-          (c.name || "").toLowerCase().includes(q) ||
-          (c.desc || "").toLowerCase().includes(q) ||
-          (c.supplier || "").toLowerCase().includes(q) ||
-          (c.projects || []).some(p => p.toLowerCase().includes(q))
-        );
+      if (activeFeed === "rising") {
+        posts = posts.sort((a, b) => {
+          const aScore = (a.likesCount || 0) + (a.commentsCount || 0) * 2;
+          const bScore = (b.likesCount || 0) + (b.commentsCount || 0) * 2;
+          return bScore - aScore;
+        });
+      }
 
-        renderComponents(f);
+      if (!posts.length) {
+        postsEl.innerHTML = `<article class="card empty">No posts here yet.</article>`;
+        return;
+      }
+
+      postsEl.innerHTML = posts.map(post => createPostHTML(post)).join("");
+      lucide.createIcons();
+      attachPostEvents();
+    }
+
+    function createPostHTML(post) {
+      const liked = (post.likedBy || []).includes(currentUser.uid);
+      const saved = (post.savedBy || []).includes(currentUser.uid);
+      const ownPost = post.userId === currentUser.uid;
+      const following = (currentUserData.following || []).includes(post.userId);
+      const image = getPostImage(post);
+
+      return `
+        <article class="post card" data-post-id="${post.id}" data-user-id="${post.userId}">
+          <div class="post-head">
+            <a class="user-link" href="profile.html?uid=${post.userId}">
+              ${getAvatarHTML(post, "avatar")}
+              <div class="user-meta">
+                <strong>${escapeHTML(post.username || "creator")}</strong>
+                <small>${formatDate(post.createdAt)} ${post.isStory ? "• Pulse" : ""}</small>
+              </div>
+            </a>
+
+            ${ownPost ? `
+              <button class="icon-btn danger" data-action="delete" title="Delete post">
+                <i data-lucide="trash-2"></i>
+              </button>
+            ` : `
+              <button class="follow-btn ${following ? "following" : ""}" data-action="follow">
+                ${following ? "Following" : "Follow"}
+              </button>
+            `}
+          </div>
+
+          ${image ? `<a href="post.html?id=${post.id}"><img class="post-img" src="${image}" alt="Nexr post"></a>` : ""}
+
+          <div class="post-body">
+            <div class="actions">
+              <div class="action-left">
+                <button class="icon-btn ${liked ? "active" : ""}" data-action="like" aria-label="Like">
+                  <i data-lucide="heart"></i>
+                </button>
+
+                <a class="icon-btn" href="post.html?id=${post.id}" aria-label="Comment">
+                  <i data-lucide="message-circle"></i>
+                </a>
+
+                <button class="icon-btn" data-action="share" aria-label="Share">
+                  <i data-lucide="send"></i>
+                </button>
+              </div>
+
+              <button class="icon-btn ${saved ? "saved" : ""}" data-action="save" aria-label="Save">
+                <i data-lucide="bookmark"></i>
+              </button>
+            </div>
+
+            <strong>${post.likesCount || 0} likes</strong>
+
+            <p class="caption">
+              <strong>${escapeHTML(post.username || "creator")}</strong>
+              ${escapeHTML(post.caption || "")}
+            </p>
+
+            <a class="comments-link" href="post.html?id=${post.id}">
+              View ${post.commentsCount || 0} comments
+            </a>
+          </div>
+        </article>
+      `;
+    }
+
+    function attachPostEvents() {
+      document.querySelectorAll("[data-action='like']").forEach(button => {
+        button.addEventListener("click", async () => {
+          const postEl = button.closest(".post");
+          await toggleLike(postEl.dataset.postId);
+        });
+      });
+
+      document.querySelectorAll("[data-action='save']").forEach(button => {
+        button.addEventListener("click", async () => {
+          const postEl = button.closest(".post");
+          await toggleSave(postEl.dataset.postId);
+        });
+      });
+
+      document.querySelectorAll("[data-action='follow']").forEach(button => {
+        button.addEventListener("click", async () => {
+          const postEl = button.closest(".post");
+          await toggleFollow(postEl.dataset.userId);
+        });
+      });
+
+      document.querySelectorAll("[data-action='delete']").forEach(button => {
+        button.addEventListener("click", async () => {
+          const postEl = button.closest(".post");
+          await deleteOwnPost(postEl.dataset.postId);
+        });
+      });
+
+      document.querySelectorAll("[data-action='share']").forEach(button => {
+        button.addEventListener("click", async () => {
+          const postEl = button.closest(".post");
+          const url = `${window.location.origin}${window.location.pathname.replace("index.html", "")}post.html?id=${postEl.dataset.postId}`;
+
+          try {
+            await navigator.clipboard.writeText(url);
+            showMessage("Post link copied.", true);
+          } catch {
+            showMessage("Could not copy link.", false);
+          }
+        });
+      });
+    }
+
+    async function toggleLike(postId) {
+      const post = allPosts.find(item => item.id === postId);
+      if (!post) return;
+
+      const liked = (post.likedBy || []).includes(currentUser.uid);
+      const postRef = doc(db, "posts", postId);
+
+      await updateDoc(postRef, {
+        likedBy: liked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid),
+        likesCount: liked ? Math.max((post.likesCount || 0) - 1, 0) : (post.likesCount || 0) + 1
+      });
+
+      if (!liked && post.userId !== currentUser.uid) {
+        await createNotification(post.userId, "like", "liked your post", postId);
       }
     }
 
-    onAuthStateChanged(auth, async user => {
-      currentUser = user;
+    async function toggleSave(postId) {
+      const saved = (currentUserData.savedPosts || []).includes(postId);
+      const userRef = doc(db, "users", currentUser.uid);
+      const postRef = doc(db, "posts", postId);
 
-      if(user){
-        hideLogin();
-        await load();
-        renderSection("dashboard");
-      } else {
-        await load();
-        renderSection("dashboard");
-        showLogin();
+      await updateDoc(userRef, {
+        savedPosts: saved ? arrayRemove(postId) : arrayUnion(postId)
+      });
+
+      await updateDoc(postRef, {
+        savedBy: saved ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+      });
+
+      currentUserData.savedPosts = saved
+        ? (currentUserData.savedPosts || []).filter(id => id !== postId)
+        : [...(currentUserData.savedPosts || []), postId];
+
+      renderPosts();
+    }
+
+    async function toggleFollow(targetUserId) {
+      if (!targetUserId || targetUserId === currentUser.uid) return;
+
+      const following = (currentUserData.following || []).includes(targetUserId);
+      const currentUserRef = doc(db, "users", currentUser.uid);
+      const targetUserRef = doc(db, "users", targetUserId);
+
+      await updateDoc(currentUserRef, {
+        following: following ? arrayRemove(targetUserId) : arrayUnion(targetUserId)
+      });
+
+      await updateDoc(targetUserRef, {
+        followers: following ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+      });
+
+      currentUserData.following = following
+        ? (currentUserData.following || []).filter(id => id !== targetUserId)
+        : [...(currentUserData.following || []), targetUserId];
+
+      if (!following) {
+        await createNotification(targetUserId, "follow", "started following you");
       }
-    });
 
-    window.goTo = goTo;
-    window.openModal = openModal;
-    window.closeModal = closeModal;
-    window.saveModal = saveModal;
-    window.editProject = editProject;
-    window.editNote = editNote;
-    window.editComponent = editComponent;
-    window.del = del;
-    window.toggleTask = toggleTask;
-    window.handleSearch = handleSearch;
-    window.renderProjects = renderProjects;
-    window.signOutNixy = () => signOut(auth);
+      renderPosts();
+      renderSuggestions();
+    }
+
+    async function deleteOwnPost(postId) {
+      const post = allPosts.find(item => item.id === postId);
+
+      if (!post) {
+        showMessage("Post not found.", false);
+        return;
+      }
+
+      if (post.userId !== currentUser.uid) {
+        showMessage("You can only delete your own posts.", false);
+        return;
+      }
+
+      const confirmed = confirm("Delete this post? This cannot be undone.");
+      if (!confirmed) return;
+
+      await deleteDoc(doc(db, "posts", postId));
+      showMessage("Post deleted.", true);
+    }
+
+    async function createNotification(toUserId, type, text, postId = "") {
+      await addDoc(collection(db, "notifications"), {
+        toUserId,
+        fromUserId: currentUser.uid,
+        fromUsername: currentUserData.username || "creator",
+        type,
+        text,
+        postId,
+        read: false,
+        createdAt: serverTimestamp()
+      });
+    }
+
+    function renderSuggestions() {
+      const following = currentUserData.following || [];
+
+      const suggestions = allUsers
+        .filter(user => user.uid !== currentUser.uid)
+        .filter(user => !following.includes(user.uid))
+        .slice(0, 5);
+
+      if (!suggestions.length) {
+        suggestionsEl.innerHTML = `<div class="empty">No suggestions yet.</div>`;
+        return;
+      }
+
+      suggestionsEl.innerHTML = suggestions.map(user => `
+        <div class="suggest-item">
+          <a class="suggest-user" href="profile.html?uid=${user.uid}">
+            ${getAvatarHTML(user, "avatar")}
+            <div>
+              <strong>${escapeHTML(user.username || "creator")}</strong>
+              <small>${(user.followers || []).length} followers</small>
+            </div>
+          </a>
+
+          <button class="follow-btn" data-suggest-follow="${user.uid}">
+            Follow
+          </button>
+        </div>
+      `).join("");
+
+      document.querySelectorAll("[data-suggest-follow]").forEach(button => {
+        button.addEventListener("click", async () => {
+          await toggleFollow(button.dataset.suggestFollow);
+        });
+      });
+
+      lucide.createIcons();
+    }
+
+    function getAvatarHTML(data, className) {
+      const name = data.username || data.displayName || "N";
+      const avatarUrl = data.avatarUrl || data.photoURL || "";
+
+      if (avatarUrl) {
+        return `<div class="${className}"><img src="${avatarUrl}" alt="${escapeHTML(name)}"></div>`;
+      }
+
+      return `<div class="${className}">${escapeHTML(name.charAt(0).toUpperCase())}</div>`;
+    }
+
+    function getPostImage(post) {
+      return post.imageData || post.imageUrl || "";
+    }
+
+    function formatDate(timestamp) {
+      if (!timestamp || !timestamp.toDate) return "Just now";
+
+      const date = timestamp.toDate();
+      const diff = Date.now() - date.getTime();
+      const minutes = Math.floor(diff / 60000);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+
+      if (minutes < 1) return "Just now";
+      if (minutes < 60) return `${minutes}m ago`;
+      if (hours < 24) return `${hours}h ago`;
+      if (days < 7) return `${days}d ago`;
+
+      return date.toLocaleDateString();
+    }
+
+    function showMessage(text, success = false) {
+      messageEl.textContent = text;
+      messageEl.classList.toggle("success", success);
+
+      if (text) {
+        setTimeout(() => {
+          messageEl.textContent = "";
+          messageEl.classList.remove("success");
+        }, 2600);
+      }
+    }
+
+    function escapeHTML(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    lucide.createIcons();
 </script>
-
 </body>
 </html>
