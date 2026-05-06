@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexr — Notifications</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+          --bg:#050505;
+          --panel:rgba(16,16,19,.9);
+          --soft:rgba(255,255,255,.045);
+          --line:#26262c;
+          --text:#fff;
+          --muted:#a1a1aa;
+          --accent:#00e5ff;
+          --accent2:#7c3aed;
+          --hot:#ff2bd6;
+          --danger:#ff4d6d;
+        }
+
+        * { box-sizing:border-box; }
+
+        body {
+          margin:0;
+          min-height:100vh;
+          color:var(--text);
+          font-family:Arial,sans-serif;
+          background:
+            radial-gradient(circle at 15% 5%, rgba(0,229,255,.14), transparent 32%),
+            radial-gradient(circle at 85% 15%, rgba(124,58,237,.2), transparent 34%),
+            radial-gradient(circle at 45% 100%, rgba(255,43,214,.1), transparent 32%),
+            var(--bg);
+        }
+
+        a { color:inherit; text-decoration:none; }
+        button { font-family:inherit; cursor:pointer; transition:.18s ease; }
+        button:hover { transform:translateY(-2px); }
+        button:active { transform:scale(.96); }
+        svg { width:21px; height:21px; }
+
+        .page {
+          width:min(820px,94vw);
+          margin:auto;
+          padding:26px 0 70px;
+        }
+
+        .topbar {
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          margin-bottom:20px;
+        }
+
+        .logo {
+          font-size:34px;
+          font-weight:950;
+          letter-spacing:-1px;
+        }
+
+        .logo span {
+          color:var(--accent);
+          text-shadow:0 0 18px var(--accent);
+        }
+
+        .back {
+          display:inline-flex;
+          align-items:center;
+          gap:8px;
+          color:var(--muted);
+          font-weight:850;
+        }
+
+        .card {
+          background:var(--panel);
+          border:1px solid var(--line);
+          border-radius:30px;
+          backdrop-filter:blur(18px);
+          box-shadow:0 20px 80px rgba(0,0,0,.24);
+        }
+
+        .header-card {
+          padding:20px;
+          margin-bottom:16px;
+        }
+
+        .header-row {
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:16px;
+        }
+
+        h1 {
+          margin:0;
+          font-size:40px;
+          letter-spacing:-2px;
+        }
+
+        .sub {
+          color:var(--muted);
+          line-height:1.6;
+          margin:8px 0 0;
+        }
+
+        .mark-btn {
+          border:0;
+          border-radius:999px;
+          padding:12px 16px;
+          font-weight:950;
+          background:linear-gradient(135deg,var(--accent),var(--accent2));
+          color:black;
+          white-space:nowrap;
+        }
+
+        .list {
+          display:grid;
+          gap:12px;
+        }
+
+        .notification {
+          padding:15px;
+          display:grid;
+          grid-template-columns:auto 1fr auto;
+          gap:13px;
+          align-items:center;
+          position:relative;
+          overflow:hidden;
+        }
+
+        .notification.unread {
+          border-color:rgba(0,229,255,.55);
+          background:
+            linear-gradient(90deg, rgba(0,229,255,.08), transparent 45%),
+            var(--panel);
+        }
+
+        .icon {
+          width:46px;
+          height:46px;
+          border-radius:50%;
+          display:grid;
+          place-items:center;
+          background:#121216;
+          border:1px solid var(--line);
+          color:var(--accent);
+        }
+
+        .icon.like { color:var(--hot); }
+        .icon.comment { color:var(--accent); }
+        .icon.follow { color:var(--accent2); }
+
+        .notification-main {
+          min-width:0;
+        }
+
+        .notification-main strong {
+          display:block;
+          margin-bottom:4px;
+        }
+
+        .notification-main p {
+          margin:0;
+          color:#e8e8ee;
+          line-height:1.45;
+        }
+
+        .notification-main small {
+          display:block;
+          color:var(--muted);
+          margin-top:6px;
+        }
+
+        .actions {
+          display:flex;
+          gap:8px;
+        }
+
+        .icon-btn {
+          border:0;
+          background:transparent;
+          color:var(--muted);
+          width:38px;
+          height:38px;
+          border-radius:50%;
+          display:grid;
+          place-items:center;
+        }
+
+        .icon-btn:hover {
+          background:var(--soft);
+          color:white;
+        }
+
+        .empty,
+        .message {
+          color:var(--muted);
+          text-align:center;
+          padding:28px;
+        }
+
+        .message.error {
+          color:var(--danger);
+        }
+
+        @media(max-width:650px) {
+          h1 {
+            font-size:32px;
+          }
+
+          .header-row {
+            align-items:flex-start;
+            flex-direction:column;
+          }
+
+          .mark-btn {
+            width:100%;
+          }
+
+          .notification {
+            grid-template-columns:auto 1fr;
+          }
+
+          .actions {
+            grid-column:1 / -1;
+            justify-content:flex-end;
+          }
+        }
+    </style>
+</head>
+
+<body>
+<main class="page">
+    <header class="topbar">
+        <a class="back" href="index.html"><i data-lucide="arrow-left"></i> Flow</a>
+        <div class="logo">Nex<span>r</span></div>
+    </header>
+
+    <section class="header-card card">
+        <div class="header-row">
+            <div>
+                <h1>Notifications</h1>
+                <p class="sub">Likes, comments, follows, and creator activity.</p>
+            </div>
+
+            <button class="mark-btn" id="markAllBtn">
+                <i data-lucide="check-check"></i>
+                Mark all read
+            </button>
+        </div>
+    </section>
+
+    <section class="list" id="notificationsList">
+        <article class="card message">Loading notifications...</article>
+    </section>
+</main>
+
+<script type="module">
+    import { auth, db } from "./firebase.js";
+
+    import {
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+    import {
+      collection,
+      query,
+      where,
+      onSnapshot,
+      doc,
+      updateDoc,
+      deleteDoc
+    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+    let currentUser = null;
+    let notifications = [];
+    let unsubscribe = null;
+
+    const notificationsList = document.getElementById("notificationsList");
+    const markAllBtn = document.getElementById("markAllBtn");
+    const unreadBadge = document.getElementById("unreadBadge");
+
+    onAuthStateChanged(auth, async user => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      currentUser = user;
+      listenForNotifications();
+    });
+
+    markAllBtn.addEventListener("click", markAllRead);
+
+    function listenForNotifications() {
+      // Unsubscribe any previous listener
+      if (unsubscribe) unsubscribe();
+
+      const q = query(
+        collection(db, "notifications"),
+        where("toUserId", "==", currentUser.uid)
+      );
+
+      unsubscribe = onSnapshot(q, snapshot => {
+        notifications = snapshot.docs.map(d => ({
+          id: d.id,
+          read: false,
+          type: "activity",
+          text: "sent you a notification",
+          ...d.data()
+        }));
+
+        notifications.sort((a, b) => {
+          const aTime = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+          const bTime = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+          return bTime - aTime;
+        });
+
+        renderNotifications();
+        updateBadge();
+      }, error => {
+        console.error(error);
+        notificationsList.innerHTML = `
+          <article class="card message error">
+            Could not load notifications: ${escapeHTML(error.message)}
+          </article>
+        `;
+      });
+    }
+
+    function updateBadge() {
+      const unread = notifications.filter(n => !n.read).length;
+      if (unreadBadge) {
+        unreadBadge.textContent = unread > 0 ? (unread > 99 ? "99+" : unread) : "";
+        unreadBadge.style.display = unread > 0 ? "inline-block" : "none";
+      }
+    }
+
+    function renderNotifications() {
+      if (!notifications.length) {
+        notificationsList.innerHTML = `
+          <article class="card empty">
+            No notifications yet.
+          </article>
+        `;
+        return;
+      }
+
+      notificationsList.innerHTML = notifications.map(notification => `
+        <article class="notification card ${notification.read ? "" : "unread"}" data-id="${notification.id}">
+          <div class="icon ${escapeHTML(notification.type)}">
+            <i data-lucide="${getIcon(notification.type)}"></i>
+          </div>
+
+          <a class="notification-main" href="${getNotificationLink(notification)}">
+            <strong>${escapeHTML(notification.fromUsername || "Someone")}</strong>
+            <p>${escapeHTML(notification.text || "sent you a notification")}</p>
+            <small>${formatDate(notification.createdAt)}</small>
+          </a>
+
+          <div class="actions">
+            ${notification.read ? "" : `
+              <button class="icon-btn" data-action="read" title="Mark read">
+                <i data-lucide="check"></i>
+              </button>
+            `}
+
+            <button class="icon-btn" data-action="delete" title="Delete notification">
+              <i data-lucide="trash-2"></i>
+            </button>
+          </div>
+        </article>
+      `).join("");
+
+      attachEvents();
+      lucide.createIcons();
+    }
+
+    function attachEvents() {
+      document.querySelectorAll("[data-action='read']").forEach(button => {
+        button.addEventListener("click", async event => {
+          event.preventDefault();
+          const item = button.closest(".notification");
+          await markRead(item.dataset.id);
+        });
+      });
+
+      document.querySelectorAll("[data-action='delete']").forEach(button => {
+        button.addEventListener("click", async event => {
+          event.preventDefault();
+          const item = button.closest(".notification");
+          await removeNotification(item.dataset.id);
+        });
+      });
+
+      document.querySelectorAll(".notification-main").forEach(link => {
+        link.addEventListener("click", async () => {
+          const item = link.closest(".notification");
+          const notification = notifications.find(note => note.id === item.dataset.id);
+
+          if (notification && !notification.read) {
+            await updateDoc(doc(db, "notifications", notification.id), {
+              read: true
+            });
+          }
+        });
+      });
+    }
+
+    async function markRead(notificationId) {
+      await updateDoc(doc(db, "notifications", notificationId), {
+        read: true
+      });
+
+      notifications = notifications.map(notification => {
+        if (notification.id === notificationId) {
+          return { ...notification, read: true };
+        }
+
+        return notification;
+      });
+
+      renderNotifications();
+    }
+
+    async function markAllRead() {
+      const unread = notifications.filter(notification => !notification.read);
+
+      if (!unread.length) return;
+
+      await Promise.all(
+        unread.map(notification =>
+          updateDoc(doc(db, "notifications", notification.id), {
+            read: true
+          })
+        )
+      );
+
+      notifications = notifications.map(notification => ({
+        ...notification,
+        read: true
+      }));
+
+      renderNotifications();
+    }
+
+    async function removeNotification(notificationId) {
+      await deleteDoc(doc(db, "notifications", notificationId));
+
+      notifications = notifications.filter(notification => notification.id !== notificationId);
+      renderNotifications();
+    }
+
+    function getIcon(type) {
+      if (type === "like") return "heart";
+      if (type === "comment") return "message-circle";
+      if (type === "follow") return "user-plus";
+      return "bell";
+    }
+
+    function getNotificationLink(notification) {
+      if (notification.postId) {
+        return `post.html?id=${encodeURIComponent(notification.postId)}`;
+      }
+
+      if (notification.fromUserId) {
+        return `profile.html?uid=${encodeURIComponent(notification.fromUserId)}`;
+      }
+
+      return "index.html";
+    }
+
+    function formatDate(timestamp) {
+      if (!timestamp || !timestamp.toDate) return "Just now";
+
+      const date = timestamp.toDate();
+      const diff = Date.now() - date.getTime();
+      const minutes = Math.floor(diff / 60000);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+
+      if (minutes < 1) return "Just now";
+      if (minutes < 60) return `${minutes}m ago`;
+      if (hours < 24) return `${hours}h ago`;
+      if (days < 7) return `${days}d ago`;
+
+      return date.toLocaleDateString();
+    }
+
+    function escapeHTML(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    lucide.createIcons();
+</script>
+</body>
+</html>

@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexr — Profile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg:#050507;
+      --panel:rgba(14,14,18,.88);
+      --soft:rgba(255,255,255,.045);
+      --line:rgba(255,255,255,.08);
+      --text:#f0f0f5;
+      --muted:#8888a0;
+      --accent:#00e5ff;
+      --accent2:#7c3aed;
+      --hot:#ff2bd6;
+      --danger:#ff4d6d;
+    }
+
+    * { box-sizing:border-box; }
+
+    body {
+      margin:0;
+      min-height:100vh;
+      color:var(--text);
+      font-family:'DM Sans',Arial,sans-serif;
+      background:
+        radial-gradient(circle at 15% 5%, rgba(0,229,255,.14), transparent 32%),
+        radial-gradient(circle at 85% 15%, rgba(124,58,237,.2), transparent 34%),
+        radial-gradient(circle at 45% 100%, rgba(255,43,214,.1), transparent 32%),
+        var(--bg);
+    }
+
+    a { color:inherit; text-decoration:none; }
+    button { font-family:inherit; cursor:pointer; transition:.18s ease; }
+    button:hover { transform:translateY(-2px); }
+    button:active { transform:scale(.96); }
+    svg { width:21px; height:21px; }
+
+    .page {
+      width:min(1050px,94vw);
+      margin:auto;
+      padding:26px 0 70px;
+    }
+
+    .topbar {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    .logo {
+      font-size:34px;
+      font-weight:950;
+      letter-spacing:-1px;
+      font-family:'Space Grotesk',Arial,sans-serif;
+        }
+
+    .logo span {
+      color:var(--accent);
+      text-shadow:0 0 18px var(--accent);
+    }
+
+    .back {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:var(--muted);
+      font-weight:850;
+    }
+
+    .card {
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:30px;
+      backdrop-filter:blur(18px);
+      box-shadow:0 20px 80px rgba(0,0,0,.24);
+    }
+
+    .profile-card {
+      padding:22px;
+    }
+
+    .profile-top {
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      gap:20px;
+      align-items:center;
+    }
+
+    .avatar {
+      width:110px;
+      height:110px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:black;
+      font-size:42px;
+      font-weight:950;
+      overflow:hidden;
+      box-shadow:0 0 34px rgba(0,229,255,.18);
+    }
+
+    .avatar img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .profile-info h1 {
+      margin:0;
+      font-size:42px;
+      letter-spacing:-2px;
+    }
+
+    .profile-info p {
+      color:var(--muted);
+      line-height:1.6;
+      margin:8px 0 0;
+    }
+
+    .stats {
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
+    .stat {
+      min-width:96px;
+      padding:12px;
+      border-radius:18px;
+      background:rgba(255,255,255,.04);
+      border:1px solid var(--line);
+    }
+
+    .stat strong,
+    .stat small {
+      display:block;
+    }
+
+    .stat small {
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    .profile-actions {
+      display:grid;
+      gap:10px;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      border-radius:999px;
+      padding:12px 17px;
+      font-weight:950;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      white-space:nowrap;
+    }
+
+    .primary-btn {
+      border:0;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:black;
+    }
+
+    .secondary-btn {
+      border:1px solid var(--line);
+      background:#121216;
+      color:white;
+    }
+
+    .secondary-btn.muted {
+      color:var(--muted);
+      background:transparent;
+    }
+
+    .tabs {
+      display:flex;
+      gap:10px;
+      margin:18px 0;
+    }
+
+    .tab {
+      border:1px solid var(--line);
+      background:#101014;
+      color:var(--muted);
+      border-radius:999px;
+      padding:10px 15px;
+      font-weight:900;
+    }
+
+    .tab.active {
+      color:black;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+    }
+
+    .grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+    }
+
+    .post-tile {
+      position:relative;
+      aspect-ratio:1/1;
+      overflow:hidden;
+      border-radius:24px;
+      border:1px solid var(--line);
+      background:#09090b;
+      display:grid;
+      place-items:center;
+      color:var(--muted);
+    }
+
+    .post-tile img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      transition:.25s ease;
+    }
+
+    .post-tile:hover img {
+      transform:scale(1.06);
+    }
+
+    .tile-overlay {
+      position:absolute;
+      inset:auto 0 0;
+      padding:12px;
+      background:linear-gradient(transparent,rgba(0,0,0,.78));
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      font-weight:900;
+    }
+
+    .tile-overlay span {
+      display:flex;
+      align-items:center;
+      gap:5px;
+    }
+
+    .text-tile {
+      padding:18px;
+      text-align:left;
+      align-items:end;
+      justify-items:start;
+    }
+
+    .empty,
+    .message {
+      color:var(--muted);
+      text-align:center;
+      padding:26px;
+    }
+
+    .message.error {
+      color:var(--danger);
+    }
+
+    @media(max-width:760px) {
+      .page { padding-bottom: 90px; }
+
+      .profile-top {
+        grid-template-columns:1fr;
+        text-align:center;
+      }
+
+      .avatar {
+        margin:auto;
+      }
+
+      .profile-actions {
+        grid-template-columns:1fr 1fr;
+      }
+
+      .stats {
+        justify-content:center;
+      }
+
+      .profile-info h1 {
+        font-size:34px;
+      }
+
+      .grid {
+        grid-template-columns:repeat(2,1fr);
+      }
+    }
+  </style>
+</head>
+
+<body>
+<main class="page">
+  <header class="topbar">
+    <a class="back" href="index.html"><i data-lucide="arrow-left"></i> Flow</a>
+    <div class="logo">Nex<span>r</span></div>
+  </header>
+
+  <section class="profile-card card" id="profileCard">
+    <div class="message">Loading profile...</div>
+  </section>
+
+  <div class="tabs" id="tabs"></div>
+
+  <section class="grid" id="postsGrid"></section>
+</main>
+
+<script type="module">
+  import { injectMobileNav } from "./nav.js";
+injectMobileNav("profile");
+
+import { auth, db } from "./firebase.js";
+
+import {
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+import {
+  collection,
+  doc,
+  getDoc,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  setDoc,
+  arrayUnion,
+  arrayRemove,
+  addDoc,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+let currentUser = null;
+let currentUserData = null;
+let profileUserId = null;
+let profileUserData = null;
+let userPosts = [];
+let savedPosts = [];
+let activeTab = "posts";
+
+const profileCard = document.getElementById("profileCard");
+const postsGrid = document.getElementById("postsGrid");
+const tabs = document.getElementById("tabs");
+
+onAuthStateChanged(auth, async user => {
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  currentUser = user;
+  currentUserData = await getOrCreateUserData(user);
+
+  const requestedUid = new URLSearchParams(window.location.search).get("uid");
+  // If no uid param OR uid param matches self, treat as own profile
+  profileUserId = (requestedUid && requestedUid !== currentUser.uid)
+    ? requestedUid
+    : currentUser.uid;
+
+  await loadProfile();
+});
+
+async function getOrCreateUserData(user) {
+  const userRef = doc(db, "users", user.uid);
+  const snapshot = await getDoc(userRef);
+
+  const fallbackData = {
+    uid: user.uid,
+    username: user.displayName || user.email.split("@")[0],
+    email: user.email || "",
+    avatarUrl: user.photoURL || "",
+    bio: "Social, leveled up.",
+    followers: [],
+    following: [],
+    savedPosts: [],
+    createdAt: serverTimestamp()
+  };
+
+  if (!snapshot.exists()) {
+    await setDoc(userRef, fallbackData);
+    return fallbackData;
+  }
+
+  return {
+    uid: user.uid,
+    followers: [],
+    following: [],
+    savedPosts: [],
+    ...snapshot.data()
+  };
+}
+
+async function loadProfile() {
+  try {
+    const profileRef = doc(db, "users", profileUserId);
+    const profileSnap = await getDoc(profileRef);
+
+    if (!profileSnap.exists()) {
+      profileCard.innerHTML = `<div class="message error">Profile not found.</div>`;
+      postsGrid.innerHTML = "";
+      return;
+    }
+
+    profileUserData = {
+      uid: profileUserId,
+      followers: [],
+      following: [],
+      savedPosts: [],
+      ...profileSnap.data()
+    };
+
+    await loadUserPosts();
+
+    if (isOwnProfile()) {
+      await loadSavedPosts();
+    }
+
+    renderProfile();
+    renderTabs();
+    renderGrid();
+  } catch (error) {
+    console.error(error);
+    profileCard.innerHTML = `
+      <div class="message error">
+        Could not load profile: ${escapeHTML(error.message)}
+      </div>
+    `;
+  }
+}
+
+async function loadUserPosts() {
+  const postsQuery = query(
+    collection(db, "posts"),
+    where("userId", "==", profileUserId)
+  );
+
+  const snapshot = await getDocs(postsQuery);
+
+  userPosts = snapshot.docs.map(postDoc => ({
+    id: postDoc.id,
+    likedBy: [],
+    savedBy: [],
+    likesCount: 0,
+    commentsCount: 0,
+    isStory: false,
+    ...postDoc.data()
+  }));
+
+  userPosts.sort((a, b) => {
+    const aTime = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+    const bTime = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+    return bTime - aTime;
+  });
+}
+
+async function loadSavedPosts() {
+  const savedIds = currentUserData.savedPosts || [];
+  savedPosts = [];
+
+  for (const postId of savedIds) {
+    const postSnap = await getDoc(doc(db, "posts", postId));
+
+    if (postSnap.exists()) {
+      savedPosts.push({
+        id: postSnap.id,
+        likedBy: [],
+        savedBy: [],
+        likesCount: 0,
+        commentsCount: 0,
+        isStory: false,
+        ...postSnap.data()
+      });
+    }
+  }
+
+  savedPosts.sort((a, b) => {
+    const aTime = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+    const bTime = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+    return bTime - aTime;
+  });
+}
+
+function renderProfile() {
+  const ownProfile = isOwnProfile();
+  // Extra safety: never show follow if profileUserId somehow equals currentUser.uid
+  const canFollow  = !ownProfile && profileUserId !== currentUser.uid;
+  const following  = canFollow && (currentUserData.following || []).includes(profileUserId);
+
+  profileCard.innerHTML = `
+    <div class="profile-top">
+      ${getAvatarHTML(profileUserData)}
+
+      <div class="profile-info">
+        <h1>${escapeHTML(profileUserData.username || "creator")}</h1>
+        <p>${escapeHTML(profileUserData.bio || "Social, leveled up.")}</p>
+
+        <div class="stats">
+          <div class="stat">
+            <strong>${userPosts.length}</strong>
+            <small>Posts</small>
+          </div>
+
+          <div class="stat">
+            <strong>${(profileUserData.followers || []).length}</strong>
+            <small>Followers</small>
+          </div>
+
+          <div class="stat">
+            <strong>${(profileUserData.following || []).length}</strong>
+            <small>Following</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-actions">
+        ${ownProfile ? `
+          <button class="primary-btn" id="createBtn">
+            <i data-lucide="plus"></i> Create
+          </button>
+
+          <button class="secondary-btn" id="editBtn">
+            <i data-lucide="pencil"></i> Edit profile
+          </button>
+        ` : canFollow ? `
+          <button class="primary-btn" id="followBtn">
+            <i data-lucide="${following ? "user-check" : "user-plus"}"></i>
+            ${following ? "Following" : "Follow"}
+          </button>
+
+          <button class="secondary-btn muted" id="messageBtn">
+            <i data-lucide="message-circle"></i> Message
+          </button>
+        ` : ""}
+      </div>
+    </div>
+  `;
+
+  const createBtn = document.getElementById("createBtn");
+  if (createBtn) {
+    createBtn.addEventListener("click", () => {
+      window.location.href = "create.html";
+    });
+  }
+
+  const editBtn = document.getElementById("editBtn");
+  if (editBtn) {
+    editBtn.addEventListener("click", () => {
+      window.location.href = "edit-profile.html";
+    });
+  }
+
+  const followBtn = document.getElementById("followBtn");
+  if (followBtn) {
+    followBtn.addEventListener("click", toggleFollow);
+  }
+
+  const messageBtn = document.getElementById("messageBtn");
+  if (messageBtn) {
+    messageBtn.addEventListener("click", () => {
+      window.location.href = "messages.html";
+    });
+  }
+
+  lucide.createIcons();
+}
+
+function renderTabs() {
+  if (isOwnProfile()) {
+    tabs.innerHTML = `
+      <button class="tab ${activeTab === "posts" ? "active" : ""}" data-tab="posts">Posts</button>
+      <button class="tab ${activeTab === "saved" ? "active" : ""}" data-tab="saved">Saved</button>
+    `;
+  } else {
+    tabs.innerHTML = `
+      <button class="tab active" data-tab="posts">Posts</button>
+    `;
+  }
+
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      activeTab = tab.dataset.tab;
+      renderTabs();
+      renderGrid();
+    });
+  });
+}
+
+function renderGrid() {
+  const posts = activeTab === "saved" ? savedPosts : userPosts;
+
+  if (!posts.length) {
+    postsGrid.innerHTML = `
+      <article class="card empty">
+        ${activeTab === "saved" ? "No saved posts yet." : "No posts yet."}
+      </article>
+    `;
+    return;
+  }
+
+  postsGrid.innerHTML = posts.map(post => createTileHTML(post)).join("");
+  lucide.createIcons();
+}
+
+function createTileHTML(post) {
+  const image = post.imageData || post.imageUrl || "";
+
+  if (image) {
+    return `
+      <a class="post-tile" href="post.html?id=${post.id}">
+        <img src="${image}" alt="Nexr post">
+        <div class="tile-overlay">
+          <span><i data-lucide="heart"></i> ${post.likesCount || 0}</span>
+          <span><i data-lucide="message-circle"></i> ${post.commentsCount || 0}</span>
+        </div>
+      </a>
+    `;
+  }
+
+  return `
+    <a class="post-tile text-tile" href="post.html?id=${post.id}">
+      <p>${escapeHTML(post.caption || "Nexr post")}</p>
+      <div class="tile-overlay">
+        <span><i data-lucide="heart"></i> ${post.likesCount || 0}</span>
+        <span><i data-lucide="message-circle"></i> ${post.commentsCount || 0}</span>
+      </div>
+    </a>
+  `;
+}
+
+async function toggleFollow() {
+  // Hard guard: never follow yourself, regardless of how this was called
+  if (!profileUserId || profileUserId === currentUser.uid) return;
+  if (isOwnProfile()) return;
+
+  const following = (currentUserData.following || []).includes(profileUserId);
+
+  const currentUserRef = doc(db, "users", currentUser.uid);
+  const profileUserRef = doc(db, "users", profileUserId);
+
+  await updateDoc(currentUserRef, {
+    following: following ? arrayRemove(profileUserId) : arrayUnion(profileUserId)
+  });
+
+  await updateDoc(profileUserRef, {
+    followers: following ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+  });
+
+  currentUserData.following = following
+    ? (currentUserData.following || []).filter(id => id !== profileUserId)
+    : [...(currentUserData.following || []), profileUserId];
+
+  profileUserData.followers = following
+    ? (profileUserData.followers || []).filter(id => id !== currentUser.uid)
+    : [...(profileUserData.followers || []), currentUser.uid];
+
+  if (!following) {
+    await createNotification(profileUserId, "follow", "started following you");
+  }
+
+  renderProfile();
+}
+
+async function createNotification(toUserId, type, text) {
+  await addDoc(collection(db, "notifications"), {
+    toUserId,
+    fromUserId: currentUser.uid,
+    fromUsername: currentUserData.username || "creator",
+    type,
+    text,
+    read: false,
+    createdAt: serverTimestamp()
+  });
+}
+
+function isOwnProfile() {
+  return profileUserId === currentUser.uid;
+}
+
+function getAvatarHTML(user) {
+  const name = user.username || "N";
+  const avatarUrl = user.avatarUrl || "";
+
+  if (avatarUrl) {
+    return `<div class="avatar"><img src="${avatarUrl}" alt="${escapeHTML(name)}"></div>`;
+  }
+
+  return `<div class="avatar">${escapeHTML(name.charAt(0).toUpperCase())}</div>`;
+}
+
+function escapeHTML(value) {
+  return String(value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+lucide.createIcons();
+</script>
+</body>
+</html>

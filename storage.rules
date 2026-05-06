@@ -1,0 +1,58 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+
+    function isVideo() {
+      return request.resource.contentType.matches('video/.*');
+    }
+
+    function underLimit(maxBytes) {
+      return request.resource.size <= maxBytes;
+    }
+
+    // Profile avatars: only the owner can upload/update/delete their avatar.
+    // Everyone logged in can read avatars.
+    match /users/{userId}/avatar/{fileName} {
+      allow read: if signedIn();
+      allow write: if isOwner(userId) && isImage() && underLimit(2 * 1024 * 1024);
+    }
+
+    // Post images: only owner can upload into their own folder.
+    match /posts/{userId}/{fileName} {
+      allow read: if signedIn();
+      allow write: if isOwner(userId) && isImage() && underLimit(8 * 1024 * 1024);
+    }
+
+    // Reels/videos: only owner can upload into their own folder.
+    match /reels/{userId}/{fileName} {
+      allow read: if signedIn();
+      allow write: if isOwner(userId) && isVideo() && underLimit(50 * 1024 * 1024);
+    }
+
+    // Message attachments: sender uploads into their own folder.
+    match /messages/{userId}/{fileName} {
+      allow read: if signedIn();
+      allow write: if isOwner(userId)
+        && (isImage() || isVideo())
+        && underLimit(15 * 1024 * 1024);
+    }
+
+    // Deny everything else.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

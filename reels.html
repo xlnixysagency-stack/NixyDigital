@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexr — Reels</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+          --bg:#050507;
+          --panel:rgba(14,14,18,.88);
+          --line:rgba(255,255,255,.08);
+          --text:#f0f0f5;
+          --muted:#8888a0;
+          --accent:#00e5ff;
+          --accent2:#7c3aed;
+          --hot:#ff2bd6;
+        }
+
+        * { box-sizing:border-box; }
+
+        body {
+          margin:0;
+          min-height:100vh;
+          color:var(--text);
+          font-family:'DM Sans',Arial,sans-serif;
+          background:
+            radial-gradient(circle at 15% 5%, rgba(0,229,255,.14), transparent 32%),
+            radial-gradient(circle at 85% 15%, rgba(124,58,237,.2), transparent 34%),
+            var(--bg);
+          overflow:hidden;
+        }
+
+        a { color:inherit; text-decoration:none; }
+        button { font-family:inherit; cursor:pointer; transition:.18s ease; }
+        button:hover { transform:translateY(-2px); }
+        button:active { transform:scale(.96); }
+        svg { width:22px; height:22px; }
+
+        .topbar {
+          position:fixed;
+          top:18px;
+          left:50%;
+          transform:translateX(-50%);
+          width:min(520px,94vw);
+          z-index:10;
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          pointer-events:none;
+        }
+
+        .topbar a,
+        .logo {
+          pointer-events:auto;
+          font-family:'Space Grotesk',Arial,sans-serif;
+        }
+
+        .back {
+          display:inline-flex;
+          align-items:center;
+          gap:8px;
+          color:white;
+          font-weight:900;
+          background:rgba(0,0,0,.38);
+          border:1px solid rgba(255,255,255,.12);
+          border-radius:999px;
+          padding:10px 13px;
+          backdrop-filter:blur(14px);
+        }
+
+        .logo {
+          font-size:30px;
+          font-weight:950;
+          letter-spacing:-1px;
+          text-shadow:0 3px 18px rgba(0,0,0,.5);
+          font-family:'Space Grotesk',Arial,sans-serif;
+        }
+
+        .logo span {
+          color:var(--accent);
+          text-shadow:0 0 18px var(--accent);
+        }
+
+        .reels {
+          height:100vh;
+          overflow-y:auto;
+          scroll-snap-type:y mandatory;
+        }
+
+        .reels::-webkit-scrollbar {
+          width:0;
+        }
+
+        .reel {
+          height:100vh;
+          scroll-snap-align:start;
+          display:grid;
+          place-items:center;
+          position:relative;
+          padding:82px 0 30px;
+        }
+
+        .phone {
+          width:min(430px,94vw);
+          height:min(760px,86vh);
+          border-radius:34px;
+          border:1px solid var(--line);
+          overflow:hidden;
+          position:relative;
+          background:#09090b;
+          box-shadow:0 25px 90px rgba(0,0,0,.45);
+        }
+
+        .phone img {
+          width:100%;
+          height:100%;
+          object-fit:cover;
+          display:block;
+        }
+
+
+        .reel-media {
+          position:absolute;
+          inset:0;
+          cursor:pointer;
+          user-select:none;
+          -webkit-tap-highlight-color:transparent;
+        }
+
+        .reel-media img {
+          width:100%;
+          height:100%;
+          object-fit:cover;
+          display:block;
+        }
+
+        .heart-burst {
+          position:absolute;
+          left:50%;
+          top:50%;
+          width:112px;
+          height:112px;
+          display:grid;
+          place-items:center;
+          transform:translate(-50%,-50%) scale(.45);
+          color:white;
+          filter:drop-shadow(0 12px 32px rgba(255,43,214,.5));
+          pointer-events:none;
+          z-index:6;
+          animation:heartPop .78s cubic-bezier(.16,1,.3,1) forwards;
+        }
+
+        .heart-burst svg {
+          width:100%;
+          height:100%;
+          fill:var(--hot);
+          stroke:white;
+          stroke-width:1.5;
+        }
+
+        .heart-particle {
+          position:absolute;
+          left:50%;
+          top:50%;
+          width:9px;
+          height:9px;
+          border-radius:999px;
+          background:linear-gradient(135deg,var(--hot),var(--accent));
+          transform:translate(-50%,-50%);
+          pointer-events:none;
+          z-index:7;
+          animation:particlePop .72s ease-out forwards;
+        }
+
+        .icon-btn.like-pop {
+          animation:likePulse .38s cubic-bezier(.16,1,.3,1);
+        }
+
+        @keyframes heartPop {
+          0% { opacity:0; transform:translate(-50%,-50%) scale(.35) rotate(-10deg); }
+          18% { opacity:1; transform:translate(-50%,-50%) scale(1.15) rotate(5deg); }
+          42% { transform:translate(-50%,-50%) scale(.96) rotate(0deg); }
+          72% { opacity:1; transform:translate(-50%,-50%) scale(1.03); }
+          100% { opacity:0; transform:translate(-50%,-58%) scale(.74); }
+        }
+
+        @keyframes particlePop {
+          to {
+            opacity:0;
+            transform:translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(.25);
+          }
+        }
+
+        @keyframes likePulse {
+          0% { transform:scale(1); }
+          45% { transform:scale(1.28); }
+          100% { transform:scale(1); }
+        }
+
+        .gradient {
+          position:absolute;
+          inset:0;
+          background:
+            linear-gradient(to top, rgba(0,0,0,.82), transparent 42%),
+            linear-gradient(to bottom, rgba(0,0,0,.32), transparent 24%);
+          pointer-events:none;
+        }
+
+        .info {
+          position:absolute;
+          left:16px;
+          right:74px;
+          bottom:18px;
+          z-index:3;
+        }
+
+        .user {
+          display:flex;
+          align-items:center;
+          gap:10px;
+          margin-bottom:10px;
+        }
+
+        .avatar {
+          width:42px;
+          height:42px;
+          border-radius:50%;
+          display:grid;
+          place-items:center;
+          background:linear-gradient(135deg,var(--accent),var(--accent2));
+          color:black;
+          font-weight:950;
+          overflow:hidden;
+          border:2px solid rgba(255,255,255,.5);
+        }
+
+        .avatar img {
+          width:100%;
+          height:100%;
+          object-fit:cover;
+        }
+
+        .user strong {
+          display:block;
+        }
+
+        .caption {
+          line-height:1.5;
+          margin:0;
+          color:#f3f3f5;
+        }
+
+        .pulse-badge {
+          display:inline-flex;
+          align-items:center;
+          gap:5px;
+          border-radius:999px;
+          padding:6px 9px;
+          margin-top:10px;
+          background:linear-gradient(135deg,var(--hot),var(--accent2));
+          font-size:12px;
+          font-weight:950;
+        }
+
+        .actions {
+          position:absolute;
+          right:14px;
+          bottom:24px;
+          z-index:4;
+          display:grid;
+          gap:13px;
+        }
+
+        .action {
+          display:grid;
+          place-items:center;
+          gap:4px;
+          color:white;
+          font-size:12px;
+          font-weight:900;
+        }
+
+        .icon-btn {
+          width:48px;
+          height:48px;
+          border-radius:50%;
+          border:1px solid rgba(255,255,255,.18);
+          background:rgba(0,0,0,.34);
+          color:white;
+          display:grid;
+          place-items:center;
+          backdrop-filter:blur(12px);
+        }
+
+        .icon-btn.active {
+          color:var(--hot);
+        }
+
+        .icon-btn.saved {
+          color:var(--accent);
+        }
+
+        .empty {
+          min-height:100vh;
+          display:grid;
+          place-items:center;
+          text-align:center;
+          color:var(--muted);
+          padding:30px;
+        }
+
+        .empty-card {
+          width:min(520px,94vw);
+          border:1px solid var(--line);
+          background:var(--panel);
+          border-radius:30px;
+          padding:28px;
+        }
+
+        .empty-card h1 {
+          color:white;
+          margin:0 0 8px;
+        }
+
+        .create-btn {
+          display:inline-flex;
+          align-items:center;
+          gap:8px;
+          margin-top:16px;
+          border-radius:999px;
+          padding:13px 18px;
+          font-weight:950;
+          background:linear-gradient(135deg,var(--accent),var(--accent2));
+          color:black;
+        }
+
+        @media(max-width:560px) {
+          .phone {
+            width: 100vw;
+            height: 100svh;
+            border-radius: 0;
+            border: 0;
+          }
+
+          .reel {
+            padding: 0;
+            height: 100svh;
+          }
+
+          .topbar {
+            top: max(14px, env(safe-area-inset-top));
+          }
+
+          .actions {
+            bottom: max(80px, calc(env(safe-area-inset-bottom) + 70px));
+          }
+
+          .info {
+            bottom: max(80px, calc(env(safe-area-inset-bottom) + 70px));
+          }
+        }
+    </style>
+</head>
+
+<body>
+<header class="topbar">
+    <a class="back" href="index.html"><i data-lucide="arrow-left"></i> Flow</a>
+    <div class="logo">Nex<span>r</span></div>
+</header>
+
+<main class="reels" id="reels">
+    <section class="empty">
+        <div class="empty-card">
+            <h1>Loading Reels...</h1>
+            <p>Finding visual posts.</p>
+        </div>
+    </section>
+</main>
+
+<script type="module">
+    import { injectMobileNav } from "./nav.js";
+injectMobileNav("reels");
+
+import { auth, db } from "./firebase.js";
+
+  import {
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+  import {
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    query,
+    updateDoc,
+    arrayUnion,
+    arrayRemove,
+    addDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+  let currentUser = null;
+  let currentUserData = null;
+  let posts = [];
+
+  const reelsEl = document.getElementById("reels");
+
+  onAuthStateChanged(auth, async user => {
+    if (!user) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    currentUser = user;
+    currentUserData = await getCurrentUserData(user.uid);
+
+    await loadPosts();
+    renderReels();
+  });
+
+  async function getCurrentUserData(uid) {
+    const snapshot = await getDoc(doc(db, "users", uid));
+
+    if (!snapshot.exists()) {
+      return {
+        uid,
+        username: currentUser.displayName || currentUser.email.split("@")[0],
+        email: currentUser.email || "",
+        avatarUrl: currentUser.photoURL || "",
+        bio: "Social, leveled up.",
+        following: [],
+        savedPosts: []
+      };
+    }
+
+    return {
+      uid,
+      following: [],
+      savedPosts: [],
+      ...snapshot.data()
+    };
+  }
+
+  async function loadPosts() {
+    const snapshot = await getDocs(query(collection(db, "posts")));
+
+    posts = snapshot.docs
+      .map(postDoc => ({
+        id: postDoc.id,
+        likedBy: [],
+        savedBy: [],
+        likesCount: 0,
+        commentsCount: 0,
+        isStory: false,
+        ...postDoc.data()
+      }))
+      .filter(post => post.imageData || post.imageUrl)
+      .sort((a, b) => getScore(b) - getScore(a));
+  }
+
+  function renderReels() {
+    if (!posts.length) {
+      reelsEl.innerHTML = `
+        <section class="empty">
+          <div class="empty-card">
+            <h1>No Reels yet</h1>
+            <p>Create a photo post and it will appear here.</p>
+            <a class="create-btn" href="create.html">
+              <i data-lucide="plus"></i>
+              Create post
+            </a>
+          </div>
+        </section>
+      `;
+      lucide.createIcons();
+      return;
+    }
+
+    reelsEl.innerHTML = posts.map(post => createReelHTML(post)).join("");
+    attachEvents();
+    lucide.createIcons();
+  }
+
+  function createReelHTML(post) {
+    const liked = (post.likedBy || []).includes(currentUser.uid);
+    const saved = (post.savedBy || []).includes(currentUser.uid);
+    const image = post.imageData || post.imageUrl;
+
+    return `
+      <section class="reel" data-post-id="${post.id}">
+        <article class="phone">
+          <div class="reel-media" data-action="media-like">
+            <img src="${image}" alt="Nexr reel" draggable="false">
+          </div>
+          <div class="gradient"></div>
+
+          <div class="info">
+            <a class="user" href="profile.html?uid=${post.userId}">
+              ${getAvatarHTML(post)}
+              <strong>${escapeHTML(post.username || "creator")}</strong>
+            </a>
+
+            <p class="caption">${escapeHTML(post.caption || "Nexr visual")}</p>
+
+            ${post.isStory ? `
+              <div class="pulse-badge">
+                <i data-lucide="zap"></i>
+                Pulse
+              </div>
+            ` : ""}
+          </div>
+
+          <div class="actions">
+            <div class="action">
+              <button class="icon-btn ${liked ? "active" : ""}" data-action="like">
+                <i data-lucide="heart"></i>
+              </button>
+              <span class="reel-likes-count">${post.likesCount || 0}</span>
+            </div>
+
+            <a class="action" href="post.html?id=${post.id}">
+              <span class="icon-btn">
+                <i data-lucide="message-circle"></i>
+              </span>
+              <span>${post.commentsCount || 0}</span>
+            </a>
+
+            <div class="action">
+              <button class="icon-btn ${saved ? "saved" : ""}" data-action="save">
+                <i data-lucide="bookmark"></i>
+              </button>
+              <span>Save</span>
+            </div>
+
+            <div class="action">
+              <button class="icon-btn" data-action="share">
+                <i data-lucide="send"></i>
+              </button>
+              <span>Share</span>
+            </div>
+          </div>
+        </article>
+      </section>
+    `;
+  }
+
+  function attachEvents() {
+    document.querySelectorAll("[data-action='like']").forEach(button => {
+      button.addEventListener("click", async () => {
+        const reel = button.closest(".reel");
+        await toggleLike(reel.dataset.postId, { burstTarget: button });
+      });
+    });
+
+    document.querySelectorAll("[data-action='media-like']").forEach(media => {
+      let lastTap = 0;
+      media.addEventListener("click", async event => {
+        event.preventDefault();
+        const now = Date.now();
+
+        if (now - lastTap < 280) {
+          lastTap = 0;
+          const reel = media.closest(".reel");
+          await toggleLike(reel.dataset.postId, { forceLike: true, burstTarget: media });
+          return;
+        }
+
+        lastTap = now;
+      });
+    });
+
+    document.querySelectorAll("[data-action='save']").forEach(button => {
+      button.addEventListener("click", async () => {
+        const reel = button.closest(".reel");
+        await toggleSave(reel.dataset.postId);
+      });
+    });
+
+    document.querySelectorAll("[data-action='share']").forEach(button => {
+      button.addEventListener("click", async () => {
+        const reel = button.closest(".reel");
+        const url = `${window.location.origin}${window.location.pathname.replace("reels.html", "")}post.html?id=${reel.dataset.postId}`;
+
+        try {
+          await navigator.clipboard.writeText(url);
+          alert("Post link copied.");
+        } catch {
+          alert("Could not copy link.");
+        }
+      });
+    });
+  }
+
+  async function toggleLike(postId, options = {}) {
+    const post = posts.find(item => item.id === postId);
+    if (!post) return;
+
+    const alreadyLiked = (post.likedBy || []).includes(currentUser.uid);
+    const shouldLike = options.forceLike ? true : !alreadyLiked;
+
+    if (alreadyLiked && options.forceLike) {
+      playHeartBurst(options.burstTarget || document.querySelector(`.reel[data-post-id="${postId}"] .reel-media`));
+      return;
+    }
+
+    post.likedBy = shouldLike
+      ? [...(post.likedBy || []), currentUser.uid]
+      : (post.likedBy || []).filter(uid => uid !== currentUser.uid);
+
+    post.likesCount = shouldLike
+      ? (post.likesCount || 0) + 1
+      : Math.max((post.likesCount || 0) - 1, 0);
+
+    updateReelLikeUI(postId, shouldLike, post.likesCount);
+
+    if (shouldLike) {
+      playHeartBurst(options.burstTarget || document.querySelector(`.reel[data-post-id="${postId}"] .reel-media`));
+    }
+
+    try {
+      await updateDoc(doc(db, "posts", postId), {
+        likedBy: shouldLike ? arrayUnion(currentUser.uid) : arrayRemove(currentUser.uid),
+        likesCount: post.likesCount
+      });
+
+      if (shouldLike && post.userId !== currentUser.uid) {
+        await addDoc(collection(db, "notifications"), {
+          toUserId: post.userId,
+          fromUserId: currentUser.uid,
+          fromUsername: currentUserData.username || "creator",
+          type: "like",
+          text: "liked your post",
+          postId,
+          read: false,
+          createdAt: serverTimestamp()
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      post.likedBy = alreadyLiked
+        ? [...(post.likedBy || []), currentUser.uid]
+        : (post.likedBy || []).filter(uid => uid !== currentUser.uid);
+      post.likesCount = alreadyLiked
+        ? (post.likesCount || 0) + 1
+        : Math.max((post.likesCount || 0) - 1, 0);
+      updateReelLikeUI(postId, alreadyLiked, post.likesCount);
+    }
+  }
+
+  function updateReelLikeUI(postId, liked, likesCount) {
+    const reel = document.querySelector(`.reel[data-post-id="${postId}"]`);
+    if (!reel) return;
+
+    const likeBtn = reel.querySelector(`[data-action="like"]`);
+    const likesEl = reel.querySelector(".reel-likes-count");
+
+    if (likeBtn) {
+      likeBtn.classList.toggle("active", liked);
+      likeBtn.classList.remove("like-pop");
+      void likeBtn.offsetWidth;
+      if (liked) likeBtn.classList.add("like-pop");
+    }
+
+    if (likesEl) likesEl.textContent = likesCount || 0;
+  }
+
+  function playHeartBurst(target) {
+    if (!target) return;
+
+    const host = target.classList?.contains("reel-media")
+      ? target
+      : target.closest?.(".reel")?.querySelector(".reel-media") || target;
+
+    const heart = document.createElement("div");
+    heart.className = "heart-burst";
+    heart.innerHTML = `<i data-lucide="heart"></i>`;
+    host.appendChild(heart);
+
+    const points = [[0,-72],[52,-48],[72,0],[48,52],[0,72],[-48,52],[-72,0],[-52,-48]];
+    points.forEach(([x, y], index) => {
+      const particle = document.createElement("span");
+      particle.className = "heart-particle";
+      particle.style.setProperty("--x", `${x}px`);
+      particle.style.setProperty("--y", `${y}px`);
+      particle.style.animationDelay = `${index * 0.018}s`;
+      host.appendChild(particle);
+      setTimeout(() => particle.remove(), 850);
+    });
+
+    lucide.createIcons();
+    setTimeout(() => heart.remove(), 850);
+  }
+
+  async function toggleSave(postId) {
+    const saved = (currentUserData.savedPosts || []).includes(postId);
+
+    await updateDoc(doc(db, "users", currentUser.uid), {
+      savedPosts: saved ? arrayRemove(postId) : arrayUnion(postId)
+    });
+
+    await updateDoc(doc(db, "posts", postId), {
+      savedBy: saved ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+    });
+
+    currentUserData.savedPosts = saved
+      ? (currentUserData.savedPosts || []).filter(id => id !== postId)
+      : [...(currentUserData.savedPosts || []), postId];
+
+    renderReels();
+  }
+
+  function getScore(post) {
+    const likes = post.likesCount || 0;
+    const comments = post.commentsCount || 0;
+    const pulse = post.isStory ? 5 : 0;
+    const time = post.createdAt?.toMillis ? post.createdAt.toMillis() : 0;
+    const fresh = Math.max(10 - ((Date.now() - time) / 86400000), 0);
+
+    return likes * 2 + comments * 4 + pulse + fresh;
+  }
+
+  function getAvatarHTML(user) {
+    const name = user.username || "N";
+    const avatarUrl = user.avatarUrl || "";
+
+    if (avatarUrl) {
+      return `<span class="avatar"><img src="${avatarUrl}" alt="${escapeHTML(name)}"></span>`;
+    }
+
+    return `<span class="avatar">${escapeHTML(name.charAt(0).toUpperCase())}</span>`;
+  }
+
+  function escapeHTML(value) {
+    return String(value || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  lucide.createIcons();
+</script>
+</body>
+</html>

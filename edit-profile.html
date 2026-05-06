@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexr — Edit Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+          --bg:#050507;
+          --panel:rgba(14,14,18,.88);
+          --line:rgba(255,255,255,.08);
+          --text:#f0f0f5;
+          --muted:#8888a0;
+          --accent:#00e5ff;
+          --accent2:#7c3aed;
+          --danger:#ff4d6d;
+        }
+
+        * { box-sizing:border-box; }
+
+        body {
+          margin:0;
+          min-height:100vh;
+          color:var(--text);
+          font-family:'DM Sans',Arial,sans-serif;
+          background:
+            radial-gradient(circle at 20% 10%, rgba(0,229,255,.16), transparent 30%),
+            radial-gradient(circle at 80% 15%, rgba(124,58,237,.22), transparent 32%),
+            var(--bg);
+        }
+
+        a { color:inherit; text-decoration:none; }
+        button { font-family:inherit; cursor:pointer; transition:.18s ease; }
+        button:hover { transform:translateY(-2px); }
+        button:active { transform:scale(.96); }
+        svg { width:21px; height:21px; }
+
+        .page {
+          width:min(720px,94vw);
+          margin:auto;
+          padding:28px 0 70px;
+        }
+
+        .topbar {
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          margin-bottom:22px;
+        }
+
+        .logo {
+          font-size:34px;
+          font-weight:950;
+          letter-spacing:-1px;
+          font-family:'Space Grotesk',Arial,sans-serif;
+        }
+
+        .logo span {
+          color:var(--accent);
+          text-shadow:0 0 18px var(--accent);
+        }
+
+        .back {
+          display:inline-flex;
+          align-items:center;
+          gap:8px;
+          color:var(--muted);
+          font-weight:850;
+        }
+
+        .card {
+          background:var(--panel);
+          border:1px solid var(--line);
+          border-radius:30px;
+          padding:22px;
+          backdrop-filter:blur(18px);
+          box-shadow:0 20px 80px rgba(0,0,0,.24);
+        }
+
+        h1 {
+          margin:0;
+          font-size:40px;
+          letter-spacing:-2px;
+        }
+
+        .sub {
+          color:var(--muted);
+          line-height:1.6;
+          margin:8px 0 22px;
+        }
+
+        .avatar-area {
+          display:grid;
+          place-items:center;
+          gap:14px;
+          margin-bottom:22px;
+        }
+
+        .avatar-preview {
+          width:126px;
+          height:126px;
+          border-radius:50%;
+          display:grid;
+          place-items:center;
+          background:linear-gradient(135deg,var(--accent),var(--accent2));
+          color:black;
+          font-size:46px;
+          font-weight:950;
+          overflow:hidden;
+          box-shadow:0 0 34px rgba(0,229,255,.18);
+        }
+
+        .avatar-preview img {
+          width:100%;
+          height:100%;
+          object-fit:cover;
+        }
+
+        input[type="file"] {
+          display:none;
+        }
+
+        .file-btn,
+        .save-btn,
+        .clear-btn {
+          border-radius:999px;
+          padding:13px 17px;
+          font-weight:950;
+          display:flex;
+          justify-content:center;
+          align-items:center;
+          gap:8px;
+        }
+
+        .file-btn {
+          background:#15151a;
+          border:1px solid var(--line);
+          color:white;
+        }
+
+        .form {
+          display:grid;
+          gap:14px;
+        }
+
+        .field {
+          display:grid;
+          gap:8px;
+        }
+
+        label {
+          color:white;
+          font-weight:900;
+        }
+
+        input,
+        textarea {
+          width:100%;
+          background:#09090b;
+          color:white;
+          border:1px solid var(--line);
+          border-radius:18px;
+          padding:14px;
+          outline:none;
+          font-size:15px;
+        }
+
+        textarea {
+          min-height:120px;
+          resize:none;
+        }
+
+        input:focus,
+        textarea:focus {
+          border-color:var(--accent);
+          box-shadow:0 0 0 4px rgba(0,229,255,.08);
+        }
+
+        small {
+          color:var(--muted);
+        }
+
+        .actions {
+          display:grid;
+          grid-template-columns:1fr 1fr;
+          gap:12px;
+          margin-top:8px;
+        }
+
+        .save-btn {
+          border:0;
+          background:linear-gradient(135deg,var(--accent),var(--accent2));
+          color:black;
+        }
+
+        .clear-btn {
+          border:1px solid var(--line);
+          background:transparent;
+          color:var(--muted);
+        }
+
+        .message {
+          min-height:22px;
+          margin-top:14px;
+          color:var(--danger);
+          font-size:14px;
+        }
+
+        .message.success {
+          color:var(--accent);
+        }
+
+        .loading {
+          opacity:.7;
+          pointer-events:none;
+        }
+
+        @media(max-width:600px) {
+          h1 {
+            font-size:34px;
+          }
+
+          .actions {
+            grid-template-columns:1fr;
+          }
+        }
+
+        @media(max-width:860px) {
+          .page, main.page { padding-bottom: 90px !important; }
+        }
+    </style>
+</head>
+
+<body>
+<main class="page">
+    <header class="topbar">
+        <a class="back" href="profile.html"><i data-lucide="arrow-left"></i> Profile</a>
+        <div class="logo">Nex<span>r</span></div>
+    </header>
+
+    <section class="card" id="editCard">
+        <h1>Edit profile</h1>
+        <p class="sub">Update your public Nexr profile. Avatar images are compressed and saved without Firebase Storage.</p>
+
+        <div class="avatar-area">
+            <div class="avatar-preview" id="avatarPreview">N</div>
+
+            <label class="file-btn" for="avatarInput">
+                <i data-lucide="image"></i>
+                Change avatar
+            </label>
+
+            <input type="file" id="avatarInput" accept="image/*">
+        </div>
+
+        <div class="form">
+            <div class="field">
+                <label for="username">Username</label>
+                <input id="username" maxlength="24" placeholder="Your username">
+                <small>Max 24 characters.</small>
+            </div>
+
+            <div class="field">
+                <label for="bio">Bio</label>
+                <textarea id="bio" maxlength="140" placeholder="Tell people about yourself..."></textarea>
+                <small>Max 140 characters.</small>
+            </div>
+
+            <div class="actions">
+                <button class="save-btn" id="saveBtn">
+                    <i data-lucide="save"></i>
+                    Save profile
+                </button>
+
+                <button class="clear-btn" id="removeAvatarBtn">
+                    <i data-lucide="trash-2"></i>
+                    Remove avatar
+                </button>
+            </div>
+
+            <div class="message" id="message"></div>
+        </div>
+    </section>
+</main>
+
+<script type="module">
+    import { injectMobileNav } from "./nav.js";
+injectMobileNav("edit-profile");
+
+import { auth, db } from "./firebase.js";
+
+  import {
+    onAuthStateChanged,
+    updateProfile
+  } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+  import {
+    doc,
+    getDoc,
+    setDoc,
+    updateDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+  let currentUser = null;
+  let currentUserData = null;
+  let avatarData = "";
+
+  const editCard = document.getElementById("editCard");
+  const avatarPreview = document.getElementById("avatarPreview");
+  const avatarInput = document.getElementById("avatarInput");
+  const usernameInput = document.getElementById("username");
+  const bioInput = document.getElementById("bio");
+  const saveBtn = document.getElementById("saveBtn");
+  const removeAvatarBtn = document.getElementById("removeAvatarBtn");
+  const message = document.getElementById("message");
+
+  onAuthStateChanged(auth, async user => {
+    if (!user) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    currentUser = user;
+    currentUserData = await getOrCreateUserData(user);
+
+    usernameInput.value = currentUserData.username || "";
+    bioInput.value = currentUserData.bio || "";
+    avatarData = currentUserData.avatarUrl || "";
+
+    renderAvatar();
+  });
+
+  async function getOrCreateUserData(user) {
+    const userRef = doc(db, "users", user.uid);
+    const snapshot = await getDoc(userRef);
+
+    const fallbackData = {
+      uid: user.uid,
+      username: user.displayName || user.email.split("@")[0],
+      email: user.email || "",
+      avatarUrl: user.photoURL || "",
+      bio: "Social, leveled up.",
+      followers: [],
+      following: [],
+      savedPosts: [],
+      createdAt: serverTimestamp()
+    };
+
+    if (!snapshot.exists()) {
+      await setDoc(userRef, fallbackData);
+      return fallbackData;
+    }
+
+    return {
+      uid: user.uid,
+      followers: [],
+      following: [],
+      savedPosts: [],
+      ...snapshot.data()
+    };
+  }
+
+  avatarInput.addEventListener("change", async () => {
+    const file = avatarInput.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      showMessage("Please choose an image file.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      showMessage("Compressing avatar...", true);
+
+      avatarData = await compressImage(file, 420, 0.72);
+      renderAvatar();
+
+      showMessage("Avatar ready.", true);
+    } catch (error) {
+      console.error(error);
+      showMessage(error.message || "Could not process avatar.");
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  saveBtn.addEventListener("click", async () => {
+    const username = usernameInput.value.trim();
+    const bio = bioInput.value.trim();
+
+    if (!username) {
+      showMessage("Username is required.");
+      return;
+    }
+
+    if (username.length > 24) {
+      showMessage("Username must be 24 characters or less.");
+      return;
+    }
+
+    if (bio.length > 140) {
+      showMessage("Bio must be 140 characters or less.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      showMessage("Saving profile...", true);
+
+      const profileData = {
+        username,
+        bio: bio || "Social, leveled up.",
+        avatarUrl: avatarData || "",
+        updatedAt: serverTimestamp()
+      };
+
+      await updateDoc(doc(db, "users", currentUser.uid), profileData);
+
+      await updateProfile(currentUser, {
+        displayName: username,
+        photoURL: avatarData || ""
+      });
+
+      showMessage("Profile saved. Redirecting...", true);
+
+      setTimeout(() => {
+        window.location.href = `profile.html?uid=${currentUser.uid}`;
+      }, 650);
+    } catch (error) {
+      console.error(error);
+      showMessage(error.message || "Could not save profile.");
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  removeAvatarBtn.addEventListener("click", () => {
+    avatarData = "";
+    avatarInput.value = "";
+    renderAvatar();
+    showMessage("Avatar removed. Save to apply.", true);
+  });
+
+  function renderAvatar() {
+    const name = usernameInput.value.trim() || currentUserData?.username || "N";
+
+    if (avatarData) {
+      avatarPreview.innerHTML = `<img src="${avatarData}" alt="${escapeHTML(name)}">`;
+    } else {
+      avatarPreview.textContent = name.charAt(0).toUpperCase();
+    }
+  }
+
+  usernameInput.addEventListener("input", () => {
+    if (!avatarData) renderAvatar();
+  });
+
+  function compressImage(file, maxWidth = 420, quality = 0.72) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onerror = () => reject(new Error("Could not read image."));
+
+      reader.onload = event => {
+        const img = new Image();
+
+        img.onerror = () => reject(new Error("Could not load image."));
+
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const scale = Math.min(1, maxWidth / img.width);
+
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          let compressed = canvas.toDataURL("image/jpeg", quality);
+
+          if (compressed.length > 280000) {
+            compressed = canvas.toDataURL("image/jpeg", 0.5);
+          }
+
+          if (compressed.length > 380000) {
+            reject(new Error("Avatar is still too large. Try a smaller image."));
+            return;
+          }
+
+          resolve(compressed);
+        };
+
+        img.src = event.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function setLoading(isLoading) {
+    editCard.classList.toggle("loading", isLoading);
+  }
+
+  function showMessage(text, success = false) {
+    message.textContent = text;
+    message.classList.toggle("success", success);
+  }
+
+  function escapeHTML(value) {
+    return String(value || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  lucide.createIcons();
+</script>
+</body>
+</html>

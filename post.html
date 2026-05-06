@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexr — Post</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+          --bg:#050505;
+          --panel:rgba(16,16,19,.9);
+          --soft:rgba(255,255,255,.045);
+          --line:#26262c;
+          --text:#fff;
+          --muted:#a1a1aa;
+          --accent:#00e5ff;
+          --accent2:#7c3aed;
+          --hot:#ff2bd6;
+          --danger:#ff4d6d;
+        }
+
+        * { box-sizing:border-box; }
+
+        body {
+          margin:0;
+          min-height:100vh;
+          color:var(--text);
+          font-family:Arial,sans-serif;
+          background:
+            radial-gradient(circle at 15% 5%, rgba(0,229,255,.14), transparent 32%),
+            radial-gradient(circle at 85% 15%, rgba(124,58,237,.2), transparent 34%),
+            radial-gradient(circle at 45% 100%, rgba(255,43,214,.1), transparent 32%),
+            var(--bg);
+        }
+
+        a { color:inherit; text-decoration:none; }
+        button { font-family:inherit; cursor:pointer; transition:.18s ease; }
+        button:hover { transform:translateY(-2px); }
+        button:active { transform:scale(.96); }
+        svg { width:21px; height:21px; }
+
+        .page {
+          width:min(980px,94vw);
+          margin:auto;
+          padding:26px 0 70px;
+        }
+
+        .topbar {
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          margin-bottom:20px;
+        }
+
+        .logo {
+          font-size:34px;
+          font-weight:950;
+          letter-spacing:-1px;
+        }
+
+        .logo span {
+          color:var(--accent);
+          text-shadow:0 0 18px var(--accent);
+        }
+
+        .back {
+          display:inline-flex;
+          align-items:center;
+          gap:8px;
+          color:var(--muted);
+          font-weight:850;
+        }
+
+        .card {
+          background:var(--panel);
+          border:1px solid var(--line);
+          border-radius:30px;
+          backdrop-filter:blur(18px);
+          box-shadow:0 20px 80px rgba(0,0,0,.24);
+          overflow:hidden;
+        }
+
+        .post-head {
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:14px;
+          padding:16px;
+        }
+
+        .user-link {
+          display:flex;
+          align-items:center;
+          gap:12px;
+          min-width:0;
+        }
+
+        .avatar {
+          width:50px;
+          height:50px;
+          border-radius:50%;
+          display:grid;
+          place-items:center;
+          background:linear-gradient(135deg,var(--accent),var(--accent2));
+          color:black;
+          font-weight:950;
+          overflow:hidden;
+          flex:0 0 auto;
+        }
+
+        .avatar img {
+          width:100%;
+          height:100%;
+          object-fit:cover;
+        }
+
+        .user-meta {
+          min-width:0;
+        }
+
+        .user-meta strong,
+        .user-meta small {
+          display:block;
+          white-space:nowrap;
+          overflow:hidden;
+          text-overflow:ellipsis;
+        }
+
+        .user-meta small {
+          color:var(--muted);
+          margin-top:4px;
+        }
+
+        .follow-btn {
+          border:1px solid var(--line);
+          background:#121216;
+          color:white;
+          border-radius:999px;
+          padding:9px 14px;
+          font-weight:950;
+        }
+
+        .follow-btn.following {
+          color:var(--muted);
+          background:transparent;
+        }
+
+        .post-img {
+          width:100%;
+          max-height:720px;
+          object-fit:cover;
+          display:block;
+          background:#09090b;
+        }
+
+
+        .post-media {
+          position:relative;
+          overflow:hidden;
+          background:#09090b;
+          cursor:pointer;
+          user-select:none;
+          -webkit-tap-highlight-color:transparent;
+        }
+
+        .post-media .post-img {
+          display:block;
+        }
+
+        .heart-burst {
+          position:absolute;
+          left:50%;
+          top:50%;
+          width:110px;
+          height:110px;
+          display:grid;
+          place-items:center;
+          transform:translate(-50%,-50%) scale(.45);
+          color:white;
+          filter:drop-shadow(0 12px 32px rgba(255,43,214,.5));
+          pointer-events:none;
+          z-index:4;
+          animation:heartPop .78s cubic-bezier(.16,1,.3,1) forwards;
+        }
+
+        .heart-burst svg {
+          width:100%;
+          height:100%;
+          fill:var(--hot);
+          stroke:white;
+          stroke-width:1.5;
+        }
+
+        .heart-particle {
+          position:absolute;
+          left:50%;
+          top:50%;
+          width:9px;
+          height:9px;
+          border-radius:999px;
+          background:linear-gradient(135deg,var(--hot),var(--accent));
+          transform:translate(-50%,-50%);
+          pointer-events:none;
+          z-index:5;
+          animation:particlePop .72s ease-out forwards;
+        }
+
+        .icon-btn.like-pop {
+          animation:likePulse .38s cubic-bezier(.16,1,.3,1);
+        }
+
+        @keyframes heartPop {
+          0% { opacity:0; transform:translate(-50%,-50%) scale(.35) rotate(-10deg); }
+          18% { opacity:1; transform:translate(-50%,-50%) scale(1.15) rotate(5deg); }
+          42% { transform:translate(-50%,-50%) scale(.96) rotate(0deg); }
+          72% { opacity:1; transform:translate(-50%,-50%) scale(1.03); }
+          100% { opacity:0; transform:translate(-50%,-58%) scale(.74); }
+        }
+
+        @keyframes particlePop {
+          to {
+            opacity:0;
+            transform:translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(.25);
+          }
+        }
+
+        @keyframes likePulse {
+          0% { transform:scale(1); }
+          45% { transform:scale(1.28); }
+          100% { transform:scale(1); }
+        }
+
+        .post-body {
+          padding:16px;
+        }
+
+        .actions {
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          margin-bottom:10px;
+        }
+
+        .action-left {
+          display:flex;
+          gap:10px;
+        }
+
+        .icon-btn {
+          border:0;
+          background:transparent;
+          color:white;
+          width:40px;
+          height:40px;
+          border-radius:50%;
+          display:grid;
+          place-items:center;
+        }
+
+        .icon-btn:hover {
+          background:var(--soft);
+        }
+
+        .icon-btn.active {
+          color:var(--hot);
+        }
+
+        .icon-btn.saved {
+          color:var(--accent);
+        }
+
+        .icon-btn.danger {
+          color:var(--danger);
+        }
+
+        .caption {
+          color:#e9e9ee;
+          line-height:1.6;
+          margin:10px 0 0;
+          white-space:pre-wrap;
+        }
+
+        .caption strong {
+          color:white;
+        }
+
+        .comment-box {
+          margin-top:18px;
+          padding-top:18px;
+          border-top:1px solid var(--line);
+          display:grid;
+          gap:12px;
+        }
+
+        textarea {
+          width:100%;
+          min-height:92px;
+          resize:none;
+          background:#09090b;
+          color:white;
+          border:1px solid var(--line);
+          border-radius:18px;
+          padding:14px;
+          outline:none;
+          font-size:15px;
+        }
+
+        textarea:focus {
+          border-color:var(--accent);
+          box-shadow:0 0 0 4px rgba(0,229,255,.08);
+        }
+
+        .comment-submit {
+          justify-self:end;
+          border:0;
+          border-radius:999px;
+          padding:12px 18px;
+          font-weight:950;
+          background:linear-gradient(135deg,var(--accent),var(--accent2));
+          color:black;
+        }
+
+        .comments {
+          margin-top:18px;
+          display:grid;
+          gap:12px;
+        }
+
+        .comment {
+          display:flex;
+          gap:12px;
+          padding:14px;
+          border:1px solid var(--line);
+          background:rgba(255,255,255,.035);
+          border-radius:20px;
+        }
+
+        .comment .avatar {
+          width:38px;
+          height:38px;
+          font-size:14px;
+        }
+
+        .comment-body {
+          min-width:0;
+        }
+
+        .comment-body strong {
+          display:block;
+          margin-bottom:4px;
+        }
+
+        .comment-body p {
+          margin:0;
+          color:#e9e9ee;
+          line-height:1.5;
+          white-space:pre-wrap;
+        }
+
+        .comment-body small {
+          display:block;
+          margin-top:7px;
+          color:var(--muted);
+        }
+
+        .empty,
+        .message {
+          color:var(--muted);
+          text-align:center;
+          padding:24px;
+        }
+
+        .message.error {
+          color:var(--danger);
+        }
+
+        .loading {
+          opacity:.7;
+          pointer-events:none;
+        }
+
+        @media(max-width:700px) {
+          .logo {
+            font-size:30px;
+          }
+
+          .post-head {
+            align-items:flex-start;
+          }
+
+          .follow-btn {
+            padding:8px 11px;
+          }
+        }
+    </style>
+</head>
+
+<body>
+<main class="page">
+    <header class="topbar">
+        <a class="back" href="index.html"><i data-lucide="arrow-left"></i> Flow</a>
+        <div class="logo">Nex<span>r</span></div>
+    </header>
+
+    <section class="card" id="postCard">
+        <div class="message">Loading post...</div>
+    </section>
+</main>
+
+<script type="module">
+    import { auth, db } from "./firebase.js";
+
+    import {
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+    import {
+      collection,
+      doc,
+      getDoc,
+      query,
+      orderBy,
+      onSnapshot,
+      updateDoc,
+      arrayUnion,
+      arrayRemove,
+      addDoc,
+      deleteDoc,
+      serverTimestamp,
+      increment
+    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+    let currentUser = null;
+    let currentUserData = null;
+    let currentPost = null;
+    let comments = [];
+
+    const postCard = document.getElementById("postCard");
+    const postId = new URLSearchParams(window.location.search).get("id");
+
+    if (!postId) {
+      postCard.innerHTML = `<div class="message error">Missing post ID.</div>`;
+    }
+
+    onAuthStateChanged(auth, async user => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      currentUser = user;
+      currentUserData = await getCurrentUserData(user.uid);
+
+      if (postId) {
+        listenForPost();
+        listenForComments();
+      }
+    });
+
+    async function getCurrentUserData(uid) {
+      const userRef = doc(db, "users", uid);
+      const snapshot = await getDoc(userRef);
+
+      if (!snapshot.exists()) {
+        return {
+          uid,
+          username: currentUser.displayName || currentUser.email.split("@")[0],
+          email: currentUser.email || "",
+          avatarUrl: currentUser.photoURL || "",
+          bio: "Social, leveled up.",
+          followers: [],
+          following: [],
+          savedPosts: []
+        };
+      }
+
+      return {
+        uid,
+        followers: [],
+        following: [],
+        savedPosts: [],
+        ...snapshot.data()
+      };
+    }
+
+    function listenForPost() {
+      const postRef = doc(db, "posts", postId);
+
+      onSnapshot(postRef, snapshot => {
+        if (!snapshot.exists()) {
+          postCard.innerHTML = `<div class="message error">Post not found.</div>`;
+          return;
+        }
+
+        currentPost = {
+          id: snapshot.id,
+          likedBy: [],
+          savedBy: [],
+          likesCount: 0,
+          commentsCount: 0,
+          commentPreview: [],
+          isStory: false,
+          ...snapshot.data()
+        };
+
+        renderPost();
+      }, error => {
+        console.error(error);
+        postCard.innerHTML = `<div class="message error">${escapeHTML(error.message)}</div>`;
+      });
+    }
+
+    function listenForComments() {
+      const commentsQuery = query(
+        collection(db, "posts", postId, "comments"),
+        orderBy("createdAt", "asc")
+      );
+
+      onSnapshot(commentsQuery, snapshot => {
+        comments = snapshot.docs.map(commentDoc => ({
+          id: commentDoc.id,
+          ...commentDoc.data()
+        }));
+
+        renderPost();
+      });
+    }
+
+    function renderPost() {
+      if (!currentPost || !currentUserData) return;
+
+      const liked     = (currentPost.likedBy || []).includes(currentUser.uid);
+      const saved     = (currentPost.savedBy || []).includes(currentUser.uid);
+      const ownPost   = currentPost.userId === currentUser.uid;
+      // Never show Follow on your own post; only show if post has a userId and it's someone else
+      const isStranger = !ownPost && !!currentPost.userId;
+      const following = isStranger && (currentUserData.following || []).includes(currentPost.userId);
+      const image     = currentPost.imageData || currentPost.imageUrl || "";
+
+      postCard.innerHTML = `
+        <div class="post-head">
+          <a class="user-link" href="profile.html?uid=${currentPost.userId}">
+            ${getAvatarHTML(currentPost, "avatar")}
+            <div class="user-meta">
+              <strong>${escapeHTML(currentPost.username || "creator")}</strong>
+              <small>${formatDate(currentPost.createdAt)} ${currentPost.isStory ? "• Pulse" : ""}</small>
+            </div>
+          </a>
+
+          ${ownPost ? `
+            <button class="icon-btn danger" id="deletePostBtn" title="Delete post">
+              <i data-lucide="trash-2"></i>
+            </button>
+          ` : isStranger ? `
+            <button class="follow-btn ${following ? "following" : ""}" id="followBtn">
+              ${following ? "Following" : "Follow"}
+            </button>
+          ` : ""}
+        </div>
+
+        ${image ? `<div class="post-media" id="postMedia" role="button" tabindex="0" aria-label="Double tap to like"><img class="post-img" src="${image}" alt="Nexr post" draggable="false"></div>` : ""}
+
+        <div class="post-body">
+          <div class="actions">
+            <div class="action-left">
+              <button class="icon-btn ${liked ? "active" : ""}" id="likeBtn" aria-label="Like">
+                <i data-lucide="heart"></i>
+              </button>
+
+              <button class="icon-btn" id="focusCommentBtn" aria-label="Comment">
+                <i data-lucide="message-circle"></i>
+              </button>
+
+              <button class="icon-btn" id="shareBtn" aria-label="Share">
+                <i data-lucide="send"></i>
+              </button>
+            </div>
+
+            <button class="icon-btn ${saved ? "saved" : ""}" id="saveBtn" aria-label="Save">
+              <i data-lucide="bookmark"></i>
+            </button>
+          </div>
+
+          <strong id="likesLabel">${currentPost.likesCount || 0} like${currentPost.likesCount === 1 ? "" : "s"}</strong>
+
+          <p class="caption">
+            <strong>${escapeHTML(currentPost.username || "creator")}</strong>
+            ${escapeHTML(currentPost.caption || "")}
+          </p>
+
+          <section class="comment-box">
+            <textarea id="commentInput" maxlength="500" placeholder="Add a comment..."></textarea>
+            <button class="comment-submit" id="commentSubmit">Post comment</button>
+          </section>
+
+          <section class="comments" id="commentsList">
+            ${renderCommentsHTML()}
+          </section>
+        </div>
+      `;
+
+      document.getElementById("likeBtn").addEventListener("click", () => toggleLike({ burstTarget: document.getElementById("likeBtn") }));
+
+      const postMedia = document.getElementById("postMedia");
+      if (postMedia) {
+        let tapTimer = null;
+        let lastTap = 0;
+
+        postMedia.addEventListener("click", event => {
+          event.preventDefault();
+          const now = Date.now();
+
+          if (now - lastTap < 280) {
+            clearTimeout(tapTimer);
+            tapTimer = null;
+            lastTap = 0;
+            toggleLike({ forceLike: true, burstTarget: postMedia });
+            return;
+          }
+
+          lastTap = now;
+          tapTimer = setTimeout(() => { lastTap = 0; }, 260);
+        });
+
+        postMedia.addEventListener("keydown", event => {
+          if (event.key === " " || event.key === "Enter") {
+            event.preventDefault();
+            toggleLike({ forceLike: true, burstTarget: postMedia });
+          }
+        });
+      }
+
+      document.getElementById("saveBtn").addEventListener("click", toggleSave);
+      document.getElementById("shareBtn").addEventListener("click", sharePost);
+      document.getElementById("focusCommentBtn").addEventListener("click", () => {
+        document.getElementById("commentInput").focus();
+      });
+      document.getElementById("commentSubmit").addEventListener("click", addComment);
+
+      const followBtn = document.getElementById("followBtn");
+      if (followBtn) {
+        followBtn.addEventListener("click", toggleFollow);
+      }
+
+      const deletePostBtn = document.getElementById("deletePostBtn");
+      if (deletePostBtn) {
+        deletePostBtn.addEventListener("click", deleteOwnPost);
+      }
+
+      lucide.createIcons();
+    }
+
+    function renderCommentsHTML() {
+      if (!comments.length) {
+        return `<div class="empty">No comments yet. Be the first.</div>`;
+      }
+
+      return comments.map(comment => `
+        <article class="comment">
+          ${getAvatarHTML(comment, "avatar")}
+          <div class="comment-body">
+            <strong>${escapeHTML(comment.username || "creator")}</strong>
+            <p>${escapeHTML(comment.text || "")}</p>
+            <small>${formatDate(comment.createdAt)}</small>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    async function toggleLike(options = {}) {
+      if (!currentPost) return;
+
+      const alreadyLiked = (currentPost.likedBy || []).includes(currentUser.uid);
+      const shouldLike = options.forceLike ? true : !alreadyLiked;
+
+      if (alreadyLiked && options.forceLike) {
+        playHeartBurst(options.burstTarget || document.getElementById("postMedia"));
+        return;
+      }
+
+      currentPost.likedBy = shouldLike
+        ? [...(currentPost.likedBy || []), currentUser.uid]
+        : (currentPost.likedBy || []).filter(uid => uid !== currentUser.uid);
+
+      currentPost.likesCount = shouldLike
+        ? (currentPost.likesCount || 0) + 1
+        : Math.max((currentPost.likesCount || 0) - 1, 0);
+
+      updateLikeUI(shouldLike, currentPost.likesCount);
+
+      if (shouldLike) {
+        playHeartBurst(options.burstTarget || document.getElementById("postMedia"));
+      }
+
+      try {
+        await updateDoc(doc(db, "posts", postId), {
+          likedBy: shouldLike ? arrayUnion(currentUser.uid) : arrayRemove(currentUser.uid),
+          likesCount: currentPost.likesCount
+        });
+
+        if (shouldLike && currentPost.userId !== currentUser.uid) {
+          await createNotification(currentPost.userId, "like", "liked your post");
+        }
+      } catch (error) {
+        console.error(error);
+        currentPost.likedBy = alreadyLiked
+          ? [...(currentPost.likedBy || []), currentUser.uid]
+          : (currentPost.likedBy || []).filter(uid => uid !== currentUser.uid);
+        currentPost.likesCount = alreadyLiked
+          ? (currentPost.likesCount || 0) + 1
+          : Math.max((currentPost.likesCount || 0) - 1, 0);
+        updateLikeUI(alreadyLiked, currentPost.likesCount);
+      }
+    }
+
+    function updateLikeUI(liked, likesCount) {
+      const likeBtn = document.getElementById("likeBtn");
+      const likesLabel = document.getElementById("likesLabel");
+
+      if (likeBtn) {
+        likeBtn.classList.toggle("active", liked);
+        likeBtn.classList.remove("like-pop");
+        void likeBtn.offsetWidth;
+        if (liked) likeBtn.classList.add("like-pop");
+      }
+
+      if (likesLabel) {
+        likesLabel.textContent = `${likesCount || 0} like${likesCount === 1 ? "" : "s"}`;
+      }
+    }
+
+    function playHeartBurst(target) {
+      if (!target) return;
+
+      const host = target.classList?.contains("post-media")
+        ? target
+        : document.getElementById("postMedia") || target;
+
+      const heart = document.createElement("div");
+      heart.className = "heart-burst";
+      heart.innerHTML = `<i data-lucide="heart"></i>`;
+      host.appendChild(heart);
+
+      const points = [[0,-72],[52,-48],[72,0],[48,52],[0,72],[-48,52],[-72,0],[-52,-48]];
+      points.forEach(([x, y], index) => {
+        const particle = document.createElement("span");
+        particle.className = "heart-particle";
+        particle.style.setProperty("--x", `${x}px`);
+        particle.style.setProperty("--y", `${y}px`);
+        particle.style.animationDelay = `${index * 0.018}s`;
+        host.appendChild(particle);
+        setTimeout(() => particle.remove(), 850);
+      });
+
+      lucide.createIcons();
+      setTimeout(() => heart.remove(), 850);
+    }
+
+    async function toggleSave() {
+      const saved = (currentUserData.savedPosts || []).includes(postId);
+      const userRef = doc(db, "users", currentUser.uid);
+      const postRef = doc(db, "posts", postId);
+
+      await updateDoc(userRef, {
+        savedPosts: saved ? arrayRemove(postId) : arrayUnion(postId)
+      });
+
+      await updateDoc(postRef, {
+        savedBy: saved ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+      });
+
+      currentUserData.savedPosts = saved
+        ? (currentUserData.savedPosts || []).filter(id => id !== postId)
+        : [...(currentUserData.savedPosts || []), postId];
+
+      renderPost();
+    }
+
+    async function toggleFollow() {
+      // Hard guard: never follow yourself
+      if (!currentPost || !currentPost.userId || currentPost.userId === currentUser.uid) return;
+
+      const targetUserId = currentPost.userId;
+      const following = (currentUserData.following || []).includes(targetUserId);
+
+      const currentUserRef = doc(db, "users", currentUser.uid);
+      const targetUserRef = doc(db, "users", targetUserId);
+
+      await updateDoc(currentUserRef, {
+        following: following ? arrayRemove(targetUserId) : arrayUnion(targetUserId)
+      });
+
+      await updateDoc(targetUserRef, {
+        followers: following ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid)
+      });
+
+      // Update local state so re-renders are immediately correct
+      currentUserData.following = following
+        ? (currentUserData.following || []).filter(id => id !== targetUserId)
+        : [...(currentUserData.following || []), targetUserId];
+
+      if (!following) {
+        await createNotification(targetUserId, "follow", "started following you");
+      }
+
+      renderPost();
+    }
+
+    async function deleteOwnPost() {
+      if (!currentPost) return;
+
+      if (currentPost.userId !== currentUser.uid) {
+        alert("You can only delete your own posts.");
+        return;
+      }
+
+      const confirmed = confirm("Delete this post? This cannot be undone.");
+      if (!confirmed) return;
+
+      await deleteDoc(doc(db, "posts", postId));
+      window.location.href = "index.html";
+    }
+
+    async function addComment() {
+      const input = document.getElementById("commentInput");
+      const text = input.value.trim();
+
+      if (!text) return;
+
+      postCard.classList.add("loading");
+
+      try {
+        await addDoc(collection(db, "posts", postId, "comments"), {
+          postId,
+          userId: currentUser.uid,
+          username: currentUserData.username || currentUser.displayName || "creator",
+          avatarUrl: currentUserData.avatarUrl || currentUser.photoURL || "",
+          avatar: (currentUserData.username || "C").charAt(0).toUpperCase(),
+          text,
+          createdAt: serverTimestamp()
+        });
+
+        await updateDoc(doc(db, "posts", postId), {
+          commentsCount: increment(1),
+          commentPreview: arrayUnion({
+            userId: currentUser.uid,
+            username: currentUserData.username || "creator",
+            text: text.slice(0, 90),
+            createdAt: new Date().toISOString()
+          })
+        });
+
+        if (currentPost.userId !== currentUser.uid) {
+          await createNotification(currentPost.userId, "comment", "commented on your post");
+        }
+
+        input.value = "";
+      } catch (error) {
+        console.error(error);
+        alert(error.message);
+      } finally {
+        postCard.classList.remove("loading");
+      }
+    }
+
+    async function sharePost() {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        alert("Post link copied.");
+      } catch {
+        alert("Could not copy link.");
+      }
+    }
+
+    async function createNotification(toUserId, type, text, postIdValue = postId) {
+  await addDoc(collection(db, "notifications"), {
+    toUserId,
+    fromUserId: currentUser.uid,
+    fromUsername: currentUserData.username || "creator",
+    type,
+    text,
+    postId: postIdValue,
+    read: false,
+    createdAt: serverTimestamp()
+  });
+}
+
+    function getAvatarHTML(data, className) {
+      const name = data.username || data.displayName || data.avatar || "N";
+      const avatarUrl = data.avatarUrl || data.photoURL || "";
+
+      if (avatarUrl) {
+        return `<div class="${className}"><img src="${avatarUrl}" alt="${escapeHTML(name)}"></div>`;
+      }
+
+      return `<div class="${className}">${escapeHTML(name.charAt(0).toUpperCase())}</div>`;
+    }
+
+    function formatDate(timestamp) {
+      if (!timestamp || !timestamp.toDate) return "Just now";
+
+      const date = timestamp.toDate();
+      const diff = Date.now() - date.getTime();
+      const minutes = Math.floor(diff / 60000);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+
+      if (minutes < 1) return "Just now";
+      if (minutes < 60) return `${minutes}m ago`;
+      if (hours < 24) return `${hours}h ago`;
+      if (days < 7) return `${days}d ago`;
+
+      return date.toLocaleDateString();
+    }
+
+    function escapeHTML(value) {
+      return String(value || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    lucide.createIcons();
+</script>
+</body>
+</html>

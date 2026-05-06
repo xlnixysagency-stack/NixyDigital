@@ -1,408 +1,565 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Settings - Study Buddy AI</title>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
-  <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexr — Settings</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-    :root {
-        --black: #020202;
-        --evergreen: #0d2818;
-        --forest: #04471c;
-        --sea-green: #058c42;
-        --malachite: #16db65;
-        --white: #FAFAFA;
-        --gray: #999;
-    }
-
-    body {
-        font-family: 'Space Grotesk', sans-serif;
-        background: var(--black);
-        color: var(--white);
-        min-height: 100vh;
-        padding: 40px 20px;
-    }
-
-    .container {
-        max-width: 800px;
-        margin: 0 auto;
-    }
-
-    .header {
-        margin-bottom: 48px;
-    }
-
-    .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        color: var(--malachite);
-        text-decoration: none;
-        margin-bottom: 24px;
-        font-size: 14px;
-        transition: opacity 0.3s ease;
-    }
-
-    .back-link:hover {
-        opacity: 0.8;
-    }
-
-    .page-title {
-        font-family: 'Syne', sans-serif;
-        font-size: 48px;
-        font-weight: 800;
-        margin-bottom: 12px;
-        background: linear-gradient(135deg, var(--white) 0%, var(--malachite) 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    .page-subtitle {
-        font-size: 18px;
-        color: var(--gray);
-    }
-
-    .settings-section {
-        background: var(--evergreen);
-        border: 1px solid rgba(22, 219, 101, 0.2);
-        border-radius: 12px;
-        padding: 32px;
-        margin-bottom: 24px;
-    }
-
-    .section-title {
-        font-size: 20px;
-        font-weight: 700;
-        margin-bottom: 24px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .settings-item {
-        padding: 20px 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .settings-item:last-child {
-        border-bottom: none;
-    }
-
-    .item-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 8px;
-    }
-
-    .item-title {
-        font-weight: 600;
-        font-size: 16px;
-    }
-
-    .item-desc {
-        font-size: 14px;
-        color: var(--gray);
-        line-height: 1.6;
-    }
-
-    .btn {
-        padding: 12px 24px;
-        border: none;
-        border-radius: 8px;
-        font-family: 'Space Grotesk', sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .btn-primary {
-        background: var(--malachite);
-        color: var(--black);
-    }
-
-    .btn-primary:hover {
-        background: var(--sea-green);
-    }
-
-    .btn-danger {
-        background: #ff4444;
-        color: var(--white);
-    }
-
-    .btn-danger:hover {
-        background: #ff6b6b;
-    }
-
-    .btn-secondary {
-        background: transparent;
-        color: var(--white);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .btn-secondary:hover {
-        background: var(--forest);
-    }
-
-    .user-info {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        padding: 24px;
-        background: var(--forest);
-        border-radius: 8px;
-        margin-bottom: 24px;
-    }
-
-    .user-avatar-large {
-        width: 80px;
-        height: 80px;
-        background: var(--malachite);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 36px;
-        font-weight: 700;
-        color: var(--black);
-    }
-
-    .user-details h3 {
-        font-size: 24px;
-        margin-bottom: 4px;
-    }
-
-    .user-email {
-        color: var(--gray);
-        font-size: 14px;
-    }
-
-    .success-message {
-        background: rgba(22, 219, 101, 0.1);
-        border: 1px solid var(--malachite);
-        color: var(--malachite);
-        padding: 16px;
-        border-radius: 8px;
-        margin-bottom: 24px;
-        display: none;
-    }
-
-    .success-message.show {
-        display: block;
-    }
-
-    @media (max-width: 768px) {
-        .page-title {
-            font-size: 36px;
+    <style>
+        :root {
+          --bg:#050507;
+          --panel:rgba(14,14,18,.88);
+          --soft:rgba(255,255,255,.045);
+          --line:rgba(255,255,255,.08);
+          --text:#f0f0f5;
+          --muted:#8888a0;
+          --accent:#00e5ff;
+          --accent2:#7c3aed;
+          --danger:#ff4d6d;
         }
 
-        .settings-section {
-            padding: 24px;
+        * { box-sizing:border-box; }
+
+        body {
+          margin:0;
+          min-height:100vh;
+          color:var(--text);
+          font-family:'DM Sans',Arial,sans-serif;
+          background:
+            radial-gradient(circle at 15% 5%, rgba(0,229,255,.14), transparent 32%),
+            radial-gradient(circle at 85% 15%, rgba(124,58,237,.2), transparent 34%),
+            var(--bg);
         }
 
-        .user-info {
-            flex-direction: column;
-            text-align: center;
+        a { color:inherit; text-decoration:none; }
+        button { font-family:inherit; cursor:pointer; transition:.18s ease; }
+        button:hover { transform:translateY(-2px); }
+        button:active { transform:scale(.96); }
+        svg { width:21px; height:21px; }
+
+        .page {
+          width:min(760px,94vw);
+          margin:auto;
+          padding:26px 0 70px;
         }
-    }
-  </style>
+
+        .topbar {
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          margin-bottom:20px;
+        }
+
+        .logo {
+          font-size:34px;
+          font-weight:950;
+          font-family:'Space Grotesk',Arial,sans-serif;
+        }
+
+        .logo span {
+          color:var(--accent);
+          text-shadow:0 0 18px var(--accent);
+        }
+
+        .back {
+          display:inline-flex;
+          align-items:center;
+          gap:8px;
+          color:var(--muted);
+          font-weight:850;
+        }
+
+        .card {
+          background:var(--panel);
+          border:1px solid var(--line);
+          border-radius:30px;
+          padding:20px;
+          backdrop-filter:blur(18px);
+          box-shadow:0 20px 80px rgba(0,0,0,.24);
+          margin-bottom:16px;
+        }
+
+        h1 {
+          margin:0;
+          font-size:42px;
+          letter-spacing:-2px;
+        }
+
+        h2 {
+          margin:0 0 12px;
+          font-size:22px;
+        }
+
+        .sub {
+          color:var(--muted);
+          line-height:1.6;
+          margin:8px 0 0;
+        }
+
+        .profile-row {
+          display:flex;
+          align-items:center;
+          gap:14px;
+        }
+
+        .avatar {
+          width:58px;
+          height:58px;
+          border-radius:50%;
+          display:grid;
+          place-items:center;
+          background:linear-gradient(135deg,var(--accent),var(--accent2));
+          color:black;
+          font-weight:950;
+          overflow:hidden;
+          flex:0 0 auto;
+        }
+
+        .avatar img {
+          width:100%;
+          height:100%;
+          object-fit:cover;
+        }
+
+        .profile-meta strong,
+        .profile-meta small {
+          display:block;
+        }
+
+        .profile-meta small {
+          color:var(--muted);
+          margin-top:4px;
+        }
+
+        .setting {
+          border-top:1px solid var(--line);
+          padding:15px 0;
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:14px;
+        }
+
+        .setting:first-of-type {
+          border-top:0;
+        }
+
+        .setting-info strong,
+        .setting-info small {
+          display:block;
+        }
+
+        .setting-info small {
+          color:var(--muted);
+          margin-top:5px;
+          line-height:1.45;
+        }
+
+        .btn {
+          border-radius:999px;
+          padding:11px 15px;
+          font-weight:950;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          gap:8px;
+          white-space:nowrap;
+        }
+
+        .primary {
+          border:0;
+          background:linear-gradient(135deg,var(--accent),var(--accent2));
+          color:black;
+        }
+
+        .secondary {
+          border:1px solid var(--line);
+          background:#121216;
+          color:white;
+        }
+
+        .danger {
+          border:1px solid rgba(255,77,109,.45);
+          background:rgba(255,77,109,.08);
+          color:var(--danger);
+        }
+
+        .creator-pill {
+          display:inline-flex;
+          align-items:center;
+          gap:6px;
+          width:max-content;
+          margin-top:6px;
+          border:1px solid rgba(0,229,255,.34);
+          border-radius:999px;
+          padding:5px 10px;
+          background:rgba(0,229,255,.08);
+          color:var(--accent);
+          font-size:12px;
+          font-weight:950;
+        }
+
+        .creator-status {
+          display:flex;
+          align-items:center;
+          gap:8px;
+          color:var(--muted);
+          font-size:13px;
+          margin-top:8px;
+        }
+
+        .creator-status.active { color:var(--accent); }
+
+        .message {
+          min-height:22px;
+          color:var(--danger);
+          font-size:14px;
+        }
+
+        .message.success {
+          color:var(--accent);
+        }
+
+        .loading {
+          opacity:.7;
+          pointer-events:none;
+        }
+
+        @media(max-width:620px) {
+          h1 {
+            font-size:34px;
+          }
+
+          .setting {
+            align-items:flex-start;
+            flex-direction:column;
+          }
+
+          .btn {
+            width:100%;
+          }
+        }
+
+        @media(max-width:860px) {
+          .page, main.page { padding-bottom: 90px !important; }
+        }
+    </style>
 </head>
+
 <body>
-<div class="container">
-  <!-- Header -->
-  <div class="header">
-    <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
-    <h1 class="page-title">Settings</h1>
-    <p class="page-subtitle">Manage your account and preferences</p>
-  </div>
+<main class="page">
+    <header class="topbar">
+        <a class="back" href="index.html"><i data-lucide="arrow-left"></i> Flow</a>
+        <div class="logo">Nex<span>r</span></div>
+    </header>
 
-  <!-- Success Message -->
-  <div class="success-message" id="successMessage">Changes saved successfully!</div>
+    <section class="card">
+        <h1>Settings</h1>
+        <p class="sub">Manage your Nexr account, profile, and session.</p>
+    </section>
 
-  <!-- Account Section -->
-  <div class="settings-section">
-    <h2 class="section-title">👤 Account</h2>
-
-    <div class="user-info">
-      <div class="user-avatar-large" id="userAvatar">?</div>
-      <div class="user-details">
-        <h3 id="userName">Loading...</h3>
-        <div class="user-email" id="userEmail">Loading...</div>
-      </div>
-    </div>
-
-    <div class="settings-item">
-      <div class="item-header">
-        <div>
-          <div class="item-title">Change Password</div>
-          <div class="item-desc">Update your account password</div>
+    <section class="card" id="accountCard">
+        <div class="profile-row" id="profileRow">
+            <div class="avatar">N</div>
+            <div class="profile-meta">
+                <strong>Loading...</strong>
+                <small>Please wait</small>
+            </div>
         </div>
-        <button class="btn btn-secondary" onclick="alert('Password change coming soon!')">Change</button>
-      </div>
-    </div>
+    </section>
 
-    <div class="settings-item">
-      <div class="item-header">
-        <div>
-          <div class="item-title">Sign Out</div>
-          <div class="item-desc">Sign out of your account</div>
+    <section class="card">
+        <h2>Creator mode</h2>
+
+        <div class="setting">
+            <div class="setting-info">
+                <strong>Creator profile tag</strong>
+                <small>Turn this on to show the Creator tag and appear in Rising Creators.</small>
+                <div class="creator-status" id="creatorStatus">
+                    <i data-lucide="badge-check"></i>
+                    <span>Checking creator status...</span>
+                </div>
+            </div>
+            <button class="btn primary" id="creatorToggleBtn">
+                <i data-lucide="sparkles"></i>
+                Enable
+            </button>
         </div>
-        <button class="btn btn-secondary" id="signOutBtn">Sign Out</button>
-      </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- Data Section -->
-  <div class="settings-section">
-    <h2 class="section-title">💾 Data</h2>
+    <section class="card">
+        <h2>Account</h2>
 
-    <div class="settings-item">
-      <div class="item-header">
-        <div>
-          <div class="item-title">Export Data</div>
-          <div class="item-desc">Download all your study materials and quiz results</div>
+        <div class="setting">
+            <div class="setting-info">
+                <strong>Edit profile</strong>
+                <small>Update your username, bio, and avatar.</small>
+            </div>
+            <button class="btn primary" id="editProfileBtn">
+                <i data-lucide="pencil"></i>
+                Edit
+            </button>
         </div>
-        <button class="btn btn-secondary" onclick="alert('Export feature coming soon!')">Export</button>
-      </div>
-    </div>
 
-    <div class="settings-item">
-      <div class="item-header">
-        <div>
-          <div class="item-title">Delete All Data</div>
-          <div class="item-desc">Permanently delete all your materials and results</div>
+        <div class="setting">
+            <div class="setting-info">
+                <strong>View public profile</strong>
+                <small>Open your Nexr profile page.</small>
+            </div>
+            <button class="btn secondary" id="viewProfileBtn">
+                <i data-lucide="user"></i>
+                View
+            </button>
         </div>
-        <button class="btn btn-danger" id="deleteDataBtn">Delete</button>
-      </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- About Section -->
-  <div class="settings-section">
-    <h2 class="section-title">ℹ️ About</h2>
+    <section class="card">
+        <h2>Session</h2>
 
-    <div class="settings-item">
-      <div class="item-header">
-        <div>
-          <div class="item-title">Version</div>
-          <div class="item-desc">Study Buddy AI v1.0.0</div>
+        <div class="setting">
+            <div class="setting-info">
+                <strong>Log out</strong>
+                <small>Sign out of this device.</small>
+            </div>
+            <button class="btn secondary" id="logoutBtn">
+                <i data-lucide="log-out"></i>
+                Log out
+            </button>
         </div>
-      </div>
-    </div>
+    </section>
 
-    <div class="settings-item">
-      <div class="item-header">
-        <div>
-          <div class="item-title">Made by NixyDigital</div>
-          <div class="item-desc">© 2026 NixyDigital. All rights reserved.</div>
+    <section class="card">
+        <h2>Danger zone</h2>
+
+        <div class="setting">
+            <div class="setting-info">
+                <strong>Delete account</strong>
+                <small>This deletes your profile document. Auth deletion may require recent login.</small>
+            </div>
+            <button class="btn danger" id="deleteAccountBtn">
+                <i data-lucide="trash-2"></i>
+                Delete
+            </button>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- Firebase SDK -->
+        <div class="message" id="message"></div>
+    </section>
+</main>
+
 <script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-  import { getFirestore, collection, query, where, getDocs, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { injectMobileNav } from "./nav.js";
+injectMobileNav("settings");
 
-  // Firebase configuration
-  const firebaseConfig = {
-      apiKey: "AIzaSyB3ZEv5TgFr8SM1jCLyHJow3N39xfHYZNk",
-      authDomain: "studybuddyai-5561d.firebaseapp.com",
-      projectId: "studybuddyai-5561d",
-      storageBucket: "studybuddyai-5561d.firebasestorage.app",
-      messagingSenderId: "559083222865",
-      appId: "1:559083222865:web:26b4351fd26330716b4570"
-  };
+import { auth, db } from "./firebase.js";
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+  import {
+    onAuthStateChanged,
+    signOut,
+    deleteUser
+  } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+  import {
+    doc,
+    getDoc,
+    setDoc,
+    deleteDoc
+  } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
   let currentUser = null;
+  let currentUserData = null;
 
-  // Check authentication
-  onAuthStateChanged(auth, (user) => {
-      if (user) {
-          console.log('✅ User logged in:', user.email);
-          currentUser = user;
+  const accountCard = document.getElementById("accountCard");
+  const profileRow = document.getElementById("profileRow");
+  const message = document.getElementById("message");
 
-          // Update UI
-          const displayName = user.displayName || user.email.split('@')[0];
-          const initial = displayName.charAt(0).toUpperCase();
+  const editProfileBtn = document.getElementById("editProfileBtn");
+  const viewProfileBtn = document.getElementById("viewProfileBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const deleteAccountBtn = document.getElementById("deleteAccountBtn");
+  const creatorToggleBtn = document.getElementById("creatorToggleBtn");
+  const creatorStatus = document.getElementById("creatorStatus");
 
-          document.getElementById('userName').textContent = displayName;
-          document.getElementById('userEmail').textContent = user.email;
-          document.getElementById('userAvatar').textContent = initial;
+  onAuthStateChanged(auth, async user => {
+    if (!user) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    currentUser = user;
+    currentUserData = await getUserData(user.uid);
+    renderAccount();
+    renderCreatorMode();
+  });
+
+  editProfileBtn.addEventListener("click", () => {
+    window.location.href = "edit-profile.html";
+  });
+
+  viewProfileBtn.addEventListener("click", () => {
+    if (!currentUser) return;
+    window.location.href = `profile.html?uid=${currentUser.uid}`;
+  });
+
+  creatorToggleBtn.addEventListener("click", async () => {
+    if (!currentUser || !currentUserData) return;
+
+    const nextValue = !Boolean(currentUserData.isCreator);
+
+    try {
+      setLoading(true);
+      await setDoc(doc(db, "users", currentUser.uid), {
+        isCreator: nextValue,
+        creatorTag: nextValue ? "Creator" : "",
+        creatorEnabledAt: nextValue ? new Date().toISOString() : null
+      }, { merge: true });
+
+      currentUserData = {
+        ...currentUserData,
+        isCreator: nextValue,
+        creatorTag: nextValue ? "Creator" : ""
+      };
+
+      renderAccount();
+      renderCreatorMode();
+      showMessage(nextValue ? "Creator tag enabled. You can now appear in Rising Creators." : "Creator tag disabled.", true);
+    } catch (error) {
+      console.error(error);
+      showMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  logoutBtn.addEventListener("click", async () => {
+    try {
+      setLoading(true);
+      await signOut(auth);
+      window.location.href = "login.html";
+    } catch (error) {
+      showMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  deleteAccountBtn.addEventListener("click", async () => {
+    if (!currentUser) return;
+
+    const firstConfirm = confirm("Delete your Nexr account? This cannot be undone.");
+    if (!firstConfirm) return;
+
+    const typed = prompt('Type DELETE to confirm account deletion.');
+
+    if (typed !== "DELETE") {
+      showMessage("Account deletion cancelled.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      showMessage("Deleting account...", true);
+
+      await deleteDoc(doc(db, "users", currentUser.uid));
+      await deleteUser(currentUser);
+
+      window.location.href = "signup.html";
+    } catch (error) {
+      console.error(error);
+
+      if (error.code === "auth/requires-recent-login") {
+        showMessage("Please log out, log back in, then delete your account.");
       } else {
-          console.log('❌ Not logged in, redirecting...');
-          window.location.href = 'auth.html';
+        showMessage(error.message);
       }
+    } finally {
+      setLoading(false);
+    }
   });
 
-  // Sign out
-  document.getElementById('signOutBtn').addEventListener('click', async () => {
-      if (confirm('Are you sure you want to sign out?')) {
-          try {
-              await signOut(auth);
-              window.location.href = 'auth.html';
-          } catch (error) {
-              console.error('❌ Sign out error:', error);
-              alert('Failed to sign out. Please try again.');
-          }
+  async function getUserData(uid) {
+    const snapshot = await getDoc(doc(db, "users", uid));
+
+    if (!snapshot.exists()) {
+      return {
+        uid,
+        username: currentUser.displayName || currentUser.email.split("@")[0],
+        email: currentUser.email || "",
+        avatarUrl: currentUser.photoURL || "",
+        bio: "Social, leveled up.",
+        isCreator: false,
+        creatorTag: ""
+      };
+    }
+
+    return {
+      uid,
+      isCreator: false,
+      creatorTag: "",
+      ...snapshot.data()
+    };
+  }
+
+  function renderAccount() {
+    const username = currentUserData.username || "creator";
+    const email = currentUserData.email || currentUser.email || "";
+    const avatarUrl = currentUserData.avatarUrl || currentUser.photoURL || "";
+
+    profileRow.innerHTML = `
+      ${avatarUrl
+        ? `<div class="avatar"><img src="${avatarUrl}" alt="${escapeHTML(username)}"></div>`
+        : `<div class="avatar">${escapeHTML(username.charAt(0).toUpperCase())}</div>`
       }
-  });
 
-  // Delete all data
-  document.getElementById('deleteDataBtn').addEventListener('click', async () => {
-      const confirmText = 'DELETE';
-      const userInput = prompt(`This will permanently delete ALL your study materials and quiz results. This cannot be undone!\n\nType "${confirmText}" to confirm:`);
+      <div class="profile-meta">
+        <strong>${escapeHTML(username)}</strong>
+        <small>${escapeHTML(email)}</small>
+        ${currentUserData.isCreator ? `<span class="creator-pill"><i data-lucide="badge-check"></i>${escapeHTML(currentUserData.creatorTag || "Creator")}</span>` : ""}
+      </div>
+    `;
+  }
 
-      if (userInput === confirmText) {
-          try {
-              // Delete study materials
-              const materialsRef = collection(db, 'study_materials');
-              const materialsQuery = query(materialsRef, where('userId', '==', currentUser.uid));
-              const materialsSnapshot = await getDocs(materialsQuery);
+  function renderCreatorMode() {
+    const isCreator = Boolean(currentUserData?.isCreator);
+    creatorToggleBtn.classList.toggle("secondary", isCreator);
+    creatorToggleBtn.classList.toggle("primary", !isCreator);
+    creatorToggleBtn.innerHTML = isCreator
+      ? `<i data-lucide="badge-check"></i> Enabled`
+      : `<i data-lucide="sparkles"></i> Enable`;
 
-              const deletePromises = [];
-              materialsSnapshot.forEach(doc => {
-                  deletePromises.push(deleteDoc(doc.ref));
-              });
+    creatorStatus.classList.toggle("active", isCreator);
+    creatorStatus.innerHTML = isCreator
+      ? `<i data-lucide="badge-check"></i><span>${escapeHTML(currentUserData.creatorTag || "Creator")} tag active</span>`
+      : `<i data-lucide="badge-check"></i><span>Creator tag is off</span>`;
 
-              // Delete quiz results
-              const resultsRef = collection(db, 'quiz_results');
-              const resultsQuery = query(resultsRef, where('userId', '==', currentUser.uid));
-              const resultsSnapshot = await getDocs(resultsQuery);
+    lucide.createIcons();
+  }
 
-              resultsSnapshot.forEach(doc => {
-                  deletePromises.push(deleteDoc(doc.ref));
-              });
+  function setLoading(isLoading) {
+    accountCard.classList.toggle("loading", isLoading);
+    logoutBtn.disabled = isLoading;
+    deleteAccountBtn.disabled = isLoading;
+    creatorToggleBtn.disabled = isLoading;
+  }
 
-              await Promise.all(deletePromises);
+  function showMessage(text, success = false) {
+    message.textContent = text;
+    message.classList.toggle("success", success);
+  }
 
-              alert('All data deleted successfully.');
-              window.location.href = 'dashboard.html';
-          } catch (error) {
-              console.error('❌ Delete error:', error);
-              alert('Failed to delete data. Please try again.');
-          }
-      } else if (userInput !== null) {
-          alert('Deletion cancelled. Text did not match.');
-      }
-  });
+  function escapeHTML(value) {
+    return String(value || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  lucide.createIcons();
 </script>
 </body>
 </html>

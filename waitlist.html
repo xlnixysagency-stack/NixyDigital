@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nexr — Join the Waitlist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+          --bg:#050507;
+          --panel:rgba(14,14,18,.88);
+          --panel2:rgba(18,18,24,.96);
+          --soft:rgba(255,255,255,.05);
+          --soft2:rgba(255,255,255,.08);
+          --line:rgba(255,255,255,.08);
+          --text:#f0f0f5;
+          --muted:#8888a0;
+          --accent:#00e5ff;
+          --accent2:#7c3aed;
+          --hot:#ff2bd6;
+          --danger:#ff4d6d;
+          --success:#22d3a0;
+        }
+
+        * { box-sizing:border-box; margin:0; padding:0; }
+
+        body {
+          min-height:100vh;
+          color:var(--text);
+          font-family:'DM Sans',Arial,sans-serif;
+          background:
+            radial-gradient(circle at 15% 5%, rgba(0,229,255,.16), transparent 30%),
+            radial-gradient(circle at 85% 15%, rgba(124,58,237,.24), transparent 34%),
+            radial-gradient(circle at 45% 100%, rgba(255,43,214,.10), transparent 32%),
+            var(--bg);
+          overflow-x:hidden;
+        }
+
+        a { color:inherit; text-decoration:none; }
+        button,input,select { font-family:inherit; }
+        svg { width:21px; height:21px; }
+
+        .orb {
+          position:fixed;
+          width:300px;
+          height:300px;
+          border-radius:50%;
+          filter:blur(30px);
+          opacity:.32;
+          pointer-events:none;
+          animation:float 8s ease-in-out infinite;
+          z-index:0;
+        }
+        .orb.one { background:var(--accent); top:8%; left:4%; }
+        .orb.two { background:var(--accent2); right:7%; bottom:8%; animation-delay:-2.5s; }
+        .orb.three { background:var(--hot); left:45%; bottom:-8%; animation-delay:-4s; opacity:.18; }
+
+        @keyframes float {
+          0%,100% { transform:translateY(0) scale(1); }
+          50% { transform:translateY(-26px) scale(1.07); }
+        }
+
+        .page {
+          position:relative;
+          z-index:2;
+          width:min(1120px,94vw);
+          margin:auto;
+          padding:26px 0 44px;
+        }
+
+        .topbar {
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          gap:16px;
+          margin-bottom:42px;
+        }
+
+        .logo {
+          font-family:'Space Grotesk',Arial,sans-serif;
+          font-size:34px;
+          font-weight:950;
+          letter-spacing:-1px;
+        }
+        .logo span { color:var(--accent); text-shadow:0 0 18px var(--accent); }
+
+        .nav-actions { display:flex; gap:10px; align-items:center; }
+        .ghost-btn,.primary-btn {
+          border-radius:999px;
+          padding:12px 16px;
+          font-weight:900;
+          display:inline-flex;
+          align-items:center;
+          justify-content:center;
+          gap:8px;
+          cursor:pointer;
+          transition:.18s ease;
+        }
+        .ghost-btn {
+          border:1px solid var(--line);
+          background:rgba(255,255,255,.035);
+          color:var(--text);
+        }
+        .primary-btn {
+          border:0;
+          color:#000;
+          background:linear-gradient(135deg,var(--accent),var(--accent2));
+          box-shadow:0 14px 44px rgba(0,229,255,.16);
+        }
+        .ghost-btn:hover,.primary-btn:hover { transform:translateY(-2px); }
+        .ghost-btn:active,.primary-btn:active { transform:scale(.97); }
+
+        .hero {
+          display:grid;
+          grid-template-columns:1.05fr .95fr;
+          gap:26px;
+          align-items:center;
+        }
+
+        .hero-copy {
+          padding:10px 0;
+        }
+
+        .eyebrow {
+          width:max-content;
+          max-width:100%;
+          display:flex;
+          align-items:center;
+          gap:8px;
+          border:1px solid rgba(0,229,255,.26);
+          background:rgba(0,229,255,.07);
+          color:#bff8ff;
+          border-radius:999px;
+          padding:9px 12px;
+          font-weight:900;
+          font-size:13px;
+          margin-bottom:18px;
+        }
+
+        h1 {
+          font-family:'Space Grotesk',Arial,sans-serif;
+          font-size:clamp(48px,7vw,86px);
+          line-height:.9;
+          letter-spacing:-4px;
+          margin-bottom:18px;
+        }
+        h1 span {
+          color:var(--accent);
+          text-shadow:0 0 28px rgba(0,229,255,.45);
+        }
+
+        .lead {
+          color:var(--muted);
+          font-size:18px;
+          line-height:1.7;
+          max-width:620px;
+          margin-bottom:22px;
+        }
+
+        .points {
+          display:grid;
+          gap:10px;
+          margin:22px 0 0;
+        }
+        .point {
+          display:flex;
+          gap:10px;
+          align-items:center;
+          color:#e8e8ee;
+          font-weight:700;
+        }
+        .check {
+          width:26px;
+          height:26px;
+          border-radius:50%;
+          display:grid;
+          place-items:center;
+          color:#001112;
+          background:var(--accent);
+          box-shadow:0 0 20px rgba(0,229,255,.22);
+          flex:0 0 auto;
+        }
+        .check svg { width:16px; height:16px; }
+
+        .card {
+          background:var(--panel);
+          border:1px solid var(--line);
+          border-radius:32px;
+          backdrop-filter:blur(20px);
+          -webkit-backdrop-filter:blur(20px);
+          box-shadow:0 24px 90px rgba(0,0,0,.32);
+        }
+
+        .waitlist-card {
+          padding:22px;
+          position:relative;
+          overflow:hidden;
+        }
+        .waitlist-card::before {
+          content:"";
+          position:absolute;
+          inset:0;
+          background:linear-gradient(135deg, rgba(0,229,255,.12), transparent 38%, rgba(124,58,237,.14));
+          pointer-events:none;
+        }
+        .waitlist-inner { position:relative; z-index:2; }
+
+        .mini-title {
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          gap:12px;
+          margin-bottom:18px;
+        }
+        .mini-title h2 {
+          font-size:26px;
+          letter-spacing:-1px;
+        }
+        .spots {
+          color:var(--accent);
+          background:rgba(0,229,255,.08);
+          border:1px solid rgba(0,229,255,.24);
+          border-radius:999px;
+          padding:8px 10px;
+          font-size:12px;
+          font-weight:950;
+          white-space:nowrap;
+        }
+
+        form { display:grid; gap:13px; }
+        .field { display:grid; gap:8px; }
+        label { color:#d7d7e0; font-weight:900; font-size:13px; }
+        input,select {
+          width:100%;
+          border:1px solid var(--line);
+          background:rgba(5,5,7,.68);
+          color:white;
+          outline:none;
+          border-radius:18px;
+          padding:14px 15px;
+          font-size:15px;
+          transition:.18s ease;
+        }
+        input:focus,select:focus {
+          border-color:var(--accent);
+          box-shadow:0 0 0 4px rgba(0,229,255,.08);
+        }
+        select option { background:#101014; }
+
+        .split {
+          display:grid;
+          grid-template-columns:.8fr 1.2fr;
+          gap:10px;
+        }
+
+        .sms-consent {
+          display:flex;
+          gap:10px;
+          align-items:flex-start;
+          padding:12px;
+          border:1px solid var(--line);
+          border-radius:18px;
+          background:rgba(255,255,255,.035);
+          color:var(--muted);
+          line-height:1.45;
+          font-size:13px;
+        }
+        .sms-consent input { width:auto; margin-top:2px; accent-color:var(--accent); }
+
+        .submit-btn {
+          margin-top:4px;
+          width:100%;
+          border:0;
+          border-radius:999px;
+          padding:15px 17px;
+          font-weight:950;
+          font-size:15px;
+          background:linear-gradient(135deg,var(--accent),var(--accent2));
+          color:#000;
+          cursor:pointer;
+          transition:.18s ease;
+        }
+        .submit-btn:hover { transform:translateY(-2px); box-shadow:0 18px 42px rgba(0,229,255,.18); }
+        .submit-btn:active { transform:scale(.98); }
+        .submit-btn:disabled { opacity:.55; cursor:not-allowed; transform:none; }
+
+        .status {
+          display:none;
+          padding:12px;
+          border-radius:16px;
+          font-weight:800;
+          line-height:1.5;
+        }
+        .status.good {
+          display:block;
+          background:rgba(34,211,160,.1);
+          border:1px solid rgba(34,211,160,.22);
+          color:#aef8df;
+        }
+        .status.bad {
+          display:block;
+          background:rgba(255,77,109,.1);
+          border:1px solid rgba(255,77,109,.24);
+          color:#ffd1da;
+        }
+
+        .preview-card {
+          margin-top:16px;
+          padding:16px;
+          display:grid;
+          gap:12px;
+        }
+        .phone-shot {
+          border-radius:26px;
+          overflow:hidden;
+          border:1px solid var(--line);
+          background:#09090b;
+          min-height:310px;
+          position:relative;
+          display:grid;
+          align-content:end;
+          padding:18px;
+        }
+        .phone-shot::before {
+          content:"";
+          position:absolute;
+          inset:0;
+          background:
+            linear-gradient(to top, rgba(0,0,0,.9), transparent 48%),
+            radial-gradient(circle at 50% 20%, rgba(0,229,255,.32), transparent 30%),
+            radial-gradient(circle at 70% 55%, rgba(124,58,237,.28), transparent 32%);
+        }
+        .shot-content { position:relative; z-index:2; }
+        .creator-row { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+        .avatar {
+          width:42px;
+          height:42px;
+          border-radius:50%;
+          background:linear-gradient(135deg,var(--accent),var(--accent2));
+          display:grid;
+          place-items:center;
+          color:#000;
+          font-weight:950;
+        }
+        .creator-badge {
+          display:inline-flex;
+          align-items:center;
+          gap:6px;
+          border:1px solid rgba(0,229,255,.28);
+          background:rgba(0,229,255,.09);
+          color:#bff8ff;
+          border-radius:999px;
+          padding:5px 8px;
+          font-size:11px;
+          font-weight:950;
+          box-shadow:0 0 20px rgba(0,229,255,.12);
+        }
+        .shot-content h3 { font-size:26px; letter-spacing:-1px; margin-bottom:8px; }
+        .shot-content p { color:var(--muted); line-height:1.55; }
+
+        .stats {
+          display:grid;
+          grid-template-columns:repeat(3,1fr);
+          gap:10px;
+          margin-top:16px;
+        }
+        .stat {
+          padding:13px;
+          border-radius:20px;
+          background:rgba(255,255,255,.04);
+          border:1px solid var(--line);
+        }
+        .stat strong { display:block; font-size:20px; }
+        .stat small { color:var(--muted); font-weight:800; }
+
+        .footer-note {
+          text-align:center;
+          margin-top:32px;
+          color:var(--muted);
+          font-size:13px;
+          line-height:1.5;
+        }
+
+        @media (max-width:880px) {
+          .hero { grid-template-columns:1fr; }
+          .topbar { margin-bottom:26px; }
+          .nav-actions .ghost-btn { display:none; }
+          .waitlist-card { order:-1; }
+        }
+        @media (max-width:560px) {
+          .page { width:min(100% - 26px, 1120px); padding-top:18px; }
+          h1 { letter-spacing:-2.5px; }
+          .lead { font-size:16px; }
+          .split { grid-template-columns:1fr; }
+          .mini-title { align-items:flex-start; flex-direction:column; }
+          .stats { grid-template-columns:1fr; }
+          .topbar { margin-bottom:20px; }
+          .logo { font-size:30px; }
+        }
+    </style>
+</head>
+<body>
+<div class="orb one"></div>
+<div class="orb two"></div>
+<div class="orb three"></div>
+
+<main class="page">
+    <header class="topbar">
+        <a class="logo" href="index.html">Nex<span>r</span></a>
+        <div class="nav-actions">
+            <a class="primary-btn" href="#waitlist"><i data-lucide="sparkles"></i> Join Waitlist</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-copy">
+            <div class="eyebrow"><i data-lucide="radio"></i> Early access is opening soon</div>
+            <h1>A cleaner social app for the <span>next wave.</span></h1>
+            <p class="lead">
+                Nexr is a dark, clean social platform built for posting, exploring, messaging, reels, and profiles — with extra creator tools for people who want to build an audience.
+            </p>
+
+            <div class="points">
+                <div class="point"><span class="check"><i data-lucide="check"></i></span> Post, discover, message, watch reels, and build a profile without the usual clutter.</div>
+                <div class="point"><span class="check"><i data-lucide="check"></i></span> Optional creator tools like badges, better discovery, and future analytics for people building something.</div>
+                <div class="point"><span class="check"><i data-lucide="check"></i></span> Join the waitlist for early access. SMS updates are optional.</div>
+            </div>
+        </div>
+
+        <div id="waitlist" class="card waitlist-card">
+            <div class="waitlist-inner">
+                <div class="mini-title">
+                    <div>
+                        <h2>Join the waitlist</h2>
+                        <p style="color:var(--muted);margin-top:5px;line-height:1.5;">Get early access before the public launch. Nexr is for everyone — creators get extra tools.</p>
+                    </div>
+                    <span class="spots">Limited beta</span>
+                </div>
+
+                <form id="waitlistForm">
+                    <div class="field">
+                        <label for="name">Name</label>
+                        <input id="name" name="name" autocomplete="name" placeholder="Your name" required />
+                    </div>
+
+                    <div class="field">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+                    </div>
+
+                    <div class="split">
+                        <div class="field">
+                            <label for="countryCode">Code</label>
+                            <select id="countryCode" name="countryCode">
+                                <option value="+1">🇺🇸 +1</option>
+                                <option value="+44">🇬🇧 +44</option>
+                                <option value="+52">🇲🇽 +52</option>
+                                <option value="+91">🇮🇳 +91</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="phone">Phone for SMS updates</label>
+                            <input id="phone" name="phone" inputmode="tel" autocomplete="tel" placeholder="661 123 4567" />
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="role">I am a...</label>
+                        <select id="role" name="role">
+                            <option value="social">Social user</option>
+                            <option value="creator">Creator</option>
+                            <option value="videographer">Videographer / editor</option>
+                            <option value="developer">Developer / builder</option>
+                            <option value="designer">Designer</option>
+                            <option value="viewer">Viewer / supporter</option>
+                        </select>
+                    </div>
+
+                    <label class="sms-consent">
+                        <input id="smsConsent" type="checkbox" />
+                        <span>I agree to receive SMS updates about Nexr early access. Msg/data rates may apply. Reply STOP to opt out. You can join without SMS by leaving this unchecked.</span>
+                    </label>
+
+                    <button id="submitBtn" class="submit-btn" type="submit">Reserve my spot</button>
+                    <div id="status" class="status"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="card preview-card">
+        <div class="phone-shot">
+            <div class="shot-content">
+                <div class="creator-row">
+                    <div class="avatar">N</div>
+                    <div>
+                        <strong>@nexruser</strong><br />
+                        <span class="creator-badge"><i data-lucide="sparkles"></i> Early Access</span>
+                    </div>
+                </div>
+                <h3>Post. Discover. Build your world.</h3>
+                <p>A social platform that feels cinematic, clean, personal, and made for mobile from day one.</p>
+            </div>
+        </div>
+        <div class="stats">
+            <div class="stat"><strong>Early</strong><small>private beta</small></div>
+            <div class="stat"><strong>Social</strong><small>for everyone</small></div>
+            <div class="stat"><strong>SMS</strong><small>launch alerts</small></div>
+        </div>
+    </section>
+
+    <p class="footer-note">By joining, you agree to receive launch updates. SMS needs a secure backend such as Twilio, Firebase Functions, or another server-side SMS provider.</p>
+</main>
+
+<script type="module">
+    import { db } from "./firebase.js";
+    import {
+      collection,
+      addDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+    const form = document.getElementById("waitlistForm");
+    const statusBox = document.getElementById("status");
+    const submitBtn = document.getElementById("submitBtn");
+
+    const cleanPhone = (value) => value.replace(/[^0-9]/g, "");
+
+    function setStatus(type, message) {
+      statusBox.className = `status ${type}`;
+      statusBox.textContent = message;
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      statusBox.className = "status";
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Reserving...";
+
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const countryCode = document.getElementById("countryCode").value;
+      const phoneRaw = document.getElementById("phone").value.trim();
+      const phoneDigits = cleanPhone(phoneRaw);
+      const role = document.getElementById("role").value;
+      const smsConsent = document.getElementById("smsConsent").checked;
+
+      const phone = phoneDigits ? `${countryCode}${phoneDigits}` : "";
+
+      if (!name || !email) {
+        setStatus("bad", "Add your name and email first.");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Reserve my spot";
+        return;
+      }
+
+      if (smsConsent && phoneDigits.length < 10) {
+        setStatus("bad", "Add a valid phone number or uncheck SMS updates.");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Reserve my spot";
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, "waitlist"), {
+          name,
+          email,
+          phone,
+          role,
+          smsConsent: Boolean(smsConsent && phone),
+          source: "waitlist.html",
+          status: "waiting",
+          createdAt: serverTimestamp()
+        });
+
+        setStatus("good", "You’re on the Nexr waitlist. Early access updates will go out soon.");
+        form.reset();
+        submitBtn.textContent = "Reserved";
+      } catch (error) {
+        console.error(error);
+        setStatus("bad", "Could not join the waitlist. Check your connection or try again.");
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Reserve my spot";
+      }
+    });
+
+    lucide.createIcons();
+</script>
+</body>
+</html>

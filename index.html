@@ -4,618 +4,1060 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nexr — Social, leveled up</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
+        /* ─── Design tokens ─────────────────────────────────────── */
         :root {
-          --bg:#050505;
-          --panel:rgba(16,16,19,.9);
-          --soft:rgba(255,255,255,.045);
-          --line:#26262c;
-          --text:#fff;
-          --muted:#a1a1aa;
-          --accent:#00e5ff;
-          --accent2:#7c3aed;
-          --hot:#ff2bd6;
-          --danger:#ff4d6d;
+          --bg:       #050507;
+          --panel:    rgba(14,14,18,.88);
+          --panel2:   rgba(18,18,24,.96);
+          --soft:     rgba(255,255,255,.05);
+          --soft2:    rgba(255,255,255,.08);
+          --line:     rgba(255,255,255,.08);
+          --text:     #f0f0f5;
+          --muted:    #8888a0;
+          --accent:   #00e5ff;
+          --accent2:  #7c3aed;
+          --hot:      #ff2bd6;
+          --danger:   #ff4d6d;
+          --success:  #22d3a0;
+
+          --r-card:   24px;
+          --r-pill:   999px;
+          --sidebar-w: 240px;
+          --rightbar-w: 290px;
         }
 
-        * { box-sizing:border-box; }
+        /* ─── Reset ─────────────────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
 
         body {
-          margin:0;
-          min-height:100vh;
-          color:var(--text);
-          font-family:Arial,sans-serif;
+          min-height: 100vh;
+          color: var(--text);
+          font-family: 'DM Sans', sans-serif;
+          font-size: 15px;
+          line-height: 1.5;
           background:
-            radial-gradient(circle at 15% 5%, rgba(0,229,255,.14), transparent 32%),
-            radial-gradient(circle at 85% 15%, rgba(124,58,237,.2), transparent 34%),
-            radial-gradient(circle at 45% 100%, rgba(255,43,214,.1), transparent 32%),
+            radial-gradient(ellipse 60% 40% at 15% 0%, rgba(0,229,255,.13) 0%, transparent 60%),
+            radial-gradient(ellipse 50% 50% at 85% 10%, rgba(124,58,237,.18) 0%, transparent 55%),
+            radial-gradient(ellipse 40% 35% at 45% 100%, rgba(255,43,214,.09) 0%, transparent 50%),
             var(--bg);
         }
 
-        a { color:inherit; text-decoration:none; }
-        button { font-family:inherit; cursor:pointer; transition:.18s ease; }
-        button:hover { transform:translateY(-2px); }
-        button:active { transform:scale(.96); }
-        svg { width:21px; height:21px; }
+        img { display: block; max-width: 100%; }
+        a { color: inherit; text-decoration: none; }
 
+        /* ─── App shell: 3-col desktop layout ───────────────────── */
         .app {
-          width:min(1180px,96vw);
-          margin:auto;
-          padding:22px 0 70px;
-          display:grid;
-          grid-template-columns:230px 1fr 285px;
-          gap:20px;
+          width: min(1200px, 100%);
+          margin: 0 auto;
+          padding: 20px 16px 80px;
+          display: grid;
+          grid-template-columns: var(--sidebar-w) 1fr var(--rightbar-w);
+          grid-template-rows: auto;
+          gap: 16px;
+          align-items: start;
         }
 
+        /* ─── Generic card ───────────────────────────────────────── */
         .card {
-          background:var(--panel);
-          border:1px solid var(--line);
-          border-radius:28px;
-          backdrop-filter:blur(18px);
-          box-shadow:0 20px 80px rgba(0,0,0,.22);
+          background: var(--panel);
+          border: 1px solid var(--line);
+          border-radius: var(--r-card);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
         }
 
+        /* ─── Sidebar ────────────────────────────────────────────── */
         .sidebar {
-          position:sticky;
-          top:20px;
-          height:max-content;
-          padding:18px;
-          z-index:2;
+          grid-column: 1;
+          position: sticky;
+          top: 20px;
+          height: max-content;
+          padding: 20px 14px 18px;
+          z-index: 10;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
         }
 
         .logo {
-          font-size:34px;
-          font-weight:950;
-          letter-spacing:-1px;
-          margin-bottom:24px;
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 32px;
+          font-weight: 700;
+          letter-spacing: -1.5px;
+          margin-bottom: 18px;
+          display: inline-flex;
+          align-items: center;
         }
 
         .logo span {
-          color:var(--accent);
-          text-shadow:0 0 18px var(--accent);
+          color: var(--accent);
+          text-shadow: 0 0 20px rgba(0,229,255,.6);
         }
 
+        /* ─── Sidebar nav ────────────────────────────────────────── */
         .nav {
-          display:grid;
-          gap:8px;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
         }
 
         .nav a {
-          display:flex;
-          align-items:center;
-          gap:12px;
-          padding:13px 14px;
-          border-radius:18px;
-          color:var(--muted);
-          font-weight:850;
+          display: flex;
+          align-items: center;
+          gap: 11px;
+          padding: 11px 13px;
+          border-radius: 16px;
+          color: var(--muted);
+          font-weight: 600;
+          font-size: 14.5px;
+          transition: background .15s, color .15s;
+          position: relative;
         }
 
-        .nav a:hover,
+        .nav a svg { width: 19px; height: 19px; flex-shrink: 0; }
+
+        .nav a:hover {
+          color: var(--text);
+          background: var(--soft);
+        }
+
         .nav a.active {
-          color:white;
-          background:var(--soft);
+          color: var(--text);
+          background: var(--soft2);
+        }
+
+        .nav a.active::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 25%;
+          bottom: 25%;
+          width: 3px;
+          border-radius: 999px;
+          background: linear-gradient(to bottom, var(--accent), var(--accent2));
+        }
+
+        /* Notification badge */
+        .nav a .badge {
+          margin-left: auto;
+          background: var(--hot);
+          color: white;
+          font-size: 10px;
+          font-weight: 900;
+          line-height: 1;
+          padding: 2px 6px;
+          border-radius: 999px;
+          min-width: 18px;
+          text-align: center;
         }
 
         .create-btn {
-          margin-top:18px;
-          width:100%;
-          border:0;
-          border-radius:999px;
-          padding:14px;
-          font-weight:950;
-          background:linear-gradient(135deg,var(--accent),var(--accent2));
-          color:black;
+          margin-top: 14px;
+          width: 100%;
+          border: 0;
+          border-radius: var(--r-pill);
+          padding: 13px;
+          font-family: 'DM Sans', sans-serif;
+          font-size: 14px;
+          font-weight: 700;
+          cursor: pointer;
+          background: linear-gradient(135deg, var(--accent), var(--accent2));
+          color: #000;
+          transition: opacity .15s, transform .15s, box-shadow .15s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
         }
 
+        .create-btn svg { width: 17px; height: 17px; }
+
+        .create-btn:hover {
+          opacity: .9;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 30px rgba(0,229,255,.25);
+        }
+
+        .create-btn:active { transform: scale(.97); }
+
+        /* ─── Feed (center) ──────────────────────────────────────── */
         .feed {
-          display:grid;
-          gap:18px;
-          position:relative;
-          z-index:2;
+          grid-column: 2;
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+          min-width: 0;
         }
 
+        /* ─── Mobile topbar (hidden on desktop) ──────────────────── */
         .top-mobile {
-          display:none;
+          display: none;
+          align-items: center;
+          justify-content: space-between;
+          padding: 12px 16px;
         }
 
-        .composer {
-          padding:18px;
+        .mobile-actions {
+          display: flex;
+          gap: 8px;
         }
 
-        .composer h1 {
-          margin:0;
-          font-size:38px;
-          letter-spacing:-2px;
+        .mobile-actions a {
+          width: 42px;
+          height: 42px;
+          border-radius: 50%;
+          display: grid;
+          place-items: center;
+          background: var(--soft);
+          color: var(--muted);
+          transition: background .15s, color .15s;
         }
 
-        .composer p {
-          margin:8px 0 0;
-          color:var(--muted);
+        .mobile-actions a:hover {
+          background: var(--soft2);
+          color: var(--text);
+        }
+
+        .mobile-actions a svg { width: 20px; height: 20px; }
+
+        /* ─── Feed header / tabs ─────────────────────────────────── */
+        .feed-header {
+          padding: 18px 18px 14px;
+        }
+
+        .feed-header h1 {
+          font-family: 'Space Grotesk', sans-serif;
+          font-size: 34px;
+          font-weight: 700;
+          letter-spacing: -1.5px;
+          line-height: 1;
+        }
+
+        .feed-header p {
+          color: var(--muted);
+          font-size: 14px;
+          margin-top: 5px;
         }
 
         .tabs {
-          display:flex;
-          gap:10px;
-          margin-top:16px;
+          display: flex;
+          gap: 8px;
+          margin-top: 14px;
+          overflow-x: auto;
+          padding-bottom: 2px;
+          scrollbar-width: none;
         }
+
+        .tabs::-webkit-scrollbar { display: none; }
 
         .tab {
-          border:1px solid var(--line);
-          background:#101014;
-          color:var(--muted);
-          border-radius:999px;
-          padding:10px 15px;
-          font-weight:900;
+          flex-shrink: 0;
+          border: 1px solid var(--line);
+          background: transparent;
+          color: var(--muted);
+          border-radius: var(--r-pill);
+          padding: 9px 16px;
+          font-family: 'DM Sans', sans-serif;
+          font-size: 13.5px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: background .15s, color .15s, border-color .15s;
         }
+
+        .tab:hover { color: var(--text); border-color: var(--soft2); }
 
         .tab.active {
-          color:black;
-          background:linear-gradient(135deg,var(--accent),var(--accent2));
+          color: #000;
+          background: linear-gradient(135deg, var(--accent), var(--accent2));
+          border-color: transparent;
         }
 
+        /* ─── Pulse (stories) ────────────────────────────────────── */
         .pulse {
-          padding:16px;
-          overflow:hidden;
+          padding: 16px;
         }
 
         .pulse-head {
-          display:flex;
-          align-items:center;
-          justify-content:space-between;
-          margin-bottom:14px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 13px;
         }
 
-        .pulse-head strong {
-          font-size:18px;
-        }
-
-        .pulse-head small {
-          color:var(--muted);
-        }
+        .pulse-head strong { font-size: 15px; font-weight: 700; }
+        .pulse-head small { color: var(--muted); font-size: 13px; }
 
         .pulse-row {
-          display:flex;
-          gap:12px;
-          overflow-x:auto;
-          padding-bottom:4px;
+          display: flex;
+          gap: 14px;
+          overflow-x: auto;
+          padding-bottom: 4px;
+          scrollbar-width: none;
         }
 
-        .pulse-row::-webkit-scrollbar {
-          height:0;
-        }
+        .pulse-row::-webkit-scrollbar { display: none; }
 
         .story {
-          flex:0 0 82px;
-          text-align:center;
+          flex: 0 0 72px;
+          text-align: center;
+          cursor: pointer;
         }
 
         .story-ring {
-          width:76px;
-          height:76px;
-          border-radius:50%;
-          padding:3px;
-          background:linear-gradient(135deg,var(--hot),var(--accent2),var(--accent));
-          margin:auto;
+          width: 68px;
+          height: 68px;
+          border-radius: 50%;
+          padding: 2.5px;
+          background: linear-gradient(135deg, var(--hot), var(--accent2), var(--accent));
+          margin: 0 auto;
         }
 
         .story-inner {
-          width:100%;
-          height:100%;
-          border-radius:50%;
-          overflow:hidden;
-          display:grid;
-          place-items:center;
-          background:#111;
-          border:3px solid #09090b;
-          font-weight:950;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          overflow: hidden;
+          background: #111;
+          border: 2.5px solid var(--bg);
+          display: grid;
+          place-items: center;
+          font-weight: 800;
+          font-size: 22px;
         }
 
-        .story-inner img {
-          width:100%;
-          height:100%;
-          object-fit:cover;
-        }
+        .story-inner img { width: 100%; height: 100%; object-fit: cover; }
 
         .story span {
-          display:block;
-          color:var(--muted);
-          font-size:12px;
-          margin-top:7px;
-          white-space:nowrap;
-          overflow:hidden;
-          text-overflow:ellipsis;
+          display: block;
+          color: var(--muted);
+          font-size: 11px;
+          font-weight: 600;
+          margin-top: 6px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 68px;
         }
 
-        .empty {
-          color:var(--muted);
-          padding:18px;
-          text-align:center;
-        }
-
+        /* ─── Posts ──────────────────────────────────────────────── */
         .post {
-          overflow:hidden;
-          animation:rise .45s ease both;
+          overflow: hidden;
+          animation: rise .4s ease both;
         }
 
         @keyframes rise {
-          from { opacity:0; transform:translateY(18px); }
-          to { opacity:1; transform:translateY(0); }
+          from { opacity: 0; transform: translateY(14px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
 
         .post-head {
-          display:flex;
-          align-items:center;
-          justify-content:space-between;
-          gap:14px;
-          padding:16px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          padding: 14px 16px;
         }
 
         .user-link {
-          display:flex;
-          align-items:center;
-          gap:12px;
-          min-width:0;
+          display: flex;
+          align-items: center;
+          gap: 11px;
+          min-width: 0;
+          flex: 1;
         }
 
         .avatar {
-          width:48px;
-          height:48px;
-          border-radius:50%;
-          display:grid;
-          place-items:center;
-          background:linear-gradient(135deg,var(--accent),var(--accent2));
-          color:black;
-          font-weight:950;
-          overflow:hidden;
-          flex:0 0 auto;
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, var(--accent), var(--accent2));
+          color: #000;
+          font-weight: 800;
+          display: grid;
+          place-items: center;
+          overflow: hidden;
+          flex-shrink: 0;
+          font-size: 16px;
         }
 
-        .avatar img {
-          width:100%;
-          height:100%;
-          object-fit:cover;
-        }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-        .user-meta {
-          min-width:0;
-        }
+        .user-meta { min-width: 0; }
 
         .user-meta strong,
         .user-meta small {
-          display:block;
-          white-space:nowrap;
-          overflow:hidden;
-          text-overflow:ellipsis;
+          display: block;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
-        .user-meta small {
-          color:var(--muted);
-          margin-top:3px;
-        }
+        .user-meta strong { font-size: 14px; font-weight: 700; }
+        .user-meta small  { color: var(--muted); font-size: 12px; margin-top: 2px; }
 
         .follow-btn {
-          border:1px solid var(--line);
-          background:#121216;
-          color:white;
-          border-radius:999px;
-          padding:9px 13px;
-          font-weight:950;
+          border: 1px solid var(--line);
+          background: transparent;
+          color: var(--text);
+          border-radius: var(--r-pill);
+          padding: 7px 14px;
+          font-family: 'DM Sans', sans-serif;
+          font-size: 13px;
+          font-weight: 700;
+          cursor: pointer;
+          white-space: nowrap;
+          flex-shrink: 0;
+          transition: background .15s, border-color .15s, color .15s;
         }
 
+        .follow-btn:hover { background: var(--soft); }
+
         .follow-btn.following {
-          color:var(--muted);
-          background:transparent;
+          color: var(--muted);
+          border-color: transparent;
         }
 
         .post-img {
-          width:100%;
-          max-height:680px;
-          object-fit:cover;
-          display:block;
-          background:#09090b;
+          width: 100%;
+          max-height: 640px;
+          object-fit: cover;
+          background: #0a0a0e;
+          cursor: pointer;
+          transition: opacity .2s;
         }
 
+        .post-img:hover { opacity: .95; }
+
+
+        .post-media {
+          position: relative;
+          overflow: hidden;
+          background: #0a0a0e;
+          cursor: pointer;
+          user-select: none;
+          -webkit-tap-highlight-color: transparent;
+        }
+
+        .post-media .post-img {
+          display: block;
+        }
+
+        .heart-burst {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          width: 104px;
+          height: 104px;
+          display: grid;
+          place-items: center;
+          transform: translate(-50%, -50%) scale(.45);
+          color: white;
+          filter: drop-shadow(0 12px 32px rgba(255,43,214,.5));
+          pointer-events: none;
+          z-index: 4;
+          animation: heartPop .78s cubic-bezier(.16,1,.3,1) forwards;
+        }
+
+        .heart-burst svg {
+          width: 100%;
+          height: 100%;
+          fill: var(--hot);
+          stroke: white;
+          stroke-width: 1.5;
+        }
+
+        .heart-particle {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          width: 9px;
+          height: 9px;
+          border-radius: 999px;
+          background: linear-gradient(135deg, var(--hot), var(--accent));
+          transform: translate(-50%, -50%);
+          pointer-events: none;
+          z-index: 5;
+          animation: particlePop .72s ease-out forwards;
+        }
+
+        .icon-btn.like-pop {
+          animation: likePulse .38s cubic-bezier(.16,1,.3,1);
+        }
+
+        @keyframes heartPop {
+          0% { opacity: 0; transform: translate(-50%, -50%) scale(.35) rotate(-10deg); }
+          18% { opacity: 1; transform: translate(-50%, -50%) scale(1.15) rotate(5deg); }
+          42% { transform: translate(-50%, -50%) scale(.96) rotate(0deg); }
+          72% { opacity: 1; transform: translate(-50%, -50%) scale(1.03); }
+          100% { opacity: 0; transform: translate(-50%, -58%) scale(.74); }
+        }
+
+        @keyframes particlePop {
+          to {
+            opacity: 0;
+            transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(.25);
+          }
+        }
+
+        @keyframes likePulse {
+          0% { transform: scale(1); }
+          45% { transform: scale(1.28); }
+          100% { transform: scale(1); }
+        }
+
+        /* ─── Post body / actions ────────────────────────────────── */
         .post-body {
-          padding:15px 16px 18px;
+          padding: 13px 16px 16px;
         }
 
         .actions {
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-          margin-bottom:10px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 10px;
         }
 
         .action-left {
-          display:flex;
-          gap:10px;
+          display: flex;
+          gap: 4px;
         }
 
         .icon-btn {
-          border:0;
-          background:transparent;
-          color:white;
-          width:38px;
-          height:38px;
-          border-radius:50%;
-          display:grid;
-          place-items:center;
+          border: 0;
+          background: transparent;
+          color: var(--muted);
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          display: grid;
+          place-items: center;
+          cursor: pointer;
+          transition: background .12s, color .12s, transform .12s;
         }
 
-        .icon-btn:hover {
-          background:var(--soft);
-        }
+        .icon-btn svg { width: 20px; height: 20px; }
 
-        .icon-btn.active {
-          color:var(--hot);
-        }
+        .icon-btn:hover { background: var(--soft); color: var(--text); }
+        .icon-btn:active { transform: scale(.88); }
 
-        .icon-btn.saved {
-          color:var(--accent);
-        }
+        .icon-btn.active   { color: var(--hot); }
+        .icon-btn.saved    { color: var(--accent); }
+        .icon-btn.danger   { color: var(--danger); }
 
-        .icon-btn.danger {
-          color:var(--danger);
+        .icon-btn.active:hover  { background: rgba(255,43,214,.1); }
+        .icon-btn.saved:hover   { background: rgba(0,229,255,.1); }
+        .icon-btn.danger:hover  { background: rgba(255,77,109,.1); }
+
+        .likes-count {
+          font-size: 13.5px;
+          font-weight: 700;
+          margin-bottom: 5px;
         }
 
         .caption {
-          color:#e9e9ee;
-          line-height:1.55;
-          margin:8px 0 0;
+          color: #d0d0e0;
+          font-size: 14px;
+          line-height: 1.55;
         }
 
-        .caption strong {
-          color:white;
-        }
+        .caption strong { color: var(--text); margin-right: 4px; }
 
         .comments-link {
-          display:inline-block;
-          margin-top:10px;
-          color:var(--muted);
-          font-weight:800;
+          display: inline-block;
+          margin-top: 8px;
+          color: var(--muted);
+          font-size: 13px;
+          font-weight: 600;
+          transition: color .12s;
         }
 
+        .comments-link:hover { color: var(--text); }
+
+        /* ─── Right sidebar ──────────────────────────────────────── */
         .rightbar {
-          position:sticky;
-          top:20px;
-          height:max-content;
-          display:grid;
-          gap:16px;
-          z-index:2;
+          grid-column: 3;
+          position: sticky;
+          top: 20px;
+          height: max-content;
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+          z-index: 10;
         }
 
-        .profile-card,
-        .suggest {
-          padding:16px;
+        .profile-card { padding: 16px; }
+
+        .me {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          min-width: 0;
         }
 
-        .me,
-        .suggest-user {
-          display:flex;
-          align-items:center;
-          gap:12px;
-          min-width:0;
-        }
+        .me-info { min-width: 0; flex: 1; }
 
         .me-info strong,
-        .me-info small,
-        .suggest-user strong,
-        .suggest-user small {
-          display:block;
-          white-space:nowrap;
-          overflow:hidden;
-          text-overflow:ellipsis;
+        .me-info small {
+          display: block;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
-        .me-info small,
-        .suggest-user small {
-          color:var(--muted);
-          margin-top:3px;
+        .me-info strong { font-size: 14px; font-weight: 700; }
+        .me-info small  { color: var(--muted); font-size: 12.5px; margin-top: 3px; }
+
+        .me-actions {
+          display: flex;
+          gap: 8px;
+          margin-top: 13px;
+        }
+
+        .me-btn {
+          flex: 1;
+          border-radius: var(--r-pill);
+          padding: 9px 12px;
+          font-family: 'DM Sans', sans-serif;
+          font-size: 12.5px;
+          font-weight: 700;
+          cursor: pointer;
+          text-align: center;
+          transition: opacity .15s, transform .15s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+        }
+
+        .me-btn svg { width: 14px; height: 14px; }
+        .me-btn:hover { opacity: .85; transform: translateY(-1px); }
+
+        .me-btn.primary {
+          border: 0;
+          background: linear-gradient(135deg, var(--accent), var(--accent2));
+          color: #000;
+        }
+
+        .me-btn.secondary {
+          border: 1px solid var(--line);
+          background: transparent;
+          color: var(--muted);
+        }
+
+        /* ─── Suggestions ────────────────────────────────────────── */
+        .suggest { padding: 16px; }
+
+        .suggest-head {
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          gap:10px;
+          margin-bottom:12px;
         }
 
         .suggest h3 {
-          margin:0 0 12px;
+          font-size: 14px;
+          font-weight: 700;
+          color: var(--muted);
+          text-transform: uppercase;
+          letter-spacing: .6px;
+          margin:0;
+        }
+
+        .suggest-see-all {
+          color:var(--accent);
+          font-size:12px;
+          font-weight:900;
         }
 
         .suggest-item {
-          display:flex;
-          justify-content:space-between;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          padding: 9px 0;
+          border-top: 1px solid var(--line);
+        }
+
+        .suggest-user {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          min-width: 0;
+          flex: 1;
+        }
+
+        .suggest-user strong,
+        .suggest-user small {
+          display: block;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .suggest-user strong { font-size: 13.5px; font-weight: 700; }
+        .suggest-user small  { color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+        .creator-tag {
+          display:inline-flex;
           align-items:center;
-          gap:12px;
-          padding:10px 0;
-          border-top:1px solid var(--line);
-        }
-
-        .message {
-          color:var(--danger);
-          min-height:20px;
-          font-size:14px;
-          padding:0 4px;
-        }
-
-        .message.success {
+          gap:4px;
+          width:max-content;
+          margin-top:5px;
+          border:1px solid rgba(0,229,255,.34);
+          border-radius:999px;
+          padding:3px 7px;
+          background:rgba(0,229,255,.08);
           color:var(--accent);
+          font-size:10px;
+          font-weight:950;
+          letter-spacing:.2px;
         }
 
+        .creator-tag svg { width:11px; height:11px; }
+
+        .suggest-follow-btn {
+          flex-shrink: 0;
+          border: 1px solid var(--line);
+          background: transparent;
+          color: var(--accent);
+          border-radius: var(--r-pill);
+          padding: 6px 13px;
+          font-family: 'DM Sans', sans-serif;
+          font-size: 12.5px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: background .12s, border-color .12s;
+        }
+
+        .suggest-follow-btn:hover {
+          background: rgba(0,229,255,.08);
+          border-color: var(--accent);
+        }
+
+        /* ─── Global message toast ───────────────────────────────── */
+        .message {
+          font-size: 13.5px;
+          font-weight: 600;
+          min-height: 18px;
+          padding: 0 2px;
+          color: var(--danger);
+          transition: opacity .3s;
+        }
+
+        .message.success { color: var(--success); }
+
+        /* ─── Empty state ────────────────────────────────────────── */
+        .empty {
+          color: var(--muted);
+          font-size: 14px;
+          padding: 20px;
+          text-align: center;
+          line-height: 1.6;
+        }
+
+        /* ─── Loading skeleton ───────────────────────────────────── */
+        .skeleton-post {
+          overflow: hidden;
+        }
+
+        .skeleton-post .sk-head { padding: 14px 16px; display: flex; gap: 11px; align-items: center; }
+        .sk { background: var(--soft); border-radius: 8px; animation: shimmer 1.4s ease infinite; }
+        .sk-circle { border-radius: 50%; }
+
+        @keyframes shimmer {
+          0%   { opacity: .6; }
+          50%  { opacity: 1; }
+          100% { opacity: .6; }
+        }
+
+        /* ─── Bottom nav (mobile) ────────────────────────────────── */
         .bottom-nav {
-          display:none;
+          display: none;
+          position: fixed;
+          bottom: 12px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: min(96vw, 480px);
+          height: 68px;
+          z-index: 999;
+          grid-template-columns: 1fr 1fr 60px 1fr 1fr;
+          align-items: center;
+          gap: 4px;
+          padding: 6px 10px;
+          border-radius: var(--r-pill);
+          background: rgba(12,12,18,.96);
+          border: 1px solid rgba(255,255,255,.1);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          box-shadow: 0 16px 50px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.04) inset;
         }
 
-        @media(max-width:980px) {
-          body {
-            padding-bottom:92px;
+        .bottom-nav a {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 3px;
+          height: 54px;
+          border-radius: 20px;
+          color: var(--muted);
+          font-size: 10px;
+          font-weight: 700;
+          transition: color .15s, background .15s;
+        }
+
+        .bottom-nav a svg { width: 22px; height: 22px; }
+
+        .bottom-nav a.active { color: var(--text); background: var(--soft); }
+
+        .bottom-nav .create-mobile {
+          width: 52px;
+          height: 52px;
+          border-radius: 50%;
+          margin: 0 auto;
+          color: #000;
+          background: linear-gradient(135deg, var(--accent), var(--accent2));
+          box-shadow: 0 0 24px rgba(0,229,255,.3);
+          flex-shrink: 0;
+        }
+
+        .bottom-nav .create-mobile svg { width: 24px; height: 24px; }
+
+        /* ─── Responsive: Tablet (1024px) ────────────────────────── */
+        @media (max-width: 1024px) {
+          :root {
+            --sidebar-w: 64px;
+            --rightbar-w: 260px;
           }
+
+          .sidebar {
+            padding: 20px 8px 18px;
+            align-items: center;
+          }
+
+          .logo { font-size: 26px; margin-bottom: 16px; }
+          .logo-text { display: none; }
+
+          .nav a {
+            padding: 12px;
+            border-radius: 16px;
+            justify-content: center;
+          }
+
+          .nav a span { display: none; }
+          .nav a svg { width: 22px; height: 22px; }
+          .nav a .badge { display: none; }
+
+          .nav a::before { display: none; }
+
+          .create-btn span { display: none; }
+          .create-btn { width: 44px; height: 44px; padding: 0; border-radius: 50%; }
+        }
+
+        /* ─── Responsive: Mobile (767px and below) ───────────────── */
+        @media (max-width: 767px) {
+          body { padding-bottom: 90px; }
 
           .app {
-            grid-template-columns:1fr;
-            width:min(720px,96vw);
-            padding-top:16px;
+            grid-template-columns: 1fr;
+            padding: 10px 10px 80px;
+            gap: 12px;
           }
 
-          .sidebar,
-          .rightbar {
-            display:none;
-          }
+          .sidebar, .rightbar { display: none; }
 
-          .top-mobile {
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            padding:14px 16px;
-            border-radius:34px;
-          }
+          .top-mobile { display: flex; }
 
-          .top-mobile .logo {
-            margin:0;
-            font-size:34px;
-          }
+          .feed-header h1 { font-size: 28px; }
 
-          .mobile-actions {
-            display:flex;
-            gap:10px;
-          }
+          .bottom-nav { display: grid; }
 
-          .mobile-actions a {
-            width:44px;
-            height:44px;
-            border-radius:50%;
-            display:grid;
-            place-items:center;
-            background:var(--soft);
-          }
+          .post-img { max-height: 520px; }
 
-          .composer h1 {
-            font-size:34px;
-          }
+          .avatar { width: 40px; height: 40px; }
+        }
 
-          .bottom-nav {
-            position:fixed;
-            left:50%;
-            bottom:14px;
-            transform:translateX(-50%);
-            width:min(94vw,520px);
-            height:70px;
-            z-index:999;
-            display:grid;
-            grid-template-columns:1fr 1fr 76px 1fr 1fr;
-            align-items:center;
-            gap:8px;
-            padding:8px;
-            border-radius:999px;
-            background:rgba(16,16,19,.94);
-            border:1px solid var(--line);
-            backdrop-filter:blur(18px);
-            box-shadow:0 18px 60px rgba(0,0,0,.48);
-          }
-
-          .bottom-nav a {
-            height:52px;
-            border-radius:999px;
-            display:grid;
-            place-items:center;
-            color:var(--muted);
-            font-size:10px;
-            font-weight:900;
-          }
-
-          .bottom-nav a svg {
-            width:22px;
-            height:22px;
-          }
-
-          .bottom-nav a span {
-            margin-top:2px;
-          }
-
-          .bottom-nav a.active {
-            color:white;
-            background:rgba(255,255,255,.06);
-          }
-
-          .bottom-nav .create-mobile {
-            width:58px;
-            height:58px;
-            margin:auto;
-            color:black;
-            background:linear-gradient(135deg,var(--accent),var(--accent2));
-            box-shadow:0 0 28px rgba(0,229,255,.24);
-          }
+        /* ─── Responsive: Small phones (360px) ───────────────────── */
+        @media (max-width: 390px) {
+          .feed-header h1 { font-size: 24px; }
+          .bottom-nav { width: 94vw; }
         }
     </style>
 </head>
 
 <body>
 <div class="app">
+
+    <!-- ── Left Sidebar ─────────────────────────────── -->
     <aside class="sidebar card">
         <div class="logo">Nex<span>r</span></div>
 
         <nav class="nav">
-            <a class="active" href="index.html"><i data-lucide="home"></i> Home</a>
-            <a href="explore.html"><i data-lucide="compass"></i> Explore</a>
-            <a href="search.html"><i data-lucide="search"></i> Search</a>
-            <a href="notifications.html"><i data-lucide="bell"></i> Notifications</a>
-            <a href="messages.html"><i data-lucide="message-circle"></i> Messages</a>
-            <a href="reels.html"><i data-lucide="clapperboard"></i> Reels</a>
-            <a href="profile.html"><i data-lucide="user"></i> Profile</a>
-            <a href="settings.html"><i data-lucide="settings"></i> Settings</a>
+            <a class="active" href="index.html">
+                <i data-lucide="home"></i>
+                <span>Home</span>
+            </a>
+            <a href="explore.html">
+                <i data-lucide="compass"></i>
+                <span>Explore</span>
+            </a>
+            <a href="search.html">
+                <i data-lucide="search"></i>
+                <span>Search</span>
+            </a>
+            <a href="notifications.html">
+                <i data-lucide="bell"></i>
+                <span>Notifications</span>
+                <span class="badge" id="notifBadge" style="display:none"></span>
+            </a>
+            <a href="messages.html">
+                <i data-lucide="message-circle"></i>
+                <span>Messages</span>
+            </a>
+            <a href="reels.html">
+                <i data-lucide="clapperboard"></i>
+                <span>Reels</span>
+            </a>
+            <a href="profile.html">
+                <i data-lucide="user"></i>
+                <span>Profile</span>
+            </a>
+            <a href="settings.html">
+                <i data-lucide="settings"></i>
+                <span>Settings</span>
+            </a>
         </nav>
 
-        <button class="create-btn" onclick="window.location.href='create.html'">Create</button>
+        <button class="create-btn" onclick="window.location.href='create.html'">
+            <i data-lucide="plus"></i>
+            <span>Create</span>
+        </button>
     </aside>
 
+    <!-- ── Feed ─────────────────────────────────────── -->
     <main class="feed">
+
+        <!-- Mobile topbar -->
         <header class="top-mobile card">
             <div class="logo">Nex<span>r</span></div>
             <div class="mobile-actions">
-                <a href="create.html"><i data-lucide="plus"></i></a>
-                <a href="notifications.html"><i data-lucide="bell"></i></a>
-                <a href="profile.html"><i data-lucide="user"></i></a>
+                <a href="create.html" aria-label="Create post"><i data-lucide="plus"></i></a>
+                <a href="notifications.html" aria-label="Notifications"><i data-lucide="bell"></i></a>
+                <a href="profile.html" aria-label="Profile"><i data-lucide="user"></i></a>
             </div>
         </header>
 
-        <section class="composer card">
+        <!-- Feed header + tabs -->
+        <section class="feed-header card">
             <h1>Nexr Flow</h1>
             <p>Real posts from real creators. Social, leveled up.</p>
-
-            <div class="tabs">
-                <button class="tab active" data-feed="forYou">For You</button>
-                <button class="tab" data-feed="following">Following</button>
-                <button class="tab" data-feed="rising">Rising</button>
+            <div class="tabs" role="tablist">
+                <button class="tab active" data-feed="forYou" role="tab">For You</button>
+                <button class="tab" data-feed="following" role="tab">Following</button>
+                <button class="tab" data-feed="rising" role="tab">Rising</button>
             </div>
         </section>
 
+        <!-- Pulse (stories) -->
         <section class="pulse card">
             <div class="pulse-head">
                 <strong>Pulse</strong>
                 <small>Story posts only</small>
             </div>
-            <div class="pulse-row" id="pulseRow"></div>
+            <div class="pulse-row" id="pulseRow">
+                <div class="empty" style="padding:0">No Pulse stories yet.</div>
+            </div>
         </section>
 
-        <div class="message" id="message"></div>
-        <section id="posts"></section>
+        <!-- Status message -->
+        <div class="message" id="message" role="status" aria-live="polite"></div>
+
+        <!-- Post list -->
+        <section id="posts">
+            <!-- Skeleton loaders while fetching -->
+            <article class="skeleton-post card">
+                <div class="sk-head">
+                    <div class="sk sk-circle" style="width:44px;height:44px;flex-shrink:0"></div>
+                    <div style="flex:1;display:grid;gap:8px">
+                        <div class="sk" style="height:13px;width:55%"></div>
+                        <div class="sk" style="height:11px;width:35%"></div>
+                    </div>
+                </div>
+                <div class="sk" style="height:260px;border-radius:0"></div>
+                <div style="padding:14px 16px;display:grid;gap:10px">
+                    <div class="sk" style="height:12px;width:40%"></div>
+                    <div class="sk" style="height:12px;width:75%"></div>
+                </div>
+            </article>
+        </section>
     </main>
 
+    <!-- ── Right Sidebar ─────────────────────────────── -->
     <aside class="rightbar">
+        <!-- My mini-profile card -->
         <section class="profile-card card">
-            <div class="me" id="meCard"></div>
+            <div class="me" id="meCard">
+                <div class="avatar">N</div>
+                <div class="me-info">
+                    <strong>Loading…</strong>
+                    <small>Social, leveled up.</small>
+                </div>
+            </div>
+            <div class="me-actions">
+                <a href="profile.html" class="me-btn primary">
+                    <i data-lucide="user"></i>
+                    Profile
+                </a>
+                <a href="settings.html" class="me-btn secondary">
+                    <i data-lucide="settings"></i>
+                    Settings
+                </a>
+            </div>
         </section>
 
+        <!-- Suggestions -->
         <section class="suggest card">
-            <h3>Rising creators</h3>
-            <div id="suggestions"></div>
+            <div class="suggest-head">
+                <h3>Rising Creators</h3>
+                <a class="suggest-see-all" href="search.html?filter=creators">See all</a>
+            </div>
+            <div id="suggestions">
+                <div class="empty">Loading…</div>
+            </div>
         </section>
     </aside>
 </div>
 
-<nav class="bottom-nav">
-    <a class="active" href="index.html"><i data-lucide="home"></i><span>Home</span></a>
-    <a href="explore.html"><i data-lucide="compass"></i><span>Explore</span></a>
-    <a class="create-mobile" href="create.html"><i data-lucide="plus"></i></a>
-    <a href="search.html"><i data-lucide="search"></i><span>Search</span></a>
-    <a href="profile.html"><i data-lucide="user"></i><span>Profile</span></a>
+<!-- ── Mobile Bottom Nav ───────────────────────── -->
+<nav class="bottom-nav" aria-label="Main navigation">
+    <a class="active" href="index.html" aria-label="Home">
+        <i data-lucide="home"></i>
+        <span>Home</span>
+    </a>
+    <a href="explore.html" aria-label="Explore">
+        <i data-lucide="compass"></i>
+        <span>Explore</span>
+    </a>
+    <a class="create-mobile" href="create.html" aria-label="Create">
+        <i data-lucide="plus"></i>
+    </a>
+    <a href="search.html" aria-label="Search">
+        <i data-lucide="search"></i>
+        <span>Search</span>
+    </a>
+    <a href="profile.html" aria-label="Profile">
+        <i data-lucide="user"></i>
+        <span>Profile</span>
+    </a>
 </nav>
 
 <script type="module">
@@ -642,25 +1084,37 @@
       limit
     } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-    let currentUser = null;
+    // ── State ──────────────────────────────────────────────────
+    let currentUser     = null;
     let currentUserData = null;
-    let allPosts = [];
-    let allUsers = [];
-    let activeFeed = "forYou";
+    let allPosts        = [];
+    let allUsers        = [];
+    let activeFeed      = "forYou";
 
-    const postsEl = document.getElementById("posts");
-    const pulseRow = document.getElementById("pulseRow");
-    const messageEl = document.getElementById("message");
-    const meCard = document.getElementById("meCard");
+    const postsEl      = document.getElementById("posts");
+    const pulseRow     = document.getElementById("pulseRow");
+    const messageEl    = document.getElementById("message");
+    const meCard       = document.getElementById("meCard");
     const suggestionsEl = document.getElementById("suggestions");
 
+    // Ghost accounts removed from Firebase Auth can still exist in Firestore.
+    // Hide the known orphan docs so they stop showing in creators/search/messages.
+    const GHOST_USERNAMES = new Set(["nixydigital", "4072.esteban"]);
+
+    function isVisibleUser(user) {
+      const username = String(user?.username || "").trim().toLowerCase();
+      const email = String(user?.email || "").trim();
+      return Boolean(user?.uid && username && email && !GHOST_USERNAMES.has(username));
+    }
+
+    // ── Auth guard ─────────────────────────────────────────────
     onAuthStateChanged(auth, async user => {
       if (!user) {
         window.location.href = "login.html";
         return;
       }
 
-      currentUser = user;
+      currentUser     = user;
       currentUserData = await getUserData(user.uid);
 
       renderMe();
@@ -669,52 +1123,65 @@
       listenForPosts();
     });
 
+    // ── Feed tabs ──────────────────────────────────────────────
     document.querySelectorAll(".tab").forEach(tab => {
       tab.addEventListener("click", () => {
-        document.querySelectorAll(".tab").forEach(item => item.classList.remove("active"));
+        document.querySelectorAll(".tab").forEach(t => {
+          t.classList.remove("active");
+          t.setAttribute("aria-selected", "false");
+        });
         tab.classList.add("active");
+        tab.setAttribute("aria-selected", "true");
         activeFeed = tab.dataset.feed;
         renderPosts();
       });
     });
 
+    // ── Data fetching ──────────────────────────────────────────
     async function getUserData(uid) {
-      const userRef = doc(db, "users", uid);
-      const snapshot = await getDoc(userRef);
+      const snapshot = await getDoc(doc(db, "users", uid));
 
       if (!snapshot.exists()) {
         return {
           uid,
-          username: currentUser.displayName || currentUser.email.split("@")[0],
-          email: currentUser.email || "",
-          avatarUrl: currentUser.photoURL || "",
-          bio: "Social, leveled up.",
-          followers: [],
-          following: [],
-          savedPosts: []
+          username:   currentUser.displayName || currentUser.email.split("@")[0],
+          email:      currentUser.email || "",
+          avatarUrl:  currentUser.photoURL || "",
+          bio:        "Social, leveled up.",
+          followers:  [],
+          following:  [],
+          savedPosts: [],
+          isCreator: false,
+          creatorTag: ""
         };
       }
 
       return {
         uid,
-        followers: [],
-        following: [],
+        followers:  [],
+        following:  [],
         savedPosts: [],
+        isCreator: false,
+        creatorTag: "",
         ...snapshot.data()
       };
     }
 
     async function loadUsers() {
       const snapshot = await getDocs(collection(db, "users"));
-
-      allUsers = snapshot.docs.map(userDoc => ({
-        id: userDoc.id,
-        uid: userDoc.id,
-        followers: [],
-        following: [],
-        savedPosts: [],
-        ...userDoc.data()
-      }));
+      allUsers = snapshot.docs
+        .map(d => ({
+          id: d.id,
+          uid: d.id,
+          followers: [],
+          following: [],
+          savedPosts: [],
+          isCreator: false,
+          creatorTag: "",
+          ...d.data()
+        }))
+        // Skip ghost accounts (deleted from Auth but Firestore doc still exists)
+        .filter(isVisibleUser);
     }
 
     function listenForPosts() {
@@ -725,26 +1192,29 @@
       );
 
       onSnapshot(postsQuery, snapshot => {
-        allPosts = snapshot.docs.map(postDoc => ({
-          id: postDoc.id,
-          likedBy: [],
-          savedBy: [],
-          likesCount: 0,
-          commentsCount: 0,
+        allPosts = snapshot.docs.map(d => ({
+          id:             d.id,
+          likedBy:        [],
+          savedBy:        [],
+          likesCount:     0,
+          commentsCount:  0,
           commentPreview: [],
-          isStory: false,
-          ...postDoc.data()
+          isStory:        false,
+          ...d.data()
         }));
 
         renderPulse();
         renderPosts();
-      }, error => {
-        console.error(error);
-        showMessage(error.message, false);
+      }, err => {
+        console.error(err);
+        showMessage(err.message, false);
       });
     }
 
+    // ── Renderers ──────────────────────────────────────────────
     function renderMe() {
+      const meActions = document.querySelector(".me-actions");
+
       meCard.innerHTML = `
         ${getAvatarHTML(currentUserData, "avatar")}
         <div class="me-info">
@@ -757,10 +1227,10 @@
     }
 
     function renderPulse() {
-      const stories = allPosts.filter(post => post.isStory === true && getPostImage(post));
+      const stories = allPosts.filter(p => p.isStory === true && getPostImage(p));
 
       if (!stories.length) {
-        pulseRow.innerHTML = `<div class="empty">No Pulse stories yet. Create one with the Pulse toggle.</div>`;
+        pulseRow.innerHTML = `<div class="empty" style="padding:0;font-size:13px">No Pulse stories yet. Create one!</div>`;
         return;
       }
 
@@ -768,7 +1238,7 @@
         <a class="story" href="post.html?id=${post.id}">
           <div class="story-ring">
             <div class="story-inner">
-              <img src="${getPostImage(post)}" alt="${escapeHTML(post.username || "Story")}">
+              <img src="${getPostImage(post)}" alt="${escapeHTML(post.username || 'Story')}" loading="lazy">
             </div>
           </div>
           <span>${escapeHTML(post.username || "creator")}</span>
@@ -781,7 +1251,7 @@
 
       if (activeFeed === "following") {
         const following = currentUserData.following || [];
-        posts = posts.filter(post => following.includes(post.userId));
+        posts = posts.filter(p => following.includes(p.userId));
       }
 
       if (activeFeed === "rising") {
@@ -793,45 +1263,60 @@
       }
 
       if (!posts.length) {
-        postsEl.innerHTML = `<article class="card empty">No posts here yet.</article>`;
+        postsEl.innerHTML = `<article class="card empty">No posts here yet. Be the first!</article>`;
         return;
       }
 
-      postsEl.innerHTML = posts.map(post => createPostHTML(post)).join("");
+      postsEl.innerHTML = posts.map((post, i) =>
+        createPostHTML(post, i)
+      ).join("");
+
       lucide.createIcons();
       attachPostEvents();
     }
 
-    function createPostHTML(post) {
-      const liked = (post.likedBy || []).includes(currentUser.uid);
-      const saved = (post.savedBy || []).includes(currentUser.uid);
-      const ownPost = post.userId === currentUser.uid;
+    function createPostHTML(post, index = 0) {
+      const liked     = (post.likedBy || []).includes(currentUser.uid);
+      const saved     = (post.savedBy || []).includes(currentUser.uid);
+      // ownPost: true if the post's userId matches the logged-in user, OR if it
+      // was posted by the same email/displayName as a fallback for legacy posts
+      const ownPost   = post.userId === currentUser.uid;
+      // Never show follow for your own posts, even if userId is somehow missing
+      const isStranger = !ownPost && !!post.userId;
       const following = (currentUserData.following || []).includes(post.userId);
-      const image = getPostImage(post);
+      const image     = getPostImage(post);
 
       return `
-        <article class="post card" data-post-id="${post.id}" data-user-id="${post.userId}">
+        <article class="post card" data-post-id="${post.id}" data-user-id="${post.userId}"
+          style="animation-delay:${index * 0.05}s">
+
           <div class="post-head">
             <a class="user-link" href="profile.html?uid=${post.userId}">
               ${getAvatarHTML(post, "avatar")}
               <div class="user-meta">
                 <strong>${escapeHTML(post.username || "creator")}</strong>
-                <small>${formatDate(post.createdAt)} ${post.isStory ? "• Pulse" : ""}</small>
+                <small>${formatDate(post.createdAt)}${post.isStory ? " · Pulse" : ""}</small>
               </div>
             </a>
 
-            ${ownPost ? `
-              <button class="icon-btn danger" data-action="delete" title="Delete post">
-                <i data-lucide="trash-2"></i>
-              </button>
-            ` : `
-              <button class="follow-btn ${following ? "following" : ""}" data-action="follow">
-                ${following ? "Following" : "Follow"}
-              </button>
-            `}
+            ${ownPost
+              ? `<button class="icon-btn danger" data-action="delete" aria-label="Delete post">
+                   <i data-lucide="trash-2"></i>
+                 </button>`
+              : isStranger
+                ? `<button class="follow-btn ${following ? "following" : ""}" data-action="follow">
+                     ${following ? "Following" : "Follow"}
+                   </button>`
+                : ""
+            }
           </div>
 
-          ${image ? `<a href="post.html?id=${post.id}"><img class="post-img" src="${image}" alt="Nexr post"></a>` : ""}
+          ${image
+            ? `<div class="post-media" data-post-id="${post.id}" data-href="post.html?id=${post.id}" role="button" tabindex="0" aria-label="Open post or double tap to like">
+                 <img class="post-img" src="${image}" alt="Nexr post" loading="lazy" draggable="false">
+               </div>`
+            : ""
+          }
 
           <div class="post-body">
             <div class="actions">
@@ -839,73 +1324,148 @@
                 <button class="icon-btn ${liked ? "active" : ""}" data-action="like" aria-label="Like">
                   <i data-lucide="heart"></i>
                 </button>
-
                 <a class="icon-btn" href="post.html?id=${post.id}" aria-label="Comment">
                   <i data-lucide="message-circle"></i>
                 </a>
-
                 <button class="icon-btn" data-action="share" aria-label="Share">
                   <i data-lucide="send"></i>
                 </button>
               </div>
-
               <button class="icon-btn ${saved ? "saved" : ""}" data-action="save" aria-label="Save">
                 <i data-lucide="bookmark"></i>
               </button>
             </div>
 
-            <strong>${post.likesCount || 0} likes</strong>
+            <div class="likes-count">${post.likesCount || 0} likes</div>
 
             <p class="caption">
-              <strong>${escapeHTML(post.username || "creator")}</strong>
-              ${escapeHTML(post.caption || "")}
+              <strong>${escapeHTML(post.username || "creator")}</strong>${escapeHTML(post.caption || "")}
             </p>
 
-            <a class="comments-link" href="post.html?id=${post.id}">
-              View ${post.commentsCount || 0} comments
-            </a>
+            ${(post.commentsCount || 0) > 0
+              ? `<a class="comments-link" href="post.html?id=${post.id}">
+                   View ${post.commentsCount} comment${post.commentsCount === 1 ? "" : "s"}
+                 </a>`
+              : ""
+            }
           </div>
         </article>
       `;
     }
 
+    function renderSuggestions() {
+      const following   = currentUserData.following || [];
+      const suggestions = allUsers
+        .filter(u => Boolean(u.isCreator))
+        .filter(u => u.uid !== currentUser.uid && !following.includes(u.uid))
+        .sort((a, b) => (b.followers || []).length - (a.followers || []).length)
+        .slice(0, 3);
+
+      if (!suggestions.length) {
+        suggestionsEl.innerHTML = `<div class="empty">No creator suggestions yet. Enable Creator mode in settings to join the list.</div>`;
+        return;
+      }
+
+      suggestionsEl.innerHTML = suggestions.map(user => `
+        <div class="suggest-item">
+          <a class="suggest-user" href="profile.html?uid=${user.uid}">
+            ${getAvatarHTML(user, "avatar")}
+            <div>
+              <strong>${escapeHTML(user.username || "creator")}</strong>
+              <small>${(user.followers || []).length} followers</small>
+              <span class="creator-tag"><i data-lucide="badge-check"></i>${escapeHTML(user.creatorTag || "Creator")}</span>
+            </div>
+          </a>
+          <button class="suggest-follow-btn" data-suggest-follow="${user.uid}">Follow</button>
+        </div>
+      `).join("");
+
+      document.querySelectorAll("[data-suggest-follow]").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          await toggleFollow(btn.dataset.suggestFollow);
+        });
+      });
+
+      lucide.createIcons();
+    }
+
+    // ── Event wiring ───────────────────────────────────────────
     function attachPostEvents() {
-      document.querySelectorAll("[data-action='like']").forEach(button => {
-        button.addEventListener("click", async () => {
-          const postEl = button.closest(".post");
-          await toggleLike(postEl.dataset.postId);
+      document.querySelectorAll("[data-action='like']").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const postEl = btn.closest(".post");
+          await toggleLike(postEl.dataset.postId, { burstTarget: btn });
         });
       });
 
-      document.querySelectorAll("[data-action='save']").forEach(button => {
-        button.addEventListener("click", async () => {
-          const postEl = button.closest(".post");
-          await toggleSave(postEl.dataset.postId);
+      document.querySelectorAll(".post-media").forEach(media => {
+        let tapTimer = null;
+        let lastTap = 0;
+
+        const openPost = () => {
+          window.location.href = media.dataset.href;
+        };
+
+        const likeFromMedia = async () => {
+          const postEl = media.closest(".post");
+          await toggleLike(postEl.dataset.postId, { forceLike: true, burstTarget: media });
+        };
+
+        media.addEventListener("click", event => {
+          event.preventDefault();
+          const now = Date.now();
+
+          if (now - lastTap < 280) {
+            clearTimeout(tapTimer);
+            tapTimer = null;
+            lastTap = 0;
+            likeFromMedia();
+            return;
+          }
+
+          lastTap = now;
+          tapTimer = setTimeout(openPost, 260);
+        });
+
+        media.addEventListener("keydown", event => {
+          if (event.key === "Enter") openPost();
+          if (event.key === " ") {
+            event.preventDefault();
+            likeFromMedia();
+          }
         });
       });
 
-      document.querySelectorAll("[data-action='follow']").forEach(button => {
-        button.addEventListener("click", async () => {
-          const postEl = button.closest(".post");
-          await toggleFollow(postEl.dataset.userId);
+      document.querySelectorAll("[data-action='save']").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          await toggleSave(btn.closest(".post").dataset.postId);
         });
       });
 
-      document.querySelectorAll("[data-action='delete']").forEach(button => {
-        button.addEventListener("click", async () => {
-          const postEl = button.closest(".post");
-          await deleteOwnPost(postEl.dataset.postId);
+      document.querySelectorAll("[data-action='follow']").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          await toggleFollow(btn.closest(".post").dataset.userId);
         });
       });
 
-      document.querySelectorAll("[data-action='share']").forEach(button => {
-        button.addEventListener("click", async () => {
-          const postEl = button.closest(".post");
-          const url = `${window.location.origin}${window.location.pathname.replace("index.html", "")}post.html?id=${postEl.dataset.postId}`;
+      document.querySelectorAll("[data-action='delete']").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          await deleteOwnPost(btn.closest(".post").dataset.postId);
+        });
+      });
+
+      document.querySelectorAll("[data-action='share']").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const postId = btn.closest(".post").dataset.postId;
+          const url = `${location.origin}${location.pathname.replace("index.html", "")}post.html?id=${postId}`;
 
           try {
-            await navigator.clipboard.writeText(url);
-            showMessage("Post link copied.", true);
+            if (navigator.share) {
+              await navigator.share({ url });
+            } else {
+              await navigator.clipboard.writeText(url);
+              showMessage("Link copied to clipboard.", true);
+            }
           } catch {
             showMessage("Could not copy link.", false);
           }
@@ -913,25 +1473,103 @@
       });
     }
 
-    async function toggleLike(postId) {
-      const post = allPosts.find(item => item.id === postId);
+    // ── Interactions ───────────────────────────────────────────
+    async function toggleLike(postId, options = {}) {
+      const post  = allPosts.find(p => p.id === postId);
       if (!post) return;
 
-      const liked = (post.likedBy || []).includes(currentUser.uid);
-      const postRef = doc(db, "posts", postId);
+      const alreadyLiked = (post.likedBy || []).includes(currentUser.uid);
+      const shouldLike = options.forceLike ? true : !alreadyLiked;
 
-      await updateDoc(postRef, {
-        likedBy: liked ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid),
-        likesCount: liked ? Math.max((post.likesCount || 0) - 1, 0) : (post.likesCount || 0) + 1
-      });
+      if (alreadyLiked && options.forceLike) {
+        playHeartBurst(options.burstTarget || document.querySelector(`[data-post-id="${postId}"]`));
+        return;
+      }
 
-      if (!liked && post.userId !== currentUser.uid) {
-        await createNotification(post.userId, "like", "liked your post", postId);
+      post.likedBy = shouldLike
+        ? [...(post.likedBy || []), currentUser.uid]
+        : (post.likedBy || []).filter(uid => uid !== currentUser.uid);
+
+      post.likesCount = shouldLike
+        ? (post.likesCount || 0) + 1
+        : Math.max((post.likesCount || 0) - 1, 0);
+
+      updatePostLikeUI(postId, shouldLike, post.likesCount);
+
+      if (shouldLike) {
+        playHeartBurst(options.burstTarget || document.querySelector(`[data-post-id="${postId}"] .post-media`));
+      }
+
+      try {
+        await updateDoc(doc(db, "posts", postId), {
+          likedBy:    shouldLike ? arrayUnion(currentUser.uid) : arrayRemove(currentUser.uid),
+          likesCount: post.likesCount
+        });
+
+        if (shouldLike && post.userId !== currentUser.uid) {
+          await createNotification(post.userId, "like", "liked your post", postId);
+        }
+      } catch (error) {
+        console.error(error);
+        post.likedBy = alreadyLiked
+          ? [...(post.likedBy || []), currentUser.uid]
+          : (post.likedBy || []).filter(uid => uid !== currentUser.uid);
+        post.likesCount = alreadyLiked
+          ? (post.likesCount || 0) + 1
+          : Math.max((post.likesCount || 0) - 1, 0);
+        updatePostLikeUI(postId, alreadyLiked, post.likesCount);
+        showMessage("Could not update like. Try again.", false);
       }
     }
 
+    function updatePostLikeUI(postId, liked, likesCount) {
+      const postEl = document.querySelector(`.post[data-post-id="${postId}"]`);
+      if (!postEl) return;
+
+      const likeBtn = postEl.querySelector(`[data-action="like"]`);
+      const likesEl = postEl.querySelector(".likes-count");
+
+      if (likeBtn) {
+        likeBtn.classList.toggle("active", liked);
+        likeBtn.classList.remove("like-pop");
+        void likeBtn.offsetWidth;
+        if (liked) likeBtn.classList.add("like-pop");
+      }
+
+      if (likesEl) {
+        likesEl.textContent = `${likesCount || 0} like${likesCount === 1 ? "" : "s"}`;
+      }
+    }
+
+    function playHeartBurst(target) {
+      if (!target) return;
+
+      const host = target.classList?.contains("post-media")
+        ? target
+        : target.closest?.(".post")?.querySelector(".post-media") || target;
+
+      const heart = document.createElement("div");
+      heart.className = "heart-burst";
+      heart.innerHTML = `<i data-lucide="heart"></i>`;
+      host.appendChild(heart);
+
+      const points = [[0,-72],[52,-48],[72,0],[48,52],[0,72],[-48,52],[-72,0],[-52,-48]];
+      points.forEach(([x, y], index) => {
+        const particle = document.createElement("span");
+        particle.className = "heart-particle";
+        particle.style.setProperty("--x", `${x}px`);
+        particle.style.setProperty("--y", `${y}px`);
+        particle.style.animationDelay = `${index * 0.018}s`;
+        host.appendChild(particle);
+        setTimeout(() => particle.remove(), 850);
+      });
+
+      lucide.createIcons();
+      setTimeout(() => heart.remove(), 850);
+    }
+
     async function toggleSave(postId) {
-      const saved = (currentUserData.savedPosts || []).includes(postId);
+      const saved   = (currentUserData.savedPosts || []).includes(postId);
       const userRef = doc(db, "users", currentUser.uid);
       const postRef = doc(db, "posts", postId);
 
@@ -951,11 +1589,12 @@
     }
 
     async function toggleFollow(targetUserId) {
+      // Hard guard: never follow yourself
       if (!targetUserId || targetUserId === currentUser.uid) return;
 
-      const following = (currentUserData.following || []).includes(targetUserId);
+      const following      = (currentUserData.following || []).includes(targetUserId);
       const currentUserRef = doc(db, "users", currentUser.uid);
-      const targetUserRef = doc(db, "users", targetUserId);
+      const targetUserRef  = doc(db, "users", targetUserId);
 
       await updateDoc(currentUserRef, {
         following: following ? arrayRemove(targetUserId) : arrayUnion(targetUserId)
@@ -978,20 +1617,10 @@
     }
 
     async function deleteOwnPost(postId) {
-      const post = allPosts.find(item => item.id === postId);
+      const post = allPosts.find(p => p.id === postId);
+      if (!post || post.userId !== currentUser.uid) return;
 
-      if (!post) {
-        showMessage("Post not found.", false);
-        return;
-      }
-
-      if (post.userId !== currentUser.uid) {
-        showMessage("You can only delete your own posts.", false);
-        return;
-      }
-
-      const confirmed = confirm("Delete this post? This cannot be undone.");
-      if (!confirmed) return;
+      if (!confirm("Delete this post? This cannot be undone.")) return;
 
       await deleteDoc(doc(db, "posts", postId));
       showMessage("Post deleted.", true);
@@ -1000,7 +1629,7 @@
     async function createNotification(toUserId, type, text, postId = "") {
       await addDoc(collection(db, "notifications"), {
         toUserId,
-        fromUserId: currentUser.uid,
+        fromUserId:   currentUser.uid,
         fromUsername: currentUserData.username || "creator",
         type,
         text,
@@ -1010,50 +1639,13 @@
       });
     }
 
-    function renderSuggestions() {
-      const following = currentUserData.following || [];
-
-      const suggestions = allUsers
-        .filter(user => user.uid !== currentUser.uid)
-        .filter(user => !following.includes(user.uid))
-        .slice(0, 5);
-
-      if (!suggestions.length) {
-        suggestionsEl.innerHTML = `<div class="empty">No suggestions yet.</div>`;
-        return;
-      }
-
-      suggestionsEl.innerHTML = suggestions.map(user => `
-        <div class="suggest-item">
-          <a class="suggest-user" href="profile.html?uid=${user.uid}">
-            ${getAvatarHTML(user, "avatar")}
-            <div>
-              <strong>${escapeHTML(user.username || "creator")}</strong>
-              <small>${(user.followers || []).length} followers</small>
-            </div>
-          </a>
-
-          <button class="follow-btn" data-suggest-follow="${user.uid}">
-            Follow
-          </button>
-        </div>
-      `).join("");
-
-      document.querySelectorAll("[data-suggest-follow]").forEach(button => {
-        button.addEventListener("click", async () => {
-          await toggleFollow(button.dataset.suggestFollow);
-        });
-      });
-
-      lucide.createIcons();
-    }
-
+    // ── Utilities ──────────────────────────────────────────────
     function getAvatarHTML(data, className) {
-      const name = data.username || data.displayName || "N";
+      const name      = data.username || data.displayName || "N";
       const avatarUrl = data.avatarUrl || data.photoURL || "";
 
       if (avatarUrl) {
-        return `<div class="${className}"><img src="${avatarUrl}" alt="${escapeHTML(name)}"></div>`;
+        return `<div class="${className}"><img src="${avatarUrl}" alt="${escapeHTML(name)}" loading="lazy"></div>`;
       }
 
       return `<div class="${className}">${escapeHTML(name.charAt(0).toUpperCase())}</div>`;
@@ -1064,18 +1656,18 @@
     }
 
     function formatDate(timestamp) {
-      if (!timestamp || !timestamp.toDate) return "Just now";
+      if (!timestamp?.toDate) return "Just now";
 
-      const date = timestamp.toDate();
-      const diff = Date.now() - date.getTime();
+      const date    = timestamp.toDate();
+      const diff    = Date.now() - date.getTime();
       const minutes = Math.floor(diff / 60000);
-      const hours = Math.floor(minutes / 60);
-      const days = Math.floor(hours / 24);
+      const hours   = Math.floor(minutes / 60);
+      const days    = Math.floor(hours / 24);
 
-      if (minutes < 1) return "Just now";
+      if (minutes < 1)  return "Just now";
       if (minutes < 60) return `${minutes}m ago`;
-      if (hours < 24) return `${hours}h ago`;
-      if (days < 7) return `${days}d ago`;
+      if (hours   < 24) return `${hours}h ago`;
+      if (days    < 7)  return `${days}d ago`;
 
       return date.toLocaleDateString();
     }
@@ -1088,7 +1680,7 @@
         setTimeout(() => {
           messageEl.textContent = "";
           messageEl.classList.remove("success");
-        }, 2600);
+        }, 2800);
       }
     }
 

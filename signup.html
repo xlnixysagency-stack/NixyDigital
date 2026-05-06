@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nexr — Sign Up</title>
+
+  <style>
+    :root {
+      --bg: #050507;
+      --panel: rgba(16,16,19,.82);
+      --line: rgba(255,255,255,.08);
+      --text: #f0f0f5;
+      --muted: #8888a0;
+      --accent: #00e5ff;
+      --accent2: #7c3aed;
+      --hot: #ff2bd6;
+      --danger: #ff4d6d;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: 'DM Sans', Arial, sans-serif;
+      background:
+        radial-gradient(circle at 20% 10%, rgba(0,229,255,.18), transparent 30%),
+        radial-gradient(circle at 80% 20%, rgba(124,58,237,.24), transparent 32%),
+        radial-gradient(circle at 50% 100%, rgba(255,43,214,.12), transparent 28%),
+        var(--bg);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: fixed;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      filter: blur(20px);
+      opacity: .45;
+      animation: float 7s ease-in-out infinite;
+    }
+
+    .orb.one {
+      background: var(--accent);
+      top: 12%;
+      left: 8%;
+    }
+
+    .orb.two {
+      background: var(--accent2);
+      bottom: 10%;
+      right: 10%;
+      animation-delay: -2s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-24px) scale(1.08); }
+    }
+
+    .auth-shell {
+      width: min(980px, 94vw);
+      display: grid;
+      grid-template-columns: 1fr 430px;
+      gap: 28px;
+      position: relative;
+      z-index: 2;
+      animation: rise .7s ease both;
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(22px) scale(.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .brand-panel,
+    .card {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(18px);
+      border-radius: 32px;
+    }
+
+    .brand-panel {
+      padding: 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .brand-panel::after {
+      content: "";
+      position: absolute;
+      inset: auto -90px -90px auto;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2), var(--hot));
+      opacity: .24;
+      filter: blur(6px);
+    }
+
+    .logo {
+      font-size: 42px;
+      font-weight: 950;
+      letter-spacing: -2px;
+      font-family:'Space Grotesk',Arial,sans-serif;
+        }
+
+    .logo span {
+      color: var(--accent);
+      text-shadow: 0 0 22px var(--accent);
+    }
+
+    .hero h1 {
+      font-size: 54px;
+      line-height: .95;
+      letter-spacing: -3px;
+      margin: 28px 0 14px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 440px;
+      line-height: 1.6;
+    }
+
+    .feature-row {
+      display: grid;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .feature {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.06);
+    }
+
+    .feature strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .feature small {
+      color: var(--muted);
+    }
+
+    .card {
+      padding: 28px;
+    }
+
+    .card h2 {
+      font-size: 30px;
+      margin: 0 0 8px;
+      letter-spacing: -1px;
+    }
+
+    .card p {
+      margin-top: 0;
+      color: var(--muted);
+    }
+
+    .form {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap input {
+      width: 100%;
+      padding: 15px 15px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: #09090b;
+      color: white;
+      outline: none;
+      transition: .2s ease;
+    }
+
+    .input-wrap input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(0,229,255,.08);
+    }
+
+    .btn {
+      width: 100%;
+      border: 0;
+      border-radius: 999px;
+      padding: 14px;
+      font-weight: 950;
+      cursor: pointer;
+      transition: .18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .primary {
+      color: black;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+    }
+
+    .secondary {
+      color: white;
+      background: #15151a;
+      border: 1px solid var(--line);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      margin: 8px 0;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: var(--line);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 18px;
+      color: var(--muted);
+    }
+
+    .footer a {
+      color: var(--accent);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .message {
+      min-height: 20px;
+      color: var(--danger);
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .loading {
+      opacity: .75;
+      pointer-events: none;
+    }
+
+    @media (max-width: 850px) {
+      body {
+        overflow: auto;
+        padding: 22px 0;
+      }
+
+      .auth-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .brand-panel {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="orb one"></div>
+<div class="orb two"></div>
+
+<main class="auth-shell">
+  <section class="brand-panel">
+    <div>
+      <div class="logo">Nex<span>r</span></div>
+
+      <div class="hero">
+        <h1>Social,<br>leveled up.</h1>
+        <p>Join a creator-first platform built around fair exposure, visual discovery, and real growth.</p>
+      </div>
+    </div>
+
+    <div class="feature-row">
+      <div class="feature">
+        <strong>Fair Feed</strong>
+        <small>New creators get a real chance to be seen.</small>
+      </div>
+      <div class="feature">
+        <strong>Nexr Flow</strong>
+        <small>A visual layout that does not feel like every other app.</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="card">
+    <h2>Create account</h2>
+    <p>Start your Nexr profile today.</p>
+
+    <div class="form">
+      <div class="input-wrap">
+        <input id="username" placeholder="Username" autocomplete="username">
+      </div>
+
+      <div class="input-wrap">
+        <input id="email" type="email" placeholder="Email" autocomplete="email">
+      </div>
+
+      <div class="input-wrap">
+        <input id="password" type="password" placeholder="Password" autocomplete="new-password">
+      </div>
+
+      <button class="btn primary" id="signupBtn">Create account</button>
+
+      <div class="divider">or</div>
+
+      <button class="btn secondary" id="googleBtn">Continue with Google</button>
+    </div>
+
+    <div class="message" id="message"></div>
+
+    <div class="footer">
+      Already have an account? <a href="login.html">Log in</a>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+  import { auth, db, googleProvider } from "./firebase.js";
+
+  import {
+    createUserWithEmailAndPassword,
+    signInWithPopup,
+    updateProfile
+  } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+
+  import {
+    doc,
+    setDoc,
+    getDoc,
+    serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+  const card = document.getElementById("card");
+  const message = document.getElementById("message");
+  const usernameInput = document.getElementById("username");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+
+  function setLoading(isLoading) {
+    card.classList.toggle("loading", isLoading);
+  }
+
+  function showMessage(text) {
+    message.textContent = text;
+  }
+
+  async function createUserProfile(user, username) {
+    const userRef = doc(db, "users", user.uid);
+    const existing = await getDoc(userRef);
+
+    if (existing.exists()) return;
+
+    await setDoc(userRef, {
+      uid: user.uid,
+      username: username || user.displayName || user.email.split("@")[0],
+      email: user.email,
+      avatarUrl: user.photoURL || "",
+      bio: "Social, leveled up.",
+      followers: [],
+      following: [],
+      savedPosts: [],
+      createdAt: serverTimestamp()
+    });
+  }
+
+  document.getElementById("signupBtn").addEventListener("click", async () => {
+    const username = usernameInput.value.trim();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (!username || !email || !password) {
+      showMessage("Fill out all fields.");
+      return;
+    }
+
+    if (password.length < 6) {
+      showMessage("Password must be at least 6 characters.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      showMessage("");
+
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+
+      await updateProfile(result.user, {
+        displayName: username
+      });
+
+      await createUserProfile(result.user, username);
+
+      window.location.href = "index.html";
+    } catch (error) {
+      showMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  document.getElementById("googleBtn").addEventListener("click", async () => {
+    try {
+      setLoading(true);
+      showMessage("");
+
+      const result = await signInWithPopup(auth, googleProvider);
+      await createUserProfile(result.user, result.user.displayName);
+
+      window.location.href = "index.html";
+    } catch (error) {
+      showMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
+  });
+</script>
+</body>
+</html>
